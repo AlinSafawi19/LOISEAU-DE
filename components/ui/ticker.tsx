@@ -8,6 +8,7 @@ interface TickerProps {
   gap?: number;
   speed?: number;
   hoverSpeed?: number;
+  direction?: "left" | "right";
   className?: string;
   style?: React.CSSProperties;
 }
@@ -17,6 +18,7 @@ export function Ticker({
   gap = 24,
   speed = 50,
   hoverSpeed = 100,
+  direction = "left",
   className = "",
   style,
 }: TickerProps) {
@@ -25,6 +27,12 @@ export function Ticker({
   const hoveredRef = useRef(false);
   const rafRef = useRef(0);
   const lastTRef = useRef(0);
+  const initRef = useRef(false);
+
+  useEffect(() => {
+    initRef.current = false;
+    posRef.current = 0;
+  }, [direction]);
 
   useEffect(() => {
     const track = trackRef.current;
@@ -36,8 +44,14 @@ export function Ticker({
 
       const half = track.scrollWidth / 2;
       if (half > 0) {
-        posRef.current -= (hoveredRef.current ? hoverSpeed : speed) * dt;
-        if (posRef.current <= -half) posRef.current += half;
+        if (direction === "right") {
+          if (!initRef.current) { posRef.current = -half; initRef.current = true; }
+          posRef.current += (hoveredRef.current ? hoverSpeed : speed) * dt;
+          if (posRef.current >= 0) posRef.current -= half;
+        } else {
+          posRef.current -= (hoveredRef.current ? hoverSpeed : speed) * dt;
+          if (posRef.current <= -half) posRef.current += half;
+        }
         track.style.transform = `translateX(${posRef.current}px)`;
       }
 
