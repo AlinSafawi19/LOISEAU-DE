@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, type Easing } from "framer-motion";
 import Image from "next/image";
 
 const IMAGES = [
@@ -19,7 +19,7 @@ const SPRING_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 // Per-image: 3s hold + 2s spring transition = 5s. 3 images = 15s total cycle.
 const DURATION = 15;
 const TIMES    = [0, 3/15, 5/15, 8/15, 10/15, 13/15, 1];
-const EASES    = ["linear", SPRING_EASE, "linear", SPRING_EASE, "linear", SPRING_EASE];
+const EASES: Easing[]    = ["linear", SPRING_EASE, "linear", SPRING_EASE, "linear", SPRING_EASE];
 
 interface ImgBoxProps {
   className?: string;
