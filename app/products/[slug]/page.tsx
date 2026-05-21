@@ -175,7 +175,7 @@ export default function ProductPage() {
           <div className="w-full desktop:w-[55%] flex flex-col justify-start items-start gap-[1px] p-0 overflow-clip rounded-none bg-caledon">
 
             {/* img 1 — full height banner */}
-            <div className="relative w-full h-screen overflow-visible rounded-none">
+            <div className="relative w-full h-[400px] tablet:h-[50vh] desktop:h-screen overflow-visible rounded-none">
               <Image
                 src={product.cover_img_1}
                 alt={product.title}
@@ -189,7 +189,7 @@ export default function ProductPage() {
 
             {/* img 2 + img 3 — mid banner */}
             {(product.img_2 || product.img_3) && (
-              <div className="w-full h-[50vh] flex flex-col tablet:flex-row justify-start items-center gap-[1px] overflow-clip rounded-none">
+              <div className="w-full h-[640px] tablet:h-[50vh] flex flex-col tablet:flex-row justify-start items-center gap-[1px] overflow-clip rounded-none">
                 {product.img_2 && (
                   <div className="relative flex-1 w-full h-full overflow-visible rounded-none">
                     <Image
@@ -221,7 +221,7 @@ export default function ProductPage() {
 
             {/* img 4 — full height banner */}
             {product.img_4 && (
-              <div className="relative w-full h-screen overflow-visible rounded-none">
+              <div className="relative w-full h-[400px] tablet:h-[50vh] desktop:h-screen overflow-visible rounded-none">
                 <Image
                   src={product.img_4}
                   alt=""
