@@ -8,6 +8,7 @@ import { H2, H3, H4, SubtitleMd, ItalicBodyLg, ItalicBodySm } from "@/components
 import { FitText } from "@/components/ui/fit-text";
 import { Ticker } from "@/components/ui/ticker";
 import { Book } from "@/components/ui/book";
+import Link from "next/link";
 import { OutlineButton } from "@/components/ui/button";
 import { NewInTitle } from "@/components/ui/new-in-title";
 import { ProductCard } from "@/components/ui/product-card";
@@ -64,6 +65,7 @@ const categories = [
     bgColor: "bg-accent",
     reversed: false,
     zIndex: 1,
+    href: "/skin-care",
   },
   {
     name: "COSMETICS",
@@ -73,6 +75,7 @@ const categories = [
     bgColor: "bg-warm",
     reversed: true,
     zIndex: 2,
+    href: "/cosmetics",
   },
   {
     name: "FACE HEALTH",
@@ -82,6 +85,7 @@ const categories = [
     bgColor: "bg-pistachio",
     reversed: false,
     zIndex: 3,
+    href: "/face-health",
   },
 ];
 
@@ -202,7 +206,7 @@ export default function Home() {
       {/* ── Categories ── */}
       <section className="w-full flex flex-col justify-start items-center gap-0 p-0 overflow-clip rounded-none">
 
-        {categories.map(({ name, description, mainImage, previewImage, bgColor, reversed, zIndex }) => (
+        {categories.map(({ name, description, mainImage, previewImage, bgColor, reversed, zIndex, href }) => (
           <div
             key={name}
             className={`sticky top-0 w-full max-w-[1920px] flex flex-col p-0 overflow-clip rounded-none tablet:items-stretch ${reversed ? "tablet:flex-row-reverse" : "tablet:flex-row"}`}
@@ -250,7 +254,9 @@ export default function Home() {
                     className="object-cover object-top"
                   />
                 </div>
-                <OutlineButton>Explore</OutlineButton>
+                <Link href={href} tabIndex={-1}>
+                  <OutlineButton>Explore</OutlineButton>
+                </Link>
               </div>
 
             </div>

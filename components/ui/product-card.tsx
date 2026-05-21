@@ -68,6 +68,8 @@ export function ProductCard({
             alt={imageAlt}
             fill
             sizes="320px"
+            quality={100}
+            unoptimized
             className="object-cover"
           />
         </div>
