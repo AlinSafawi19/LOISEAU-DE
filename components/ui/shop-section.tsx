@@ -210,7 +210,7 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
           desktop:gap-[32px]">
 
           {/* Filters sidebar */}
-          <div className="sticky top-[58px] md:top-[80px] self-start w-full tablet:w-auto">
+          <div className="sticky top-[58px] md:top-[80px] self-start w-full tablet:w-auto z-[20] tablet:z-auto">
             <Filters
               categories={categories}
               brands={brands}
