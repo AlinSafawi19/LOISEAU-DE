@@ -334,7 +334,7 @@ export default function ProductPage() {
 
           {/* Title */}
           <div className="w-full flex flex-col justify-start items-start gap-[8px] overflow-visible rounded-none p-0">
-            <H4 className="w-full !text-brown !text-left [text-wrap:balance]">Related Products</H4>
+            <H4 className="w-full !text-black !text-left [text-wrap:balance]">Related Products</H4>
           </div>
 
           {/* Products grid */}
