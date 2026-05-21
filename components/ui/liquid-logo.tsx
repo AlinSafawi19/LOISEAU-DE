@@ -106,6 +106,41 @@ export function LiquidLogo({
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
+    // Disable liquid effect on tablet and mobile (≤ 1024px)
+    if (window.matchMedia("(max-width: 1024px)").matches) {
+      if (!image) return;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      let imgEl: HTMLImageElement | null = null;
+
+      const draw = () => {
+        if (!imgEl) return;
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = canvas.clientWidth * dpr;
+        canvas.height = canvas.clientHeight * dpr;
+        const cW = canvas.width, cH = canvas.height;
+        const iW = imgEl.naturalWidth, iH = imgEl.naturalHeight;
+        const cAR = cW / cH, iAR = iW / iH;
+        let sw: number, sh: number, sx: number, sy: number;
+        if (cAR > iAR) {
+          sw = iW; sh = iW / cAR; sx = 0; sy = (iH - sh) / 2;
+        } else {
+          sh = iH; sw = iH * cAR; sx = (iW - sw) / 2; sy = 0;
+        }
+        ctx.drawImage(imgEl, sx, sy, sw, sh, 0, 0, cW, cH);
+      };
+
+      const el = new Image();
+      el.crossOrigin = "anonymous";
+      el.onload = () => { imgEl = el; draw(); };
+      el.src = image;
+
+      const ro = new ResizeObserver(draw);
+      ro.observe(canvas);
+      return () => ro.disconnect();
+    }
+
     const gl = canvas.getContext("webgl");
     if (!gl) return;
 
