@@ -266,7 +266,8 @@ export default function Home() {
                   alt={name}
                   fill
                   sizes="(max-width: 809px) 100vw, 50vw"
-                  quality={90}
+                  quality={100}
+                  unoptimized
                   className="object-cover object-top"
                 />
               </motion.div>
@@ -289,7 +290,8 @@ export default function Home() {
                     alt=""
                     fill
                     sizes="200px"
-                    quality={90}
+                    quality={100}
+                  unoptimized
                     className="object-cover object-top"
                   />
                 </div>
@@ -340,7 +342,8 @@ export default function Home() {
                   width={1200}
                   height={900}
                   sizes="(max-width: 809px) 50vw, 25vw"
-                  quality={90}
+                  quality={100}
+                  unoptimized
                   className="w-full h-auto block"
                 />
               </div>
@@ -356,7 +359,8 @@ export default function Home() {
                   width={2400}
                   height={1800}
                   sizes="(max-width: 809px) 100vw, 50vw"
-                  quality={90}
+                  quality={100}
+                  unoptimized
                   className="w-full h-auto block"
                 />
               </div>
@@ -370,7 +374,8 @@ export default function Home() {
                   alt=""
                   fill
                   sizes="(max-width: 809px) 50vw, 25vw"
-                  quality={90}
+                  quality={100}
+                  unoptimized
                   className="object-cover object-center"
                 />
               </div>
@@ -382,7 +387,8 @@ export default function Home() {
                   alt=""
                   fill
                   sizes="(max-width: 809px) 50vw, 25vw"
-                  quality={90}
+                  quality={100}
+                  unoptimized
                   className="object-cover object-center"
                 />
               </div>
@@ -398,7 +404,8 @@ export default function Home() {
                   alt=""
                   fill
                   sizes="(max-width: 809px) 50vw, 25vw"
-                  quality={90}
+                  quality={100}
+                  unoptimized
                   className="object-cover object-center"
                 />
               </div>
@@ -413,7 +420,8 @@ export default function Home() {
                   width={1200}
                   height={900}
                   sizes="(max-width: 809px) 100vw, 50vw"
-                  quality={90}
+                  quality={100}
+                  unoptimized
                   className="w-full h-auto block"
                 />
               </div>
@@ -431,7 +439,8 @@ export default function Home() {
                   alt=""
                   fill
                   sizes="(max-width: 809px) 50vw, 25vw"
-                  quality={90}
+                  quality={100}
+                  unoptimized
                   className="object-cover object-center"
                 />
               </div>
@@ -447,7 +456,8 @@ export default function Home() {
                   alt=""
                   fill
                   sizes="(max-width: 809px) 50vw, 25vw"
-                  quality={90}
+                  quality={100}
+                  unoptimized
                   className="object-cover object-center"
                 />
               </div>
@@ -458,7 +468,8 @@ export default function Home() {
                   alt=""
                   fill
                   sizes="(max-width: 809px) 50vw, 25vw"
-                  quality={90}
+                  quality={100}
+                  unoptimized
                   className="object-cover object-center"
                 />
               </div>
@@ -487,7 +498,8 @@ export default function Home() {
                   alt=""
                   fill
                   sizes="100vw"
-                  quality={90}
+                  quality={100}
+                  unoptimized
                   className="object-cover"
                 />
               </div>
