@@ -43,7 +43,7 @@ export function Book({
 
   useEffect(() => {
     const check = () => {
-      const mobile = window.innerWidth <= 809;
+      const mobile = window.innerWidth < 1200;
       setIsMobile(mobile);
     };
     check();
