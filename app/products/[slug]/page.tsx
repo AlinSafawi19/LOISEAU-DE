@@ -238,8 +238,10 @@ export default function ProductPage() {
           </div>
 
           {/* Details wrapper */}
-          <div className="flex-1 sticky top-0 self-start flex flex-col justify-start items-start gap-[48px] overflow-visible rounded-none bg-caledon z-[1]
-            pt-[80px] px-[32px] pb-[48px]">
+          <div className="flex-1 desktop:sticky desktop:top-0 desktop:self-start flex flex-col justify-start items-start gap-[48px] overflow-visible rounded-none bg-caledon z-[1]
+            pt-[32px] px-[16px] pb-[32px]
+            tablet:pt-[48px] tablet:px-[24px] tablet:pb-[40px]
+            desktop:pt-[80px] desktop:px-[32px] desktop:pb-[48px]">
 
             {/* Top wrapper */}
             <div className="w-[476px] max-w-full flex flex-col justify-start items-start gap-[24px] p-0 overflow-visible rounded-none">
