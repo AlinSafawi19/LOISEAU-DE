@@ -171,6 +171,76 @@ export default function ProductPage() {
         {/* ── Container 1: Product detail ── */}
         <div className="w-full max-w-[1920px] flex flex-col desktop:flex-row justify-start items-start gap-0 p-0 overflow-clip rounded-none bg-caledon">
 
+          {/* Images wrapper */}
+          <div className="w-full desktop:w-[55%] flex flex-col justify-start items-start gap-[1px] p-0 overflow-clip rounded-none bg-caledon">
+
+            {/* img 1 — full height banner */}
+            <div className="relative w-full h-screen overflow-visible rounded-none">
+              <Image
+                src={product.cover_img_1}
+                alt={product.title}
+                fill
+                sizes="(max-width: 1199px) 100vw, 55vw"
+                quality={100}
+                unoptimized
+                className="object-cover object-center"
+              />
+            </div>
+
+            {/* img 2 + img 3 — mid banner */}
+            {(product.img_2 || product.img_3) && (
+              <div className="w-full h-[50vh] flex flex-col tablet:flex-row justify-start items-center gap-[1px] overflow-clip rounded-none">
+                {product.img_2 && (
+                  <div className="relative flex-1 w-full h-full overflow-visible rounded-none">
+                    <Image
+                      src={product.img_2}
+                      alt=""
+                      fill
+                      sizes="(max-width: 809px) 100vw, (max-width: 1199px) 50vw, 27vw"
+                      quality={100}
+                      unoptimized
+                      className="object-cover object-center"
+                    />
+                  </div>
+                )}
+                {product.img_3 && (
+                  <div className="relative flex-1 w-full h-full overflow-visible rounded-none">
+                    <Image
+                      src={product.img_3}
+                      alt=""
+                      fill
+                      sizes="(max-width: 809px) 100vw, (max-width: 1199px) 50vw, 27vw"
+                      quality={100}
+                      unoptimized
+                      className="object-cover object-center"
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* img 4 — full height banner */}
+            {product.img_4 && (
+              <div className="relative w-full h-screen overflow-visible rounded-none">
+                <Image
+                  src={product.img_4}
+                  alt=""
+                  fill
+                  sizes="(max-width: 1199px) 100vw, 55vw"
+                  quality={100}
+                  unoptimized
+                  className="object-cover object-center"
+                />
+              </div>
+            )}
+
+          </div>
+
+          {/* Details wrapper — empty */}
+          <div className="flex-1 sticky top-0 self-start flex flex-col justify-start items-start gap-[48px] overflow-visible rounded-none bg-caledon z-[1]
+            pt-[80px] px-[32px] pb-[48px]">
+          </div>
+
         </div>
 
         {/* ── Container 2: Benefits ── */}
