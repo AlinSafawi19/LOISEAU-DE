@@ -299,7 +299,7 @@ export default function ProductPage() {
 
         {/* ── Container 2: Benefits ── */}
         <div
-          className="w-full max-w-[1920px] flex flex-row justify-start items-start gap-[32px] overflow-clip rounded-none bg-white
+          className="w-full max-w-[1920px] flex flex-col justify-start items-start gap-[32px] overflow-clip rounded-none bg-white
             pt-[48px] px-[16px] pb-[48px]
             tablet:pt-[48px] tablet:px-[24px] tablet:pb-[48px]
             desktop:pt-[64px] desktop:px-[32px] desktop:pb-[80px]"
@@ -310,12 +310,12 @@ export default function ProductPage() {
         >
 
           {/* Title wrapper */}
-          <div className="flex-1 flex flex-col justify-start items-center gap-[16px] p-0 overflow-clip rounded-none">
+          <div className="w-full flex flex-col justify-start items-start gap-[16px] p-0 overflow-clip rounded-none">
             <H4 className="w-full !text-black !text-left">Your Benefits, Our Promise</H4>
           </div>
 
           {/* Features wrapper */}
-          <div className="flex-1 grid overflow-clip rounded-none
+          <div className="w-full grid overflow-clip rounded-none
             grid-cols-1 gap-x-0 gap-y-[32px]
             tablet:grid-cols-2 tablet:gap-x-[32px] tablet:gap-y-[32px]
             desktop:grid-cols-4 desktop:gap-x-[32px] desktop:gap-y-[32px]">
@@ -327,20 +327,22 @@ export default function ProductPage() {
         </div>
 
         {/* ── Container 3: Related products ── */}
-        <div className="w-full max-w-[1920px] flex flex-row justify-start items-start gap-[24px] overflow-clip rounded-none bg-white
+        <div className="w-full max-w-[1920px] flex flex-col justify-start items-start gap-[24px] overflow-clip rounded-none bg-white
           pt-[48px] px-[16px] pb-[48px]
           tablet:pt-[48px] tablet:px-[24px] tablet:pb-[48px]
           desktop:pt-[64px] desktop:px-[32px] desktop:pb-[80px]">
 
-          {/* Sticky title */}
-          <div className="sticky top-0 self-start w-full max-w-[280px] flex flex-col justify-start items-start gap-[8px] overflow-visible rounded-none p-0 z-[1]">
+          {/* Title */}
+          <div className="w-full flex flex-col justify-start items-start gap-[8px] overflow-visible rounded-none p-0">
             <H4 className="w-full !text-brown !text-left [text-wrap:balance]">Related Products</H4>
           </div>
 
           {/* Products grid */}
           <div
-            className="flex-1 grid overflow-visible rounded-none p-0"
-            style={{ columnGap: "16px", rowGap: "48px", gridTemplateColumns: "repeat(3, 1fr)" }}
+            className="w-full grid overflow-visible rounded-none p-0
+              grid-cols-1
+              tablet:grid-cols-3"
+            style={{ columnGap: "16px", rowGap: "48px" }}
           >
             {related.map((p) => (
               <ProductCard
