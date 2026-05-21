@@ -6,7 +6,8 @@ import { useParams } from "next/navigation";
 import { Truck, LockKeyhole, Wallet, PhoneCall, ShoppingBag } from "lucide-react";
 import { H4, H5, ItalicBodySm, SubtitleSm, SubtitleMd } from "@/components/ui/typography";
 import Link from "next/link";
-import { OutlineButton } from "@/components/ui/button";
+import { OutlineButton, FilledButton } from "@/components/ui/button";
+import { FaqCardProduct } from "@/components/ui/faq-card";
 import { ProductCard } from "@/components/ui/product-card";
 
 const PRODUCTS_URL = "https://cms-api-production-e357.up.railway.app/api/public/v1/projects/prj-mpf7ktu4-1w/categories/cat-mpf7ktu4-1v";
@@ -236,9 +237,47 @@ export default function ProductPage() {
 
           </div>
 
-          {/* Details wrapper — empty */}
+          {/* Details wrapper */}
           <div className="flex-1 sticky top-0 self-start flex flex-col justify-start items-start gap-[48px] overflow-visible rounded-none bg-caledon z-[1]
             pt-[80px] px-[32px] pb-[48px]">
+
+            {/* Top wrapper — empty */}
+            <div className="w-full flex flex-col justify-start items-start gap-[32px] p-0 overflow-clip rounded-none" />
+
+            {/* Buy now */}
+            <a
+              href="https://contra.com/payment-link/whQsyhNo-aionic-modern-ai-saa-s-framer-template"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FilledButton icon={<ShoppingBag size={16} strokeWidth={1.5} />}>
+                Buy now
+              </FilledButton>
+            </a>
+
+            {/* Bottom wrapper */}
+            <div className="w-full flex flex-col justify-start items-start gap-[8px] p-0 overflow-clip rounded-none">
+              <div className="w-full h-[1px] overflow-clip rounded-none bg-beige" />
+              <FaqCardProduct
+                question="Delivery & Shipping"
+                answer="Orders are processed within 1–2 business days."
+                className="w-full"
+              />
+              <div className="w-full h-[1px] overflow-clip rounded-none bg-beige" />
+              <FaqCardProduct
+                question="Returns & Refunds"
+                answer="Items must be unused and in their original packaging to be eligible for a refund or exchange."
+                className="w-full"
+              />
+              <div className="w-full h-[1px] overflow-clip rounded-none bg-beige" />
+              <FaqCardProduct
+                question="Product Details / Safety"
+                answer="All products are carefully crafted using high-quality, safe ingredients and materials."
+                className="w-full"
+              />
+              <div className="w-full h-[1px] overflow-clip rounded-none bg-beige" />
+            </div>
+
           </div>
 
         </div>
