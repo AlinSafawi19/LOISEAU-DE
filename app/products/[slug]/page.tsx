@@ -311,7 +311,7 @@ export default function ProductPage() {
 
           {/* Title wrapper */}
           <div className="w-full flex flex-col justify-start items-start gap-[16px] p-0 overflow-clip rounded-none">
-            <H4 className="w-full !text-black !text-left">Your Benefits, Our Promise</H4>
+            <H4 className="w-full !text-black !text-left">Your Benefits, <br/>Our Promise</H4>
           </div>
 
           {/* Features wrapper */}
@@ -334,7 +334,7 @@ export default function ProductPage() {
 
           {/* Title */}
           <div className="w-full flex flex-col justify-start items-start gap-[8px] overflow-visible rounded-none p-0">
-            <H4 className="w-full !text-black !text-left [text-wrap:balance]">Related Products</H4>
+            <H4 className="w-full !text-black !text-left [text-wrap:balance]">Related <br/>Products</H4>
           </div>
 
           {/* Products grid */}
