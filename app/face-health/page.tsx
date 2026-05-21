@@ -50,7 +50,7 @@ export default function FaceHealth() {
 
       </section>
 
-      <ShopSection />
+      <ShopSection collectionSlug="face-health" />
 
     </main>
   );

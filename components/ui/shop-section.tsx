@@ -20,19 +20,21 @@ interface RawProduct {
     gender:      string;
     category:    string;
     brand:       string;
+    collections: string;
   };
 }
 
 interface Product {
-  id:       string;
-  slug:     string;
-  title:    string;
-  price:    number;
-  discount: number;
-  imageSrc: string;
-  gender:   string;
-  category: string;
-  brand:    string;
+  id:          string;
+  slug:        string;
+  title:       string;
+  price:       number;
+  discount:    number;
+  imageSrc:    string;
+  gender:      string;
+  category:    string;
+  brand:       string;
+  collections: string;
 }
 
 const DESKTOP_PAGE_SIZE = 12;
@@ -52,15 +54,16 @@ async function fetchProducts(url: string): Promise<Product[]> {
   const res  = await fetch(url);
   const data = await res.json();
   return (data?.category?.entries ?? []).map((e: RawProduct) => ({
-    id:       e.id,
-    slug:     e.values.slug,
-    title:    e.values.title,
-    price:    e.values.price,
-    discount: e.values.discount,
-    imageSrc: e.values.cover_img_1,
-    gender:   e.values.gender,
-    category: e.values.category,
-    brand:    e.values.brand,
+    id:          e.id,
+    slug:        e.values.slug,
+    title:       e.values.title,
+    price:       e.values.price,
+    discount:    e.values.discount,
+    imageSrc:    e.values.cover_img_1,
+    gender:      e.values.gender,
+    category:    e.values.category,
+    brand:       e.values.brand,
+    collections: e.values.collections ?? "",
   }));
 }
 
@@ -88,7 +91,7 @@ function EmptyState() {
   );
 }
 
-export function ShopSection() {
+export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}) {
   const [categories,          setCategories]          = useState<FilterItem[]>([]);
   const [brands,              setBrands]              = useState<FilterItem[]>([]);
   const [allProducts,         setAllProducts]         = useState<Product[]>([]);
@@ -138,6 +141,10 @@ export function ShopSection() {
   const filtered = useMemo(() => {
     const q = searchValue.trim().toLowerCase();
     return allProducts.filter((p) => {
+      if (collectionSlug) {
+        const cols = p.collections.split(",").map((s) => s.trim());
+        if (!cols.includes(collectionSlug)) return false;
+      }
       if (q && !p.title.toLowerCase().includes(q)) return false;
       if (selectedGender !== "ALL" && p.gender !== selectedGender) return false;
       if (selectedCategories.size > 0) {
@@ -150,7 +157,7 @@ export function ShopSection() {
       }
       return true;
     });
-  }, [allProducts, searchValue, selectedGender, selectedCategories, selectedBrands, categorySlugToId, brandSlugToId]);
+  }, [allProducts, collectionSlug, searchValue, selectedGender, selectedCategories, selectedBrands, categorySlugToId, brandSlugToId]);
 
   // Reset to page 1 whenever filters change
   useEffect(() => { setPage(1); }, [searchValue, selectedGender, selectedCategories, selectedBrands]);

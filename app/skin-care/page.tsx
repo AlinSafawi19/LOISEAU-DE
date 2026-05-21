@@ -50,7 +50,7 @@ export default function SkinCare() {
 
       </section>
 
-      <ShopSection />
+      <ShopSection collectionSlug="skin-care" />
 
     </main>
   );
