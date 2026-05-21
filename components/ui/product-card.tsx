@@ -47,8 +47,6 @@ export function ProductCard({
   return (
     <a
       href={href}
-      target="_blank"
-      rel="noopener noreferrer"
       className={`w-[320px] flex flex-col justify-start items-start gap-[16px] p-0 overflow-visible rounded-none ${cursorVisible ? "cursor-none" : ""} ${className}`}
       style={{ transition: `all 0.4s ${EASE} 0s`, rotate: "0deg" }}
       onMouseEnter={() => setHovered(true)}

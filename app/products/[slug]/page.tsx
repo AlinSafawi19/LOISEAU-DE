@@ -4,7 +4,7 @@ import { useState, useEffect, type ReactNode } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { Truck, LockKeyhole, Wallet, PhoneCall, ShoppingBag } from "lucide-react";
-import { H4, H5, ItalicBodySm, SubtitleSm, SubtitleMd } from "@/components/ui/typography";
+import { H1, H4, H5, BodySm, ItalicBodySm, SubtitleSm } from "@/components/ui/typography";
 import Link from "next/link";
 import { OutlineButton, FilledButton } from "@/components/ui/button";
 import { FaqCardProduct } from "@/components/ui/faq-card";
@@ -241,16 +241,83 @@ export default function ProductPage() {
           <div className="flex-1 sticky top-0 self-start flex flex-col justify-start items-start gap-[48px] overflow-visible rounded-none bg-caledon z-[1]
             pt-[80px] px-[32px] pb-[48px]">
 
-            {/* Top wrapper — empty */}
-            <div className="w-full flex flex-col justify-start items-start gap-[32px] p-0 overflow-clip rounded-none" />
+            {/* Top wrapper */}
+            <div className="w-[476px] max-w-full flex flex-col justify-start items-start gap-[24px] p-0 overflow-visible rounded-none">
+
+              {/* Title box */}
+              <div className="w-full flex flex-col justify-start items-start gap-[16px] p-0 overflow-clip rounded-none">
+
+                {/* Sales type */}
+                {product.sales_type && (
+                  <div className="flex flex-row justify-end items-center gap-[8px] py-[8px] px-[16px] bg-pistachio overflow-clip rounded-none">
+                    <SubtitleSm className="!text-black !text-left w-auto">{product.sales_type}</SubtitleSm>
+                  </div>
+                )}
+
+                {/* Title */}
+                <H1 className="w-full max-w-[480px] h-auto !text-black !text-left">{product.title}</H1>
+
+                {/* Price × discount wrapper */}
+                <div className="w-full flex flex-row justify-start items-center gap-[12px] p-0 overflow-clip rounded-none">
+
+                  {/* Price */}
+                  <div className="flex flex-row justify-start items-center gap-[8px]">
+                    <H4 className="!text-brown !text-left w-auto">$</H4>
+                    <H4 className="!text-brown !text-left w-auto">{finalPrice ?? product.price}</H4>
+                  </div>
+
+                  {/* Discount */}
+                  {product.discount !== 0 && (
+                    <div className="flex flex-row items-center gap-[6px] py-[4px] px-[12px] bg-golden overflow-clip rounded-none">
+                      <H4 className="!text-brown !text-left w-auto">%</H4>
+                      <H4 className="!text-brown !text-left w-auto">{product.discount}</H4>
+                    </div>
+                  )}
+
+                </div>
+
+              </div>
+
+              {/* SKU box */}
+              <div className="w-full flex flex-row justify-start items-start gap-[8px] p-0 overflow-clip rounded-none">
+                <BodySm className="w-auto max-w-[600px] !text-brown !text-left">SKU:</BodySm>
+                <BodySm className="w-auto h-auto max-w-[600px] !text-brown !text-left">{product.sku}</BodySm>
+              </div>
+
+            </div>
+
+            {/* Divider */}
+            <div className="w-full h-[1px] overflow-clip rounded-none bg-beige" />
+
+            {/* Key Ingredients × Size */}
+            <div className="w-full flex flex-row justify-start items-start gap-[24px] p-0 overflow-clip rounded-none">
+
+              <div className="flex flex-col justify-start items-start gap-[8px] p-0 overflow-clip rounded-none">
+                <SubtitleSm className="w-full max-w-[600px] h-auto !text-black !text-left">Key Ingredients</SubtitleSm>
+                <BodySm className="w-full max-w-[600px] h-auto !text-black !text-left">{product.key_ingredients}</BodySm>
+              </div>
+
+              <div className="flex flex-col justify-start items-start gap-[8px] p-0 overflow-clip rounded-none">
+                <SubtitleSm className="w-full max-w-[600px] h-auto !text-black !text-left">Size</SubtitleSm>
+                <BodySm className="w-full max-w-[600px] h-auto !text-black !text-left">{product.size}</BodySm>
+              </div>
+
+            </div>
+
+            {/* Details */}
+            <div className="w-full flex flex-col justify-start items-start gap-[8px] p-0 overflow-clip rounded-none">
+              <SubtitleSm className="w-full max-w-[600px] h-auto !text-black !text-left">Details</SubtitleSm>
+              <BodySm className="w-full max-w-[600px] h-auto !text-black !text-left">{product.description}</BodySm>
+            </div>
 
             {/* Buy now */}
             <a
               href="https://contra.com/payment-link/whQsyhNo-aionic-modern-ai-saa-s-framer-template"
               target="_blank"
               rel="noopener noreferrer"
+              className="w-full"
             >
-              <FilledButton icon={<ShoppingBag size={16} strokeWidth={1.5} />}>
+              <FilledButton className="w-full" icon={<ShoppingBag size={16} strokeWidth={1.5} />}>
                 Buy now
               </FilledButton>
             </a>
