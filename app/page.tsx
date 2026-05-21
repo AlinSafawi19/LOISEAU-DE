@@ -248,7 +248,7 @@ export default function Home() {
         {categories.map(({ name, description, mainImage, previewImage, bgColor, reversed, zIndex, href }) => (
           <div
             key={name}
-            className={`sticky top-0 w-full max-w-[1920px] flex flex-col p-0 overflow-clip rounded-none tablet:items-stretch ${reversed ? "tablet:flex-row-reverse" : "tablet:flex-row"}`}
+            className={`tablet:sticky top-0 w-full max-w-[1920px] flex flex-col p-0 overflow-clip rounded-none tablet:items-stretch ${reversed ? "tablet:flex-row-reverse" : "tablet:flex-row"}`}
             style={{ zIndex }}
           >
 
