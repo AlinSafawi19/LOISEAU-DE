@@ -38,17 +38,20 @@ export function Book({
   coverSrc = "https://framerusercontent.com/images/JXL9OqyS9HXAxdkH6ZGIV5PQXQQ.jpg",
   className = "",
 }: BookProps) {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(max-width: 1199px)").matches
+  );
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const check = () => {
-      const mobile = window.innerWidth < 1200;
-      setIsMobile(mobile);
+    const mq = window.matchMedia("(max-width: 1199px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => {
+      setIsMobile(e.matches);
+      if (!e.matches) setIsOpen(false);
     };
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
   }, []);
 
   const variant = isMobile ? (isOpen ? "mobile" : "closed") : "closed";

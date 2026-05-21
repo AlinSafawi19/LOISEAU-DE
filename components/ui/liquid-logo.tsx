@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type React from "react";
 
 const VS = `
@@ -102,13 +102,23 @@ export function LiquidLogo({
   className = "",
 }: LiquidLogoProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isSmallScreen, setIsSmallScreen] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(max-width: 1024px)").matches
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1024px)");
+    setIsSmallScreen(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsSmallScreen(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Disable liquid effect on tablet and mobile (≤ 1024px)
-    if (window.matchMedia("(max-width: 1024px)").matches) {
+    if (isSmallScreen) {
       if (!image) return;
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
@@ -285,7 +295,7 @@ export function LiquidLogo({
       gl.deleteTexture(tex);
       gl.deleteProgram(prog);
     };
-  }, [image, fit, distortionStrength, hoverRadius, decayTime, useChromaColors, idleEnabled, idleStrength]);
+  }, [image, fit, distortionStrength, hoverRadius, decayTime, useChromaColors, idleEnabled, idleStrength, isSmallScreen]);
 
   return (
     <canvas
