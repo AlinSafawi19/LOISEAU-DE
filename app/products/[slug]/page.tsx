@@ -309,7 +309,7 @@ export default function ProductPage() {
             {/* Details */}
             <div className="w-full flex flex-col justify-start items-start gap-[8px] p-0 overflow-clip rounded-none">
               <SubtitleSm className="w-full max-w-[600px] h-auto !text-black !text-left">Details</SubtitleSm>
-              <BodySm className="w-full max-w-[600px] h-auto !text-black !text-left">{product.description}</BodySm>
+              <BodySm className="w-full max-w-[480px] tablet:max-w-[600px] h-auto !text-black !text-left">{product.description}</BodySm>
             </div>
 
             {/* Buy now */}
