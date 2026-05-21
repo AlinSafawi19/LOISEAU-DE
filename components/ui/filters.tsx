@@ -20,27 +20,10 @@ const SPRING_POPUP  = { type: "spring" as const, duration: 0.4, bounce: 0,   del
 
 const GENDERS = ["ALL", "Women", "Men", "Unisex"];
 
-interface FilterItem {
+export interface FilterItem {
   id:   string;
   name: string;
   slug: string;
-}
-
-interface ApiEntry {
-  id:     string;
-  values: { title?: string; slug?: string; [key: string]: string | undefined };
-}
-
-interface ApiResponse {
-  category?: { entries?: ApiEntry[] };
-}
-
-function parseItems(data: ApiResponse): FilterItem[] {
-  return (data?.category?.entries ?? []).map((entry) => ({
-    id:   entry.id,
-    name: entry.values.title ?? entry.id,
-    slug: entry.values.slug  ?? "",
-  }));
 }
 
 function CheckboxItem({
@@ -53,7 +36,6 @@ function CheckboxItem({
   onToggle: () => void;
 }) {
   const [focused, setFocused] = useState(false);
-
   const borderColor = focused || checked ? "black" : "var(--color-beige)";
   const bgColor     = checked ? "black" : "white";
 
@@ -77,35 +59,33 @@ function CheckboxItem({
       >
         {checked && <Check size={14} strokeWidth={2.5} className="text-white" />}
       </span>
-      <span className={`${bodySmBaseCls} text-black`}>
-        {item.name}
-      </span>
+      <span className={`${bodySmBaseCls} text-black`}>{item.name}</span>
     </label>
   );
 }
 
-interface FilterSectionsProps {
-  categories:           FilterItem[];
-  brands:               FilterItem[];
-  searchValue:          string;
-  setSearchValue:       (v: string) => void;
-  selectedGender:       string;
-  setSelectedGender:    (v: string) => void;
-  selectedCategories:   Set<string>;
-  setSelectedCategories:(s: Set<string>) => void;
-  selectedBrands:       Set<string>;
-  setSelectedBrands:    (s: Set<string>) => void;
-  toggleItem:           (set: Set<string>, setFn: (s: Set<string>) => void, id: string) => void;
+export interface FiltersProps {
+  categories:         FilterItem[];
+  brands:             FilterItem[];
+  searchValue:        string;
+  onSearchChange:     (v: string) => void;
+  selectedGender:     string;
+  onGenderChange:     (v: string) => void;
+  selectedCategories: Set<string>;
+  onCategoryToggle:   (id: string) => void;
+  selectedBrands:     Set<string>;
+  onBrandToggle:      (id: string) => void;
+  onClear:            () => void;
+  className?:         string;
 }
 
 function FilterSections({
   categories, brands,
-  searchValue, setSearchValue,
-  selectedGender, setSelectedGender,
-  selectedCategories, setSelectedCategories,
-  selectedBrands, setSelectedBrands,
-  toggleItem,
-}: FilterSectionsProps) {
+  searchValue, onSearchChange,
+  selectedGender, onGenderChange,
+  selectedCategories, onCategoryToggle,
+  selectedBrands, onBrandToggle,
+}: Omit<FiltersProps, "onClear" | "className">) {
   return (
     <>
       {/* Search */}
@@ -116,13 +96,9 @@ function FilterSections({
             type="text"
             placeholder="Search…"
             value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            onChange={(e) => onSearchChange(e.target.value)}
             className="w-full h-[40px] font-inter font-normal text-black text-[14px] bg-white border border-beige rounded-none pl-[36px] pr-[12px] placeholder:text-brown focus:outline-none focus:border-black"
-            style={{
-              lineHeight: "1.2em",
-              letterSpacing: "0em",
-              transition: "border-color 0.3s cubic-bezier(0.44, 0, 0.56, 1)",
-            }}
+            style={{ lineHeight: "1.2em", letterSpacing: "0em", transition: "border-color 0.3s cubic-bezier(0.44, 0, 0.56, 1)" }}
           />
           <Search size={16} strokeWidth={1.5} className="absolute left-3 top-1/2 -translate-y-1/2 text-brown pointer-events-none" />
         </div>
@@ -134,7 +110,7 @@ function FilterSections({
         <div className="relative w-full h-[40px]">
           <select
             value={selectedGender}
-            onChange={(e) => setSelectedGender(e.target.value)}
+            onChange={(e) => onGenderChange(e.target.value)}
             className="w-full h-full font-inter font-normal text-black text-[14px] appearance-none bg-transparent border-none rounded-none p-0 pr-6 focus:outline-none cursor-pointer"
             style={{ lineHeight: "1.2em", letterSpacing: "0em" }}
           >
@@ -152,7 +128,7 @@ function FilterSections({
             key={cat.id}
             item={cat}
             checked={selectedCategories.has(cat.id)}
-            onToggle={() => toggleItem(selectedCategories, setSelectedCategories, cat.id)}
+            onToggle={() => onCategoryToggle(cat.id)}
           />
         ))}
       </div>
@@ -165,7 +141,7 @@ function FilterSections({
             key={brand.id}
             item={brand}
             checked={selectedBrands.has(brand.id)}
-            onToggle={() => toggleItem(selectedBrands, setSelectedBrands, brand.id)}
+            onToggle={() => onBrandToggle(brand.id)}
           />
         ))}
       </div>
@@ -173,20 +149,18 @@ function FilterSections({
   );
 }
 
-interface FiltersProps {
-  className?: string;
-}
-
-export function Filters({ className = "" }: FiltersProps) {
-  const [categories,         setCategories]         = useState<FilterItem[]>([]);
-  const [brands,             setBrands]             = useState<FilterItem[]>([]);
-  const [filterOpen,         setFilterOpen]         = useState(false);
-  const [isMobile,           setIsMobile]           = useState(false);
-  const [mounted,            setMounted]            = useState(false);
-  const [searchValue,        setSearchValue]        = useState("");
-  const [selectedGender,     setSelectedGender]     = useState("ALL");
-  const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
-  const [selectedBrands,     setSelectedBrands]     = useState<Set<string>>(new Set());
+export function Filters({
+  categories, brands,
+  searchValue, onSearchChange,
+  selectedGender, onGenderChange,
+  selectedCategories, onCategoryToggle,
+  selectedBrands, onBrandToggle,
+  onClear,
+  className = "",
+}: FiltersProps) {
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [isMobile,   setIsMobile]   = useState(false);
+  const [mounted,    setMounted]    = useState(false);
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -203,38 +177,12 @@ export function Filters({ className = "" }: FiltersProps) {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  useEffect(() => {
-    fetch("/api/loiseau/projects/p-mp9148pm-1/categories/cat-mp917uxy-1f")
-      .then((r) => r.json() as Promise<ApiResponse>)
-      .then((data) => setCategories(parseItems(data)))
-      .catch(() => {});
-
-    fetch("/api/loiseau/projects/p-mp9148pm-1/categories/cat-mp919ixa-1l")
-      .then((r) => r.json() as Promise<ApiResponse>)
-      .then((data) => setBrands(parseItems(data)))
-      .catch(() => {});
-  }, []);
-
-  const toggleItem = (set: Set<string>, setFn: (s: Set<string>) => void, id: string) => {
-    const next = new Set(set);
-    if (next.has(id)) next.delete(id); else next.add(id);
-    setFn(next);
-  };
-
-  const clearFilters = () => {
-    setSearchValue("");
-    setSelectedGender("ALL");
-    setSelectedCategories(new Set());
-    setSelectedBrands(new Set());
-  };
-
-  const sectionProps: FilterSectionsProps = {
+  const sectionProps = {
     categories, brands,
-    searchValue, setSearchValue,
-    selectedGender, setSelectedGender,
-    selectedCategories, setSelectedCategories,
-    selectedBrands, setSelectedBrands,
-    toggleItem,
+    searchValue, onSearchChange,
+    selectedGender, onGenderChange,
+    selectedCategories, onCategoryToggle,
+    selectedBrands, onBrandToggle,
   };
 
   return (
@@ -248,12 +196,11 @@ export function Filters({ className = "" }: FiltersProps) {
           ${className}`}
         transition={SPRING}
       >
-        {/* ── Title + Toggle ── */}
+        {/* Title + Toggle */}
         <div className="w-full flex flex-row justify-between items-center">
           <ButtonLg className="text-left !text-[20px] desktop:!text-[24px] !leading-[1.4] !text-black">
             Filters
           </ButtonLg>
-
           <button
             className="tablet:hidden flex items-center justify-center p-0 bg-transparent border-none cursor-pointer text-black"
             onClick={() => setFilterOpen((v) => !v)}
@@ -263,23 +210,22 @@ export function Filters({ className = "" }: FiltersProps) {
           </button>
         </div>
 
-        {/* ── Desktop: inline filter content (always visible) ── */}
+        {/* Desktop: inline filter content */}
         <div className="hidden tablet:flex flex-col gap-[32px] w-full">
           <FilterSections {...sectionProps} />
           <div className="w-full pt-[24px] border-t border-beige">
-            <OutlineButton onClick={clearFilters} icon={<Eraser size={16} />} className="w-full">
+            <OutlineButton onClick={onClear} icon={<Eraser size={16} />} className="w-full">
               Clear Filter
             </OutlineButton>
           </div>
         </div>
       </motion.div>
 
-      {/* ── Mobile: portal popup ── */}
+      {/* Mobile: portal popup */}
       {mounted && createPortal(
         <AnimatePresence>
           {isMobile && filterOpen && (
             <>
-              {/* Overlay */}
               <motion.div
                 key="overlay"
                 className="fixed inset-0 z-40 bg-black"
@@ -289,8 +235,6 @@ export function Filters({ className = "" }: FiltersProps) {
                 transition={SPRING_POPUP}
                 onClick={() => setFilterOpen(false)}
               />
-
-              {/* Centered modal */}
               <motion.div
                 key="sheet"
                 className="fixed inset-0 z-50 flex items-center justify-center p-[24px] pointer-events-none"
@@ -299,33 +243,27 @@ export function Filters({ className = "" }: FiltersProps) {
                 exit={{ opacity: 0, scale: 0.96 }}
                 transition={SPRING_POPUP}
               >
-              <div className="bg-white w-full max-w-[400px] max-h-[85vh] overflow-y-auto flex flex-col gap-[32px] px-[24px] pt-[24px] pb-[32px] pointer-events-auto">
-                {/* Sheet header */}
-                <div className="flex flex-row justify-between items-center">
-                  <ButtonLg className="text-left !text-[20px] !leading-[1.4] !text-black">
-                    Filters
-                  </ButtonLg>
-                  <button
-                    className="flex items-center justify-center p-0 bg-transparent border-none cursor-pointer text-black"
-                    onClick={() => setFilterOpen(false)}
-                    aria-label="Close filters"
-                  >
-                    <X size={24} strokeWidth={1} />
-                  </button>
+                <div className="bg-white w-full max-w-[400px] max-h-[85vh] overflow-y-auto flex flex-col gap-[32px] px-[24px] pt-[24px] pb-[32px] pointer-events-auto">
+                  <div className="flex flex-row justify-between items-center">
+                    <ButtonLg className="text-left !text-[20px] !leading-[1.4] !text-black">Filters</ButtonLg>
+                    <button
+                      className="flex items-center justify-center p-0 bg-transparent border-none cursor-pointer text-black"
+                      onClick={() => setFilterOpen(false)}
+                      aria-label="Close filters"
+                    >
+                      <X size={24} strokeWidth={1} />
+                    </button>
+                  </div>
+                  <FilterSections {...sectionProps} />
+                  <div className="w-full flex flex-col gap-[16px] pt-[24px] border-t border-beige">
+                    <OutlineButton onClick={onClear} icon={<Eraser size={16} />} className="w-full">
+                      Clear Filter
+                    </OutlineButton>
+                    <FilledButton icon={<Eye size={16} />} className="w-full" onClick={() => setFilterOpen(false)}>
+                      Show Results
+                    </FilledButton>
+                  </div>
                 </div>
-
-                <FilterSections {...sectionProps} />
-
-                {/* Actions */}
-                <div className="w-full flex flex-col gap-[16px] pt-[24px] border-t border-beige">
-                  <OutlineButton onClick={clearFilters} icon={<Eraser size={16} />} className="w-full">
-                    Clear Filter
-                  </OutlineButton>
-                  <FilledButton icon={<Eye size={16} />} className="w-full" onClick={() => setFilterOpen(false)}>
-                    Show Results
-                  </FilledButton>
-                </div>
-              </div>
               </motion.div>
             </>
           )}
