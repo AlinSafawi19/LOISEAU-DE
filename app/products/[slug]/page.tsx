@@ -220,7 +220,7 @@ export default function ProductPage() {
           <div
             className="w-full grid overflow-visible rounded-none p-0
               grid-cols-1
-              tablet:grid-cols-4"
+              tablet:grid-cols-2"
             style={{ columnGap: "16px", rowGap: "48px" }}
           >
             {related.map((p) => (
