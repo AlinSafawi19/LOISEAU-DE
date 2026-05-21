@@ -143,7 +143,7 @@ export default function ProductPage() {
   if (loading) return <LoadingScreen />;
 
   const product = products.find((p) => p.slug === slug);
-  const related = products.filter((p) => p.slug !== slug).slice(0, 3);
+  const related = products.filter((p) => p.slug !== slug).slice(0, 4);
   const images  = product
     ? [product.cover_img_1, product.img_2, product.img_3, product.img_4].filter(Boolean)
     : [];
@@ -212,7 +212,7 @@ export default function ProductPage() {
           <div className="w-full flex flex-row justify-between items-center gap-[16px] overflow-visible rounded-none p-0">
             <H4 className="!text-black !text-left [text-wrap:balance]">Related <br/>Products</H4>
             <Link href="/shop-all" tabIndex={-1}>
-              <OutlineButton icon={null}>Explore all</OutlineButton>
+              <OutlineButton icon={<></>}>Explore all</OutlineButton>
             </Link>
           </div>
 
@@ -220,7 +220,7 @@ export default function ProductPage() {
           <div
             className="w-full grid overflow-visible rounded-none p-0
               grid-cols-1
-              tablet:grid-cols-3"
+              tablet:grid-cols-4"
             style={{ columnGap: "16px", rowGap: "48px" }}
           >
             {related.map((p) => (
