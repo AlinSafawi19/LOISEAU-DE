@@ -16,6 +16,43 @@ import { BrandCard } from "@/components/ui/brand-card";
 
 const EASE = [0.44, 0, 0.56, 1] as const;
 
+const PRODUCTS_URL = "https://cms-api-production-e357.up.railway.app/api/public/v1/projects/prj-mpf7ktu4-1w/categories/cat-mpf7ktu4-1v";
+
+interface FeaturedProduct {
+  id:       string;
+  slug:     string;
+  title:    string;
+  price:    number;
+  discount: number;
+  imageSrc: string;
+}
+
+function useFeaturedProducts(limit: number) {
+  const [products, setProducts] = useState<FeaturedProduct[]>([]);
+  const [loading,  setLoading]  = useState(true);
+
+  useEffect(() => {
+    fetch(PRODUCTS_URL)
+      .then((r) => r.json())
+      .then((data) => {
+        const entries = data?.category?.entries ?? [];
+        setProducts(
+          entries.slice(0, limit).map((e: { id: string; values: { slug: string; title: string; cover_img_1: string; price: number; discount: number } }) => ({
+            id:       e.id,
+            slug:     e.values.slug,
+            title:    e.values.title,
+            price:    e.values.price,
+            discount: e.values.discount,
+            imageSrc: e.values.cover_img_1,
+          }))
+        );
+      })
+      .finally(() => setLoading(false));
+  }, [limit]);
+
+  return { products, loading };
+}
+
 function FormingTruchet() {
   const svgRef = useRef<SVGSVGElement>(null);
   const [c, setC] = useState(14);
@@ -90,6 +127,8 @@ const categories = [
 ];
 
 export default function Home() {
+  const { products: featuredProducts, loading: featuredLoading } = useFeaturedProducts(3);
+
   return (
     <main>
 
@@ -495,15 +534,32 @@ export default function Home() {
             <H4 className="w-full !text-brown !text-left [text-wrap:balance]">Featured Products</H4>
           </div>
 
-          {/* Products Wrapper — TODO: replace with /api/loiseau/products?type=new_in&limit=3 */}
-          <div
-            className="w-full grid grid-cols-1 tablet:grid-cols-3 overflow-visible rounded-none p-0"
-            style={{ columnGap: "16px", rowGap: "48px" }}
-          >
-            <ProductCard className="!w-full" />
-            <ProductCard className="!w-full" />
-            <ProductCard className="!w-full" />
-          </div>
+          {/* Products Wrapper */}
+          {featuredLoading ? (
+            <div className="flex items-center justify-center w-full py-[48px]">
+              <div
+                className="w-[40px] h-[40px] rounded-full border-[2px] border-beige animate-spin"
+                style={{ borderTopColor: "var(--color-brown)" }}
+              />
+            </div>
+          ) : (
+            <div
+              className="w-full grid grid-cols-1 tablet:grid-cols-3 overflow-visible rounded-none p-0"
+              style={{ columnGap: "16px", rowGap: "48px" }}
+            >
+              {featuredProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  title={product.title}
+                  price={product.price}
+                  discount={product.discount}
+                  imageSrc={product.imageSrc}
+                  href={`/products/${product.slug}`}
+                  className="!w-full"
+                />
+              ))}
+            </div>
+          )}
 
         </div>
 
