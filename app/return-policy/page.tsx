@@ -7,7 +7,7 @@ import { LiquidLogo } from "@/components/ui/liquid-logo";
 import { H3, SubtitleMd } from "@/components/ui/typography";
 import { FitText } from "@/components/ui/fit-text";
 
-const UTILITY_URL = "https://cms-api-production-e357.up.railway.app/api/public/v1/projects/prj-mpf7ktu4-1w/categories/cat-mpf7ktu1-6";
+const UTILITY_URL = "https://cms-api-production-e357.up.railway.app/api/public/v1/projects/prj-mpgoaakg-1w/categories/cat-mpgoaakf-15";
 const SPRING = { type: "spring" as const, duration: 0.6, bounce: 0, delay: 0 };
 
 export default function ReturnPolicy() {

@@ -5,9 +5,9 @@ import { Filters, type FilterItem } from "./filters";
 import { ProductCard } from "./product-card";
 import { H4, SubtitleMd } from "./typography";
 
-const CATEGORIES_URL = "https://cms-api-production-e357.up.railway.app/api/public/v1/projects/prj-mpf7ktu4-1w/categories/cat-mpf7ktu2-w";
-const BRANDS_URL     = "https://cms-api-production-e357.up.railway.app/api/public/v1/projects/prj-mpf7ktu4-1w/categories/cat-mpf7ktu2-q";
-const PRODUCTS_URL   = "https://cms-api-production-e357.up.railway.app/api/public/v1/projects/prj-mpf7ktu4-1w/categories/cat-mpf7ktu4-1v";
+const CATEGORIES_URL = "https://cms-api-production-e357.up.railway.app/api/public/v1/projects/prj-mpgoaakg-1w/categories/cat-mpgoaakg-1v";
+const BRANDS_URL     = "https://cms-api-production-e357.up.railway.app/api/public/v1/projects/prj-mpgoaakg-1w/categories/cat-mpgoaakf-1p";
+const PRODUCTS_URL   = "https://cms-api-production-e357.up.railway.app/api/public/v1/projects/prj-mpgoaakg-1w/categories/cat-mpgoaakf-z";
 
 interface RawProduct {
   id:    string;
