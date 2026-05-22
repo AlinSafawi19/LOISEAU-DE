@@ -149,7 +149,7 @@ export function Footer() {
           {/* Truchet overlay (accent background + arc pattern) */}
           <TruchetOverlay />
 
-          {/* Large logotype — font-size scales to fill container (Framer "Fit") */}
+          {/* Large logotype — font-size scales to fill container */}
           <FitText
             className="relative z-[3] font-clash font-normal clash-features text-center text-white not-italic"
             style={{ letterSpacing: "0em", lineHeight: "1.2" }}

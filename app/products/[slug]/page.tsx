@@ -314,7 +314,7 @@ export default function ProductPage() {
 
             {/* Buy now */}
             <a
-              href="https://contra.com/payment-link/whQsyhNo-aionic-modern-ai-saa-s-framer-template"
+              href="#"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full"

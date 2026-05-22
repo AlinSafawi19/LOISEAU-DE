@@ -253,7 +253,7 @@ export default function Contact() {
                   <input
                     type="email"
                     name="Email"
-                    placeholder="jane@framer.com"
+                    placeholder="jane@example.com"
                     required
                     value={email}
                     onChange={e => setEmail(e.target.value)}
