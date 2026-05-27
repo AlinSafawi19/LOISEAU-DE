@@ -16,7 +16,7 @@ import { BrandCard } from "@/components/ui/brand-card";
 
 const EASE = [0.44, 0, 0.56, 1] as const;
 
-const PRODUCTS_URL = "https://cms-api-production-e357.up.railway.app/api/public/v1/projects/prj-mpgoaakg-1w/categories/cat-mpgoaakf-z";
+const PRODUCTS_URL = "https://cms-api-production-e357.up.railway.app/api/public/v1/projects/prj-mpgp9m4c-75/categories/cat-mpgp49j4-al";
 
 interface FeaturedProduct {
   id:       string;

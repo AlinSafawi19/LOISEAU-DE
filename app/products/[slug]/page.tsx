@@ -10,7 +10,7 @@ import { OutlineButton, FilledButton } from "@/components/ui/button";
 import { FaqCardProduct } from "@/components/ui/faq-card";
 import { ProductCard } from "@/components/ui/product-card";
 
-const PRODUCTS_URL = "https://cms-api-production-e357.up.railway.app/api/public/v1/projects/prj-mpgoaakg-1w/categories/cat-mpgoaakf-z";
+const PRODUCTS_URL = "https://cms-api-production-e357.up.railway.app/api/public/v1/projects/prj-mpgp9m4c-75/categories/cat-mpgp49j4-al";
 
 interface Product {
   id:              string;
