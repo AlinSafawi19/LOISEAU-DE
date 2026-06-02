@@ -10,7 +10,8 @@ import { OutlineButton, FilledButton } from "@/components/ui/button";
 import { FaqCardProduct } from "@/components/ui/faq-card";
 import { ProductCard } from "@/components/ui/product-card";
 
-const PRODUCTS_URL = "https://cms-api-production-e357.up.railway.app/api/public/v1/projects/prj-mpgp9m4c-75/categories/cat-mpgp49j4-al";
+const PRODUCTS_URL = "https://canopy-production-7f21.up.railway.app/api/v1/loiseau-d/products";
+const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 
 interface Product {
   id:              string;
@@ -34,26 +35,24 @@ interface Product {
 }
 
 interface RawEntry {
-  id: string;
-  values: {
-    slug:            string;
-    title:           string;
-    price:           number;
-    discount:        number;
-    cover_img_1:     string;
-    img_2:           string;
-    img_3:           string;
-    img_4:           string;
-    gender:          string;
-    category:        string;
-    brand:           string;
-    size:            string;
-    sku:             number;
-    description:     string;
-    key_ingredients: string;
-    sales_type:      string;
-    collections:     string;
-  };
+  id:              string;
+  Slug:            string;
+  Title:           string;
+  "Price ($)":     string;
+  Discount:        string;
+  "Cover (img 1)": string;
+  "Img 2":         string;
+  "Img 3":         string;
+  "Img 4":         string;
+  Gender:          string;
+  Category:        string;
+  Brand:           string;
+  Size:            string;
+  SKU:             string;
+  Description:     string;
+  "Key Ingredients": string;
+  "Sales type":    string;
+  Collections:     string;
 }
 
 const FEATURES: { title: string; description: string; icon: ReactNode }[] = [
@@ -110,29 +109,29 @@ export default function ProductPage() {
   const [activeImage,  setActiveImage]  = useState(0);
 
   useEffect(() => {
-    fetch(PRODUCTS_URL)
+    fetch(PRODUCTS_URL, { headers: API_HEADERS })
       .then((r) => r.json())
       .then((data) => {
         setProducts(
-          (data?.category?.entries ?? []).map((e: RawEntry) => ({
+          (data?.data ?? []).map((e: RawEntry) => ({
             id:              e.id,
-            slug:            e.values.slug            ?? "",
-            title:           e.values.title           ?? "",
-            price:           e.values.price           ?? 0,
-            discount:        e.values.discount        ?? 0,
-            cover_img_1:     e.values.cover_img_1     ?? "",
-            img_2:           e.values.img_2           ?? "",
-            img_3:           e.values.img_3           ?? "",
-            img_4:           e.values.img_4           ?? "",
-            gender:          e.values.gender          ?? "",
-            category:        e.values.category        ?? "",
-            brand:           e.values.brand           ?? "",
-            size:            e.values.size            ?? "",
-            sku:             e.values.sku             ?? 0,
-            description:     e.values.description     ?? "",
-            key_ingredients: e.values.key_ingredients ?? "",
-            sales_type:      e.values.sales_type      ?? "",
-            collections:     e.values.collections     ?? "",
+            slug:            e.Slug                ?? "",
+            title:           e.Title               ?? "",
+            price:           parseFloat(e["Price ($)"]) || 0,
+            discount:        parseFloat(e.Discount)     || 0,
+            cover_img_1:     e["Cover (img 1)"]    ?? "",
+            img_2:           e["Img 2"]             ?? "",
+            img_3:           e["Img 3"]             ?? "",
+            img_4:           e["Img 4"]             ?? "",
+            gender:          e.Gender               ?? "",
+            category:        e.Category             ?? "",
+            brand:           e.Brand                ?? "",
+            size:            e.Size                 ?? "",
+            sku:             parseInt(e.SKU)        || 0,
+            description:     e.Description          ?? "",
+            key_ingredients: e["Key Ingredients"]   ?? "",
+            sales_type:      e["Sales type"]        ?? "",
+            collections:     e.Collections          ?? "",
           }))
         );
       })

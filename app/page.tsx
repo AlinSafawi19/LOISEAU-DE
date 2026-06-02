@@ -16,7 +16,8 @@ import { BrandCard } from "@/components/ui/brand-card";
 
 const EASE = [0.44, 0, 0.56, 1] as const;
 
-const PRODUCTS_URL = "https://cms-api-production-e357.up.railway.app/api/public/v1/projects/prj-mpgp9m4c-75/categories/cat-mpgp49j4-al";
+const PRODUCTS_URL = "https://canopy-production-7f21.up.railway.app/api/v1/loiseau-d/products";
+const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 
 interface FeaturedProduct {
   id:       string;
@@ -27,23 +28,32 @@ interface FeaturedProduct {
   imageSrc: string;
 }
 
+interface RawFeaturedEntry {
+  id:            string;
+  Slug:          string;
+  Title:         string;
+  "Cover (img 1)": string;
+  "Price ($)":   string;
+  Discount:      string;
+}
+
 function useFeaturedProducts(limit: number) {
   const [products, setProducts] = useState<FeaturedProduct[]>([]);
   const [loading,  setLoading]  = useState(true);
 
   useEffect(() => {
-    fetch(PRODUCTS_URL)
+    fetch(PRODUCTS_URL, { headers: API_HEADERS })
       .then((r) => r.json())
       .then((data) => {
-        const entries = data?.category?.entries ?? [];
+        const entries: RawFeaturedEntry[] = data?.data ?? [];
         setProducts(
-          entries.slice(0, limit).map((e: { id: string; values: { slug: string; title: string; cover_img_1: string; price: number; discount: number } }) => ({
+          entries.slice(0, limit).map((e) => ({
             id:       e.id,
-            slug:     e.values.slug,
-            title:    e.values.title,
-            price:    e.values.price,
-            discount: e.values.discount,
-            imageSrc: e.values.cover_img_1,
+            slug:     e.Slug,
+            title:    e.Title,
+            price:    parseFloat(e["Price ($)"]) || 0,
+            discount: parseFloat(e.Discount)     || 0,
+            imageSrc: e["Cover (img 1)"],
           }))
         );
       })

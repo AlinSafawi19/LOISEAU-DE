@@ -5,23 +5,22 @@ import { Filters, type FilterItem } from "./filters";
 import { ProductCard } from "./product-card";
 import { H4, SubtitleMd } from "./typography";
 
-const CATEGORIES_URL = "https://cms-api-production-e357.up.railway.app/api/public/v1/projects/prj-mpgp9m4c-75/categories/cat-mpgp49j3-9m";
-const BRANDS_URL     = "https://cms-api-production-e357.up.railway.app/api/public/v1/projects/prj-mpgp9m4c-75/categories/cat-mpgp49j4-az";
-const PRODUCTS_URL   = "https://cms-api-production-e357.up.railway.app/api/public/v1/projects/prj-mpgp9m4c-75/categories/cat-mpgp49j4-al";
+const CATEGORIES_URL = "https://canopy-production-7f21.up.railway.app/api/v1/loiseau-d/categories";
+const BRANDS_URL     = "https://canopy-production-7f21.up.railway.app/api/v1/loiseau-d/brands";
+const PRODUCTS_URL   = "https://canopy-production-7f21.up.railway.app/api/v1/loiseau-d/products";
+const API_HEADERS    = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 
 interface RawProduct {
-  id:    string;
-  values: {
-    slug:        string;
-    title:       string;
-    cover_img_1: string;
-    price:       number;
-    discount:    number;
-    gender:      string;
-    category:    string;
-    brand:       string;
-    collections: string;
-  };
+  id:              string;
+  Slug:            string;
+  Title:           string;
+  "Cover (img 1)": string;
+  "Price ($)":     string;
+  Discount:        string;
+  Gender:          string;
+  Category:        string;
+  Brand:           string;
+  Collections:     string;
 }
 
 interface Product {
@@ -41,29 +40,29 @@ const DESKTOP_PAGE_SIZE = 12;
 const MOBILE_PAGE_SIZE  = 8;
 
 async function fetchFilterItems(url: string): Promise<FilterItem[]> {
-  const res  = await fetch(url);
+  const res  = await fetch(url, { headers: API_HEADERS });
   const data = await res.json();
-  return (data?.category?.entries ?? []).map((e: { id: string; values: { slug: string; title: string } }) => ({
+  return (data?.data ?? []).map((e: { id: string; Title: string; Slug: string }) => ({
     id:   e.id,
-    name: e.values.title,
-    slug: e.values.slug,
+    name: e.Title,
+    slug: e.Slug,
   }));
 }
 
 async function fetchProducts(url: string): Promise<Product[]> {
-  const res  = await fetch(url);
+  const res  = await fetch(url, { headers: API_HEADERS });
   const data = await res.json();
-  return (data?.category?.entries ?? []).map((e: RawProduct) => ({
+  return (data?.data ?? []).map((e: RawProduct) => ({
     id:          e.id,
-    slug:        e.values.slug,
-    title:       e.values.title,
-    price:       e.values.price,
-    discount:    e.values.discount,
-    imageSrc:    e.values.cover_img_1,
-    gender:      e.values.gender,
-    category:    e.values.category,
-    brand:       e.values.brand,
-    collections: e.values.collections ?? "",
+    slug:        e.Slug,
+    title:       e.Title,
+    price:       parseFloat(e["Price ($)"]) || 0,
+    discount:    parseFloat(e.Discount)     || 0,
+    imageSrc:    e["Cover (img 1)"],
+    gender:      e.Gender,
+    category:    e.Category,
+    brand:       e.Brand,
+    collections: e.Collections ?? "",
   }));
 }
 
