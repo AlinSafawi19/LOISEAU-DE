@@ -5,9 +5,9 @@ import { Filters, type FilterItem } from "./filters";
 import { ProductCard } from "./product-card";
 import { H4, SubtitleMd } from "./typography";
 
-const CATEGORIES_URL = "https://canopy-production-7f21.up.railway.app/api/v1/loiseau-d/categories";
-const BRANDS_URL     = "https://canopy-production-7f21.up.railway.app/api/v1/loiseau-d/brands";
-const PRODUCTS_URL   = "https://canopy-production-7f21.up.railway.app/api/v1/loiseau-d/products";
+const CATEGORIES_URL = `${process.env.CMS_BACKEND_URL}/loiseau-d/categories`;
+const BRANDS_URL     = `${process.env.CMS_BACKEND_URL}/loiseau-d/brands`;
+const PRODUCTS_URL   = `${process.env.CMS_BACKEND_URL}/loiseau-d/products`;
 const API_HEADERS    = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 
 interface RawProduct {

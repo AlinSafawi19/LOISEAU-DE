@@ -10,7 +10,7 @@ import { OutlineButton, FilledButton } from "@/components/ui/button";
 import { FaqCardProduct } from "@/components/ui/faq-card";
 import { ProductCard } from "@/components/ui/product-card";
 
-const PRODUCTS_URL = "https://canopy-production-7f21.up.railway.app/api/v1/loiseau-d/products";
+const PRODUCTS_URL = `${process.env.CMS_BACKEND_URL}/loiseau-d/products`;
 const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 
 interface Product {

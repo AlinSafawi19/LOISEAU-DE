@@ -7,7 +7,7 @@ import { LiquidLogo } from "@/components/ui/liquid-logo";
 import { H3, SubtitleMd } from "@/components/ui/typography";
 import { FitText } from "@/components/ui/fit-text";
 
-const UTILITY_URL  = "https://canopy-production-7f21.up.railway.app/api/v1/loiseau-d/utility-pages";
+const UTILITY_URL  = `${process.env.CMS_BACKEND_URL}/loiseau-d/utility-pages`;
 const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 const SPRING = { type: "spring" as const, duration: 0.6, bounce: 0, delay: 0 };
 

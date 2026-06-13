@@ -16,7 +16,7 @@ import { BrandCard } from "@/components/ui/brand-card";
 
 const EASE = [0.44, 0, 0.56, 1] as const;
 
-const PRODUCTS_URL = "https://canopy-production-7f21.up.railway.app/api/v1/loiseau-d/products";
+const PRODUCTS_URL = `${process.env.CMS_BACKEND_URL}/loiseau-d/products`;
 const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 
 interface FeaturedProduct {
