@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -16,7 +16,7 @@ import { BrandCard } from "@/components/ui/brand-card";
 
 const EASE = [0.44, 0, 0.56, 1] as const;
 
-const PRODUCTS_URL = `${process.env.CMS_BACKEND_URL}/loiseau-d/products`;
+const PRODUCTS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/products`;
 const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 
 interface FeaturedProduct {
@@ -81,13 +81,13 @@ function FormingTruchet() {
   const sw = Math.max(0.3, c * 0.08);
 
   const arcs = [
-    // A(0,0): top-mid → left-mid, CCW
+    // A(0,0): top-mid â†’ left-mid, CCW
     `M${r},0 A${r},${r} 0 0,0 0,${r}`,
-    // B(c,0): top-mid → right-mid, CW
+    // B(c,0): top-mid â†’ right-mid, CW
     `M${c+r},0 A${r},${r} 0 0,1 ${c*2},${r}`,
-    // B(0,c): top-mid → right-mid, CW
+    // B(0,c): top-mid â†’ right-mid, CW
     `M${r},${c} A${r},${r} 0 0,1 ${c},${c+r}`,
-    // A(c,c): top-mid → left-mid, CCW
+    // A(c,c): top-mid â†’ left-mid, CCW
     `M${c+r},${c} A${r},${r} 0 0,0 ${c},${c+r}`,
   ].join(" ");
 
@@ -142,10 +142,10 @@ export default function Home() {
   return (
     <main>
 
-      {/* ── Hero ── */}
+      {/* â”€â”€ Hero â”€â”€ */}
       <section className="relative w-full h-screen flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip">
 
-        {/* LiquidLogo — absolute, fills hero, z-1 */}
+        {/* LiquidLogo â€” absolute, fills hero, z-1 */}
         <div className="absolute inset-0 z-[1]">
           <LiquidLogo
             image="https://framerusercontent.com/images/JMlFxkbPdV16dtqSqtwzOcRoCZs.png"
@@ -155,7 +155,7 @@ export default function Home() {
           />
         </div>
 
-        {/* Container — z-2, pointer-none, relative for absolute children */}
+        {/* Container â€” z-2, pointer-none, relative for absolute children */}
         <div
           className="relative z-[2] w-full flex-1 max-w-[1920px] flex flex-col justify-end items-center gap-[64px] overflow-clip pointer-events-none rounded-none"
           style={{ padding: "80px 32px 32px 32px" }}
@@ -177,14 +177,14 @@ export default function Home() {
             className="w-full font-clash font-normal clash-features text-center text-white not-italic"
             style={{ letterSpacing: "0em", lineHeight: "1.2" }}
           >
-            L&apos;OISEAU DÉ
+            L&apos;OISEAU DÃ‰
           </FitText>
 
         </div>
 
       </section>
 
-      {/* ── Discount ── */}
+      {/* â”€â”€ Discount â”€â”€ */}
       <section className="w-full flex flex-col justify-end items-center gap-[10px] p-0 overflow-clip rounded-none">
 
         <div className="w-full flex flex-col justify-end items-center gap-[23px] overflow-clip rounded-none bg-accent py-[24px] px-0 tablet:py-[32px]">
@@ -203,7 +203,7 @@ export default function Home() {
 
       </section>
 
-      {/* ── Short Intro ── */}
+      {/* â”€â”€ Short Intro â”€â”€ */}
       <section className="w-full flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip rounded-none">
 
         <div className="w-full max-w-[1920px] flex flex-col justify-start items-center gap-[32px] overflow-clip rounded-none z-[2]
@@ -214,10 +214,10 @@ export default function Home() {
           {/* 1. Title Wrapper */}
           <div className="w-full flex flex-col justify-start items-center gap-[4px] p-0 overflow-clip rounded-none">
             <H2 className="w-full !text-black !text-center [text-wrap:balance]">
-              L&apos;OISEAU DÉ IS A MODERN ATELIER
+              L&apos;OISEAU DÃ‰ IS A MODERN ATELIER
             </H2>
             <ItalicBodyLg className="w-full !text-black !text-center [text-wrap:balance]">
-              L&apos;OISEAU DÉ IS A MODERN ATELIER
+              L&apos;OISEAU DÃ‰ IS A MODERN ATELIER
             </ItalicBodyLg>
           </div>
 
@@ -252,7 +252,7 @@ export default function Home() {
 
       </section>
 
-      {/* ── Categories ── */}
+      {/* â”€â”€ Categories â”€â”€ */}
       <section className="w-full flex flex-col justify-start items-center gap-0 p-0 overflow-clip rounded-none">
 
         {categories.map(({ name, description, mainImage, previewImage, bgColor, reversed, zIndex, href }) => (
@@ -317,7 +317,7 @@ export default function Home() {
 
       </section>
 
-      {/* ── Gallery ── */}
+      {/* â”€â”€ Gallery â”€â”€ */}
       <section className="w-full flex flex-col items-center justify-start gap-[10px] overflow-visible bg-dark-green rounded-none
         py-[64px] px-0
         tablet:py-[80px]
@@ -359,7 +359,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Row 2 — #elegance */}
+            {/* Row 2 â€” #elegance */}
             <div id="elegance" className="w-full grid grid-cols-4 gap-0 items-center">
               <div className="col-span-1 opacity-0" style={{ height: 142 }} />
               <div className="col-span-2 overflow-hidden">
@@ -421,7 +421,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Row 5 — #amenity */}
+            {/* Row 5 â€” #amenity */}
             <div id="amenity" className="w-full grid grid-cols-4 gap-0 items-center">
               <div className="col-span-2 overflow-hidden">
                 <Image
@@ -457,7 +457,7 @@ export default function Home() {
               <div className="col-span-1 opacity-0" style={{ height: 142 }} />
             </div>
 
-            {/* Row 7 — #nature */}
+            {/* Row 7 â€” #nature */}
             <div id="nature" className="w-full grid grid-cols-4 gap-0 items-center">
               <div className="col-span-1 opacity-0" style={{ height: 142 }} />
               <div className="col-span-1 relative overflow-hidden" style={{ height: 142 }}>
@@ -491,7 +491,7 @@ export default function Home() {
 
       </section>
 
-      {/* ── Forming ── */}
+      {/* â”€â”€ Forming â”€â”€ */}
       <section className="relative w-full flex flex-col items-center justify-start gap-[10px] p-0 overflow-clip rounded-none">
 
         {/* Scrolling image ticker */}
@@ -539,7 +539,7 @@ export default function Home() {
 
       </section>
 
-      {/* ── Featured ── */}
+      {/* â”€â”€ Featured â”€â”€ */}
       <section className="w-full flex flex-col justify-start items-center gap-[10px] p-0 overflow-visible rounded-none bg-caledon
         py-[64px]
         tablet:py-[80px]
@@ -587,7 +587,7 @@ export default function Home() {
 
       </section>
 
-      {/* ── Brands ── */}
+      {/* â”€â”€ Brands â”€â”€ */}
       <section className="w-full flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip rounded-none bg-pistachio">
 
         {/* Container */}
@@ -615,11 +615,11 @@ export default function Home() {
               }}
             >
               <BrandCard title="Dior" description="Luxury Fashion" productCount={12} href="/shop-all" />
-              <BrandCard title="Estée Lauder" description="Premium Beauty" productCount={8} href="/shop-all" />
+              <BrandCard title="EstÃ©e Lauder" description="Premium Beauty" productCount={8} href="/shop-all" />
               <BrandCard title="Clinique" description="Dermatologist Skincare" productCount={23} href="/shop-all" />
               <BrandCard title="Kiehl's" description="Apothecary Skincare" productCount={34} href="/shop-all" />
-              <BrandCard title="L'Oréal" description="Beauty Innovation" productCount={38} href="/shop-all" />
-              <BrandCard title="Lancôme" description="Luxury Beauty" productCount={9} href="/shop-all" />
+              <BrandCard title="L'OrÃ©al" description="Beauty Innovation" productCount={38} href="/shop-all" />
+              <BrandCard title="LancÃ´me" description="Luxury Beauty" productCount={9} href="/shop-all" />
               <BrandCard title="Mac Cosmetics" description="Professional Makeup" productCount={14} href="/shop-all" />
             </div>
 

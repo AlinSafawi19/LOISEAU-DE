@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
@@ -7,7 +7,7 @@ import { LiquidLogo } from "@/components/ui/liquid-logo";
 import { H3, SubtitleMd } from "@/components/ui/typography";
 import { FitText } from "@/components/ui/fit-text";
 
-const UTILITY_URL  = `${process.env.CMS_BACKEND_URL}/loiseau-d/utility-pages`;
+const UTILITY_URL  = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/utility-pages`;
 const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 const SPRING = { type: "spring" as const, duration: 0.6, bounce: 0, delay: 0 };
 
@@ -28,10 +28,10 @@ export default function TermsOfUse() {
   return (
     <main>
 
-      {/* ── Hero ── */}
+      {/* â”€â”€ Hero â”€â”€ */}
       <section className="relative w-full h-screen flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip">
 
-        {/* LiquidLogo — absolute, fills hero, z-1 */}
+        {/* LiquidLogo â€” absolute, fills hero, z-1 */}
         <div className="absolute inset-0 z-[1]">
           <LiquidLogo
             image="https://framerusercontent.com/images/stui7nLH0W6suNpRBxaAAz6OFU.png?width=1200&height=800"
@@ -41,7 +41,7 @@ export default function TermsOfUse() {
           />
         </div>
 
-        {/* Container — z-2, pointer-none, relative for absolute children */}
+        {/* Container â€” z-2, pointer-none, relative for absolute children */}
         <div
           className="relative z-[2] w-full flex-1 max-w-[1920px] flex flex-col justify-end items-center gap-[64px] overflow-clip pointer-events-none rounded-none"
           style={{ padding: "80px 32px 32px 32px" }}
@@ -69,7 +69,7 @@ export default function TermsOfUse() {
 
       </section>
 
-      {/* ── Content ── */}
+      {/* â”€â”€ Content â”€â”€ */}
       <motion.section
         className="w-full flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip rounded-none bg-pistachio"
         initial={{ opacity: 0, y: 24 }}

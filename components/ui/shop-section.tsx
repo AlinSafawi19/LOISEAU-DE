@@ -1,13 +1,13 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useMemo } from "react";
 import { Filters, type FilterItem } from "./filters";
 import { ProductCard } from "./product-card";
 import { H4, SubtitleMd } from "./typography";
 
-const CATEGORIES_URL = `${process.env.CMS_BACKEND_URL}/loiseau-d/categories`;
-const BRANDS_URL     = `${process.env.CMS_BACKEND_URL}/loiseau-d/brands`;
-const PRODUCTS_URL   = `${process.env.CMS_BACKEND_URL}/loiseau-d/products`;
+const CATEGORIES_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/categories`;
+const BRANDS_URL     = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/brands`;
+const PRODUCTS_URL   = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/products`;
 const API_HEADERS    = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 
 interface RawProduct {
@@ -124,7 +124,7 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
     }).finally(() => setLoading(false));
   }, []);
 
-  // Build lookup maps: slug → id
+  // Build lookup maps: slug â†’ id
   const categorySlugToId = useMemo(() => {
     const m: Record<string, string> = {};
     categories.forEach((c) => { m[c.slug] = c.id; });
