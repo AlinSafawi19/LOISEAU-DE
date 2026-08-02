@@ -32,8 +32,8 @@ interface RawFeaturedEntry {
   id:            string;
   Slug:          string;
   Title:         string;
-  "Cover (img 1)": string;
-  "Price ($)":   string;
+  "Cover img 1": string;
+  Price:         string;
   Discount:      string;
 }
 
@@ -51,9 +51,9 @@ function useFeaturedProducts(limit: number) {
             id:       e.id,
             slug:     e.Slug,
             title:    e.Title,
-            price:    parseFloat(e["Price ($)"]) || 0,
+            price:    parseFloat(e.Price)        || 0,
             discount: parseFloat(e.Discount)     || 0,
-            imageSrc: e["Cover (img 1)"],
+            imageSrc: e["Cover img 1"],
           }))
         );
       })

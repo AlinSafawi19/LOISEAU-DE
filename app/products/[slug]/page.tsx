@@ -38,9 +38,9 @@ interface RawEntry {
   id:              string;
   Slug:            string;
   Title:           string;
-  "Price ($)":     string;
+  Price:           string;
   Discount:        string;
-  "Cover (img 1)": string;
+  "Cover img 1":   string;
   "Img 2":         string;
   "Img 3":         string;
   "Img 4":         string;
@@ -117,9 +117,9 @@ export default function ProductPage() {
             id:              e.id,
             slug:            e.Slug                ?? "",
             title:           e.Title               ?? "",
-            price:           parseFloat(e["Price ($)"]) || 0,
+            price:           parseFloat(e.Price)        || 0,
             discount:        parseFloat(e.Discount)     || 0,
-            cover_img_1:     e["Cover (img 1)"]    ?? "",
+            cover_img_1:     e["Cover img 1"]      ?? "",
             img_2:           e["Img 2"]             ?? "",
             img_3:           e["Img 3"]             ?? "",
             img_4:           e["Img 4"]             ?? "",
