@@ -120,7 +120,7 @@ export default function Wishlist() {
               <button
                 type="button"
                 onClick={clear}
-                className="font-clash font-medium clash-features uppercase text-brown text-[14px] leading-[1.4] border border-dashed border-beige px-[32px] py-[12px] rounded-none bg-transparent cursor-pointer"
+                className="self-center font-clash font-medium clash-features uppercase text-brown text-[14px] leading-[1.4] border border-dashed border-beige px-[32px] py-[12px] rounded-none bg-transparent cursor-pointer"
               >
                 Clear wishlist
               </button>

@@ -83,14 +83,14 @@ export function Footer() {
           <div className="w-full desktop:flex-1 flex flex-col tablet:flex-row justify-start items-start gap-[16px] overflow-clip rounded-none">
 
             <div className="flex-1 flex flex-col justify-start items-start gap-[10px] overflow-clip rounded-none">
-              <SubtitleMd className="w-full !text-white [text-wrap:balance]">Address</SubtitleMd>
-              <BodyMd className="w-full !text-white [text-wrap:balance]">Market str. 42, CA 10028, USA</BodyMd>
+              <SubtitleMd className="w-full !text-white [text-wrap:balance]">Where to find us</SubtitleMd>
+              <BodyMd className="w-full !text-white [text-wrap:balance]">Wherever you are — we deliver to your door</BodyMd>
             </div>
 
             <div className="flex-1 flex flex-col justify-start items-start gap-[10px] overflow-clip rounded-none">
-              <SubtitleMd className="w-full !text-white [text-wrap:balance]">New projects</SubtitleMd>
-              <LinkContact href="mailto:sales@glaze.com" target="_blank" rel="noopener noreferrer">
-                sales@glaze.com
+              <SubtitleMd className="w-full !text-white [text-wrap:balance]">Website</SubtitleMd>
+              <LinkContact href="https://glaze.alinsafawi.com" target="_blank" rel="noopener noreferrer">
+                glaze.alinsafawi.com
               </LinkContact>
             </div>
 
@@ -122,7 +122,7 @@ export function Footer() {
 
           {/* Footer menu wrapper */}
           <div className="w-full tablet:flex-1 flex flex-row justify-start items-center gap-[10px] overflow-clip rounded-none">
-            <FooterMenu title="RETURN POLICY" href="/return-policy" className="flex-1" />
+            <FooterMenu title="CONTACT" href="/contact" className="flex-1" />
             <FooterMenu title="TERMS OF USE"  href="/terms-of-use"  className="flex-1" />
           </div>
 

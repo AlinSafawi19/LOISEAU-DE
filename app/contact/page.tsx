@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 const FAQS = [
   {
     question: "What payment methods do you accept?",
-    answer: "We accept all major credit and debit cards, along with secure online payment options to ensure a smooth and safe checkout experience.",
+    answer: "Cash on delivery only. You pay the courier in cash when the order reaches you — we do not take cards, bank transfers, or any online payment, and we will never ask you for card details.",
   },
   {
     question: "How long does shipping take?",
@@ -18,7 +18,7 @@ const FAQS = [
   },
   {
     question: "Can I return or exchange an item?",
-    answer: "Yes, within the stated return window. Skincare must be unopened and sealed — once a formula has been used we cannot resell it.",
+    answer: "No. All sales are final, so please check your order carefully before confirming it. If something arrives damaged or is not what you ordered, call us the same day and we will make it right.",
   },
   {
     question: "How can I track my order?",

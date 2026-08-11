@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/ui/footer";
 import { Header } from "@/components/ui/header";
+import { CartDrawer } from "@/components/ui/cart-drawer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -44,6 +45,7 @@ export default function RootLayout({
           </defs>
         </svg>
         <Header />
+        <CartDrawer />
         {children}
         <Footer />
       </body>

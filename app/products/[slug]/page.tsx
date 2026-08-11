@@ -9,6 +9,7 @@ import Link from "next/link";
 import { OutlineButton, FilledButton } from "@/components/ui/button";
 import { FaqCardProduct } from "@/components/ui/faq-card";
 import { ProductCard } from "@/components/ui/product-card";
+import { useCart } from "@/components/ui/use-cart";
 
 const PRODUCTS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/products`;
 const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
@@ -57,18 +58,18 @@ interface RawEntry {
 
 const FEATURES: { title: string; description: string; icon: ReactNode }[] = [
   {
-    title:       "Free Shipping",
-    description: "Enjoy fast and free delivery on all orders, with no hidden fees.",
+    title:       "Delivery Nationwide",
+    description: "Shipped from our warehouse; the delivery fee is quoted before you confirm.",
     icon:        <Truck size={24} strokeWidth={1.5} />,
   },
   {
-    title:       "Secure Checkout",
-    description: "Your payments are protected with advanced encryption.",
+    title:       "Cash On Delivery",
+    description: "Pay the courier in cash. We never ask for card details, online or by phone.",
     icon:        <LockKeyhole size={24} strokeWidth={1.5} />,
   },
   {
-    title:       "Money-Back Guarantee",
-    description: "Not satisfied? Get a full refund within our hassle-free return period.",
+    title:       "Sealed & Authentic",
+    description: "Every item arrives sealed, sourced from the Korean brand or its distributor.",
     icon:        <Wallet size={24} strokeWidth={1.5} />,
   },
   {
@@ -107,6 +108,8 @@ export default function ProductPage() {
   const [products,     setProducts]     = useState<Product[]>([]);
   const [loading,      setLoading]      = useState(true);
   const [activeImage,  setActiveImage]  = useState(0);
+  const [added,        setAdded]        = useState(false);
+  const { add } = useCart();
 
   useEffect(() => {
     fetch(PRODUCTS_URL, { headers: API_HEADERS })
@@ -311,30 +314,30 @@ export default function ProductPage() {
               <BodySm className="w-full max-w-[480px] tablet:max-w-[600px] h-auto !text-black !text-left">{product.description}</BodySm>
             </div>
 
-            {/* Buy now */}
-            <a
-              href="#"
-              target="_blank"
-              rel="noopener noreferrer"
+            {/* Add to cart */}
+            <FilledButton
               className="w-full"
+              icon={<ShoppingBag size={16} strokeWidth={1.5} />}
+              onClick={() => {
+                add(product.slug);
+                setAdded(true);
+              }}
             >
-              <FilledButton className="w-full" icon={<ShoppingBag size={16} strokeWidth={1.5} />}>
-                Buy now
-              </FilledButton>
-            </a>
+              {added ? "Added to cart" : "Add to cart"}
+            </FilledButton>
 
             {/* Bottom wrapper */}
             <div className="w-full flex flex-col justify-start items-start gap-[8px] p-0 overflow-clip rounded-none">
               <div className="w-full h-[1px] overflow-clip rounded-none bg-beige" />
               <FaqCardProduct
                 question="Delivery & Shipping"
-                answer="Orders are processed within 1–2 business days."
+                answer="Orders are processed within 1–2 business days and the delivery fee is confirmed before dispatch."
                 className="w-full"
               />
               <div className="w-full h-[1px] overflow-clip rounded-none bg-beige" />
               <FaqCardProduct
-                question="Returns & Refunds"
-                answer="Items must be unused and in their original packaging to be eligible for a refund or exchange."
+                question="Payment"
+                answer="Cash on delivery only — you pay the courier when the order reaches you. All sales are final."
                 className="w-full"
               />
               <div className="w-full h-[1px] overflow-clip rounded-none bg-beige" />

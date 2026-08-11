@@ -1,0 +1,222 @@
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { H2, H4, SubtitleMd, BodySm, ItalicBodyLg } from "@/components/ui/typography";
+import { OutlineButton, Button, type ButtonState } from "@/components/ui/button";
+import { useCart } from "@/components/ui/use-cart";
+import { useProducts } from "@/components/ui/use-products";
+
+const ORDERS_URL  = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/orders`;
+const API_HEADERS = {
+  "Content-Type":  "application/json",
+  Authorization:   `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}`,
+};
+
+const FIELD_CLS =
+  "w-full h-[48px] bg-transparent outline-none border-0 border-b border-beige px-0 pt-0 pb-[8px] " +
+  "font-inter font-normal text-[18px] leading-[1.2] text-black placeholder:text-beige";
+
+export default function Checkout() {
+  const { lines, ready, clear } = useCart();
+  const { products, loading }   = useProducts();
+
+  const [name,    setName]    = useState("");
+  const [phone,   setPhone]   = useState("");
+  const [address, setAddress] = useState("");
+  const [city,    setCity]    = useState("");
+  const [notes,   setNotes]   = useState("");
+
+  const [state, setState] = useState<ButtonState>("default");
+  const [placed, setPlaced] = useState(false);
+
+  const items = lines
+    .map((line) => {
+      const product = products.find((p) => p.slug === line.slug);
+      return product ? { ...product, qty: line.qty } : null;
+    })
+    .filter((i): i is NonNullable<typeof i> => Boolean(i));
+
+  const subtotal = items.reduce((sum, i) => sum + i.finalPrice * i.qty, 0);
+  const settled  = ready && !loading;
+  const incomplete = !name.trim() || !phone.trim() || !address.trim() || !city.trim();
+
+  async function placeOrder(e: React.FormEvent) {
+    e.preventDefault();
+    if (incomplete || items.length === 0) return;
+
+    setState("loading");
+    try {
+      const res = await fetch(ORDERS_URL, {
+        method:  "POST",
+        headers: API_HEADERS,
+        body: JSON.stringify({
+          Name:      name,
+          Phone:     phone,
+          Address:   address,
+          City:      city,
+          Notes:     notes,
+          Payment:   "Cash on delivery",
+          Total:     String(subtotal),
+          Items:     items.map((i) => `${i.qty} x ${i.title} (${i.slug})`).join(", "),
+        }),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      setState("success");
+      setPlaced(true);
+      clear();
+    } catch {
+      setState("error");
+    }
+  }
+
+  if (placed) {
+    return (
+      <main>
+        <section className="w-full flex flex-col justify-start items-center gap-[10px] p-0 rounded-none bg-caledon">
+          <div className="w-full max-w-[800px] flex flex-col justify-center items-center gap-[24px] py-[80px] px-[16px] tablet:py-[120px]">
+            <H2 className="w-full !text-black !text-center">ORDER PLACED</H2>
+            <ItalicBodyLg className="w-full !text-brown !text-center [text-wrap:balance]">
+              We will call you to confirm the details. Payment is cash on delivery — please have the
+              exact amount ready for the courier.
+            </ItalicBodyLg>
+            <Link href="/shop-all">
+              <OutlineButton>Keep shopping</OutlineButton>
+            </Link>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  return (
+    <main>
+      <section className="w-full flex flex-col justify-start items-center gap-[10px] p-0 rounded-none bg-caledon">
+
+        <div className="w-full max-w-[1920px] flex flex-col justify-start items-start rounded-none
+          gap-[32px] py-[48px] px-[16px]
+          tablet:gap-[40px] tablet:py-[64px] tablet:px-[24px]
+          desktop:gap-[48px] desktop:py-[80px] desktop:px-[32px]">
+
+          <div className="w-full flex flex-col justify-start items-start gap-[4px] p-0 rounded-none">
+            <H2 className="w-full !text-black !text-left">CHECKOUT</H2>
+            <ItalicBodyLg className="w-full !text-brown !text-left">cash on delivery</ItalicBodyLg>
+          </div>
+
+          {!settled && (
+            <div className="flex items-center justify-center w-full py-[48px]">
+              <div
+                className="w-[40px] h-[40px] rounded-full border-[2px] border-beige animate-spin"
+                style={{ borderTopColor: "var(--color-brown)" }}
+              />
+            </div>
+          )}
+
+          {settled && items.length === 0 && (
+            <div className="w-full flex flex-col justify-center items-center gap-[24px] py-[16px]">
+              <H4 className="!text-brown !text-center">Nothing to check out</H4>
+              <Link href="/shop-all">
+                <OutlineButton>Shop all</OutlineButton>
+              </Link>
+            </div>
+          )}
+
+          {settled && items.length > 0 && (
+            <div className="w-full flex flex-col desktop:flex-row justify-start items-start gap-[32px] desktop:gap-[48px]">
+
+              {/* Delivery details */}
+              <form onSubmit={placeOrder} className="w-full desktop:flex-1 flex flex-col justify-start items-start gap-[32px] bg-white p-[24px] tablet:p-[40px] rounded-none">
+
+                <H4 className="w-full !text-black !text-left">Delivery details</H4>
+
+                <div className="w-full flex flex-col gap-[24px]">
+                  <div className="w-full flex flex-col gap-[10px]">
+                    <SubtitleMd className="w-full !text-brown !text-left">Full name</SubtitleMd>
+                    <input className={FIELD_CLS} value={name} onChange={(e) => setName(e.target.value)} placeholder="Jane Smith" required />
+                  </div>
+
+                  <div className="w-full flex flex-col gap-[10px]">
+                    <SubtitleMd className="w-full !text-brown !text-left">Phone</SubtitleMd>
+                    <input className={FIELD_CLS} value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+961 70 000 000" type="tel" required />
+                  </div>
+
+                  <div className="w-full flex flex-col gap-[10px]">
+                    <SubtitleMd className="w-full !text-brown !text-left">Address</SubtitleMd>
+                    <input className={FIELD_CLS} value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Street, building, floor" required />
+                  </div>
+
+                  <div className="w-full flex flex-col gap-[10px]">
+                    <SubtitleMd className="w-full !text-brown !text-left">City</SubtitleMd>
+                    <input className={FIELD_CLS} value={city} onChange={(e) => setCity(e.target.value)} placeholder="City" required />
+                  </div>
+
+                  <div className="w-full flex flex-col gap-[10px]">
+                    <SubtitleMd className="w-full !text-brown !text-left">Notes</SubtitleMd>
+                    <textarea
+                      className={`${FIELD_CLS} min-h-[80px]`}
+                      style={{ resize: "vertical" }}
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      placeholder="Anything the courier should know"
+                    />
+                  </div>
+                </div>
+
+                <div className="w-full bg-blush px-[16px] py-[12px] rounded-none">
+                  <BodySm className="!text-brown !text-left [text-wrap:balance]">
+                    Cash on delivery is the only payment method. No card details are collected at any
+                    point — you pay the courier in cash when the order arrives.
+                  </BodySm>
+                </div>
+
+                <div className="w-full flex justify-center">
+                  <Button type="submit" buttonState={state} disabled={incomplete} />
+                </div>
+
+                {state === "error" && (
+                  <BodySm className="w-full !text-error !text-center [text-wrap:balance]">
+                    We could not place the order. Please try again, or call us and we will take it over the phone.
+                  </BodySm>
+                )}
+              </form>
+
+              {/* Order summary */}
+              <div className="w-full desktop:w-[380px] shrink-0 desktop:sticky desktop:top-[96px] flex flex-col justify-start items-start gap-[24px] bg-white p-[24px] tablet:p-[32px] rounded-none">
+
+                <H4 className="w-full !text-black !text-left">Your order</H4>
+
+                <div className="w-full flex flex-col gap-[16px]">
+                  {items.map((item) => (
+                    <div key={item.slug} className="w-full flex flex-row justify-start items-center gap-[12px]">
+                      <div className="relative w-[56px] h-[70px] shrink-0 overflow-clip rounded-none">
+                        <Image src={item.imageSrc} alt="" fill sizes="56px" quality={100} unoptimized className="object-cover object-center" />
+                      </div>
+                      <div className="flex-1 min-w-0 flex flex-col gap-[2px]">
+                        <BodySm className="!text-black !text-left">{item.title}</BodySm>
+                        <BodySm className="!text-brown !text-left">{item.qty} × ${item.finalPrice}</BodySm>
+                      </div>
+                      <BodySm className="!text-black !text-right shrink-0">${item.finalPrice * item.qty}</BodySm>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="w-full flex flex-row justify-between items-center pt-[16px] border-t border-dashed border-beige">
+                  <SubtitleMd className="!text-black !text-left">Total</SubtitleMd>
+                  <SubtitleMd className="!text-black !text-right">${subtotal}</SubtitleMd>
+                </div>
+
+                <Link href="/cart" className="w-full">
+                  <OutlineButton className="w-full">Back to cart</OutlineButton>
+                </Link>
+
+              </div>
+
+            </div>
+          )}
+
+        </div>
+      </section>
+    </main>
+  );
+}

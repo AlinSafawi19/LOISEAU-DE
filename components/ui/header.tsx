@@ -4,14 +4,16 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart } from "lucide-react";
+import { Heart, ShoppingBag } from "lucide-react";
 import { ButtonSm, ButtonLg, BodySm } from "./typography";
 import { useWishlist } from "./use-wishlist";
+import { useCart } from "./use-cart";
 import { useScrollLock } from "./use-scroll-lock";
 
 const EASE   = [0.44, 0, 0.56, 1] as const;
 const SPRING = { type: "spring" as const, duration: 0.4, bounce: 0.2 };
-const PANEL  = { type: "spring" as const, duration: 0.45, bounce: 0 };
+// Long, low-bounce ease so the panel glides rather than snaps.
+const PANEL  = { duration: 0.45, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] };
 
 const NAV = [
   { title: "Home",     href: "/"         },
@@ -87,6 +89,39 @@ function WishlistLink({ className = "" }: { className?: string }) {
           <Heart strokeWidth={1.5} className="text-plum w-[16px] h-[16px] tablet:w-[19px] tablet:h-[19px] desktop:w-[23px] desktop:h-[23px]" fill="var(--color-plum)" />
         </motion.span>
       </span>
+      {ready && count > 0 && (
+        <span className="absolute top-[4px] right-[2px] min-w-[16px] h-[16px] px-[3px] flex items-center justify-center bg-plum rounded-none">
+          <span className="font-clash font-medium text-[10px] leading-none text-white">{count}</span>
+        </span>
+      )}
+    </Link>
+  );
+}
+
+function CartLink({ className = "" }: { className?: string }) {
+  const { count, ready } = useCart();
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <Link
+      href="/cart"
+      aria-label={ready && count > 0 ? `Cart, ${count} items` : "Cart"}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className={`relative flex items-center justify-center w-[36px] h-[36px] tablet:w-[40px] tablet:h-[40px] desktop:w-[44px] desktop:h-[44px] rounded-none ${className}`}
+    >
+      <motion.span
+        className="flex items-center justify-center"
+        animate={{ scale: hovered ? 1.08 : 1 }}
+        transition={{ duration: 0.3, ease: EASE }}
+      >
+        <ShoppingBag
+          strokeWidth={1.5}
+          fill="none"
+          className={`${hovered ? "text-plum" : "text-brown"} w-[16px] h-[16px] tablet:w-[19px] tablet:h-[19px] desktop:w-[23px] desktop:h-[23px]`}
+          style={{ transition: "color 0.3s cubic-bezier(0.44,0,0.56,1)" }}
+        />
+      </motion.span>
       {ready && count > 0 && (
         <span className="absolute top-[4px] right-[2px] min-w-[16px] h-[16px] px-[3px] flex items-center justify-center bg-plum rounded-none">
           <span className="font-clash font-medium text-[10px] leading-none text-white">{count}</span>
@@ -174,9 +209,10 @@ export function Header() {
           </nav>
 
           {/* Right side */}
-          <div className="flex flex-row items-center gap-[4px] tablet:gap-[8px]">
+          <div className="flex flex-row items-center gap-0">
 
-            <WishlistLink className="-mr-[6px] tablet:mr-0" />
+            <WishlistLink />
+            <CartLink className="-mr-[6px] tablet:mr-0" />
 
             {/* Mobile trigger */}
             <button
@@ -204,7 +240,7 @@ export function Header() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, ease: EASE }}
+              transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
               onClick={() => setOpen(false)}
             />
 
@@ -249,8 +285,8 @@ export function Header() {
 
               <div className="w-full mt-auto flex flex-col justify-start items-start gap-[4px]">
                 <BodySm className="!text-brown !text-left">Korean skincare, curated</BodySm>
-                <a href="mailto:sales@glaze.com">
-                  <BodySm className="!text-plum !text-left">sales@glaze.com</BodySm>
+                <a href="https://glaze.alinsafawi.com" target="_blank" rel="noopener noreferrer">
+                  <BodySm className="!text-plum !text-left">glaze.alinsafawi.com</BodySm>
                 </a>
               </div>
 

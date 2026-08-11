@@ -16,8 +16,8 @@ interface FeatureCardProps {
 
 export function FeatureCard({
   icon        = <Box size={24} strokeWidth={1.5} />,
-  title       = "Free Shipping",
-  description = "Enjoy fast and free delivery on all orders, with no hidden fees.",
+  title       = "Delivery Nationwide",
+  description = "Shipped from our warehouse; the delivery fee is quoted before you confirm.",
   className   = "",
 }: FeatureCardProps) {
   return (

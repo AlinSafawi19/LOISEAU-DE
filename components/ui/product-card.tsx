@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { SubtitleMd, SubtitleSm } from "./typography";
 import { DiscoverCursor } from "./discover-cursor";
 import { WishlistButton } from "./wishlist-button";
+import { useCart } from "./use-cart";
 
 interface ProductCardProps {
   slug?: string;
@@ -32,6 +33,8 @@ export function ProductCard({
   const [isDesktop, setIsDesktop] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [overHeart, setOverHeart] = useState(false);
+  const [overCta,   setOverCta]   = useState(false);
+  const { add } = useCart();
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 1200);
@@ -47,7 +50,8 @@ export function ProductCard({
   }, []);
 
   // The Discover cursor is suppressed over the heart so its own pointer shows.
-  const cursorVisible = isDesktop && hovered && !overHeart;
+  // The Discover cursor steps aside over the interactive controls.
+  const cursorVisible = isDesktop && hovered && !overHeart && !overCta;
 
   return (
     <a
@@ -111,6 +115,27 @@ export function ProductCard({
           <SubtitleMd className="!text-black !text-left">$</SubtitleMd>
           <SubtitleMd className="!text-black !text-left">{price}</SubtitleMd>
         </div>
+
+        {/* Add to cart */}
+        {slug && (
+          <div
+            className="w-full pt-[4px]"
+            onMouseEnter={() => setOverCta(true)}
+            onMouseLeave={() => setOverCta(false)}
+          >
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                add(slug);
+              }}
+              className="w-full font-clash font-medium clash-features uppercase text-brown text-[13px] leading-[1.4] border border-dashed border-beige px-[16px] py-[10px] rounded-none bg-transparent cursor-pointer transition-colors duration-300 hover:bg-blush hover:text-plum"
+            >
+              Add to cart
+            </button>
+          </div>
+        )}
 
       </div>
     </a>

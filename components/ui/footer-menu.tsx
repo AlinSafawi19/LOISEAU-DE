@@ -11,7 +11,7 @@ interface FooterMenuProps {
   className?: string;
 }
 
-export function FooterMenu({ title = "RETURN POLICY", href = "#", className = "" }: FooterMenuProps) {
+export function FooterMenu({ title = "TERMS OF USE", href = "#", className = "" }: FooterMenuProps) {
   const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
