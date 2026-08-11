@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRef, useState, useEffect } from "react";
 import { H4, SubtitleMd, BodyMd, LinkContact } from "./typography";
 import { FooterMenu } from "./footer-menu";
-import { FitText } from "./fit-text";
+import { Logomark } from "./logomark";
 
 function TruchetOverlay() {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -60,7 +60,7 @@ function CopyrightIcon() {
 
 export function Footer() {
   return (
-    <footer className="w-full flex flex-col justify-start items-center gap-[10px] p-0 bg-black overflow-clip">
+    <footer className="w-full flex flex-col justify-start items-center gap-[10px] p-0 bg-plum overflow-clip">
 
       {/* Footer Wrapper */}
       <div className="w-full max-w-[1920px] flex flex-col justify-start items-center gap-[24px]
@@ -76,7 +76,7 @@ export function Footer() {
           border-b border-dashed border-accent">
 
           <H4 className="!text-accent w-full desktop:flex-1 !text-left [text-wrap:balance]">
-            An e-commerce platform dedicated to quality goods, refined aesthetics, and effortless purchasing.
+            A curated shop for Korean skincare. Every formula is made in Korea by the brand on the bottle — we choose what we stock, we don&apos;t make it.
           </H4>
 
           {/* Contact details */}
@@ -89,8 +89,8 @@ export function Footer() {
 
             <div className="flex-1 flex flex-col justify-start items-start gap-[10px] overflow-clip rounded-none">
               <SubtitleMd className="w-full !text-white [text-wrap:balance]">New projects</SubtitleMd>
-              <LinkContact href="mailto:sales@loiseau.com" target="_blank" rel="noopener noreferrer">
-                sales@loiseau.com
+              <LinkContact href="mailto:sales@glaze.com" target="_blank" rel="noopener noreferrer">
+                sales@glaze.com
               </LinkContact>
             </div>
 
@@ -109,14 +109,14 @@ export function Footer() {
 
           {/* Logo inner wrapper */}
           <div className="w-full tablet:flex-1 flex flex-row justify-start items-center gap-[10px] overflow-clip rounded-none">
-            <FooterMenu title="L'OISEAU DÉ" href="/" className="flex-1" />
+            <FooterMenu title="GLAZE" href="/" className="flex-1" />
 
             {/* Copyright wrapper */}
             <div className="flex-1 flex flex-row justify-start items-center gap-[10px] overflow-clip rounded-none">
               <span className="text-accent flex-shrink-0">
                 <CopyrightIcon />
               </span>
-              <BodyMd className="!text-accent !text-left [text-wrap:balance]">2026</BodyMd>
+              <BodyMd className="!text-blush !text-left [text-wrap:balance]">2026</BodyMd>
             </div>
           </div>
 
@@ -137,7 +137,7 @@ export function Footer() {
           {/* Image base layer */}
           <div className="absolute inset-0 z-[1]">
             <Image
-              src="https://framerusercontent.com/images/eJz6nSHKQGwj2a2fxzK5jYek.png"
+              src="https://framerusercontent.com/images/ZbYyoU6EfYLcinn2akWs02lFfg.png?scale-down-to=2048&width=2400&height=1800"
               alt=""
               fill
               sizes="100vw"
@@ -150,12 +150,7 @@ export function Footer() {
           <TruchetOverlay />
 
           {/* Large logotype — font-size scales to fill container */}
-          <FitText
-            className="relative z-[3] font-clash font-normal clash-features text-center text-white not-italic"
-            style={{ letterSpacing: "0em", lineHeight: "1.2" }}
-          >
-            L&apos;OISEAU DÉ
-          </FitText>
+          <Logomark className="relative z-[3] text-white" />
 
         </div>
 

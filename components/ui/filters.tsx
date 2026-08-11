@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { SubtitleSm, ButtonLg, bodySmBaseCls } from "./typography";
 import { OutlineButton, FilledButton } from "./button";
+import { useScrollLock } from "./use-scroll-lock";
 
 const SPRING        = { type: "spring" as const, duration: 0.4, bounce: 0.2, delay: 0 };
 const SPRING_POPUP  = { type: "spring" as const, duration: 0.4, bounce: 0,   delay: 0 };
@@ -177,6 +178,8 @@ export function Filters({
     return () => window.removeEventListener("resize", check);
   }, []);
 
+  useScrollLock(isMobile && filterOpen);
+
   const sectionProps = {
     categories, brands,
     searchValue, onSearchChange,
@@ -228,22 +231,22 @@ export function Filters({
             <>
               <motion.div
                 key="overlay"
-                className="fixed inset-0 z-40 bg-black"
+                className="fixed inset-0 z-40 bg-plum"
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 0.85 }}
+                animate={{ opacity: 0.6 }}
                 exit={{ opacity: 0 }}
                 transition={SPRING_POPUP}
                 onClick={() => setFilterOpen(false)}
               />
               <motion.div
                 key="sheet"
-                className="fixed inset-0 z-50 flex items-center justify-center p-[24px] pointer-events-none"
+                className="fixed inset-0 z-50 flex items-center justify-center p-0 pointer-events-none"
                 initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.96 }}
                 transition={SPRING_POPUP}
               >
-                <div className="bg-white w-full max-w-[400px] max-h-[85vh] overflow-y-auto flex flex-col gap-[32px] px-[24px] pt-[24px] pb-[32px] pointer-events-auto">
+                <div className="bg-white w-full max-w-none max-h-[85vh] rounded-none overflow-y-auto flex flex-col gap-[32px] px-[16px] pt-[24px] pb-[32px] pointer-events-auto">
                   <div className="flex flex-row justify-between items-center">
                     <ButtonLg className="text-left !text-[20px] !leading-[1.4] !text-black">Filters</ButtonLg>
                     <button

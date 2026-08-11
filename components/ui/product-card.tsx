@@ -4,8 +4,10 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { SubtitleMd, SubtitleSm } from "./typography";
 import { DiscoverCursor } from "./discover-cursor";
+import { WishlistButton } from "./wishlist-button";
 
 interface ProductCardProps {
+  slug?: string;
   title?: string;
   price?: number;
   discount?: number;
@@ -18,6 +20,7 @@ interface ProductCardProps {
 const EASE = "cubic-bezier(0.44, 0, 0.56, 1)";
 
 export function ProductCard({
+  slug      = "",
   title     = "Oak Cinnamon",
   price     = 260,
   discount  = 50,
@@ -28,6 +31,7 @@ export function ProductCard({
 }: ProductCardProps) {
   const [isDesktop, setIsDesktop] = useState(false);
   const [hovered, setHovered] = useState(false);
+  const [overHeart, setOverHeart] = useState(false);
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 1200);
@@ -42,7 +46,8 @@ export function ProductCard({
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const cursorVisible = isDesktop && hovered;
+  // The Discover cursor is suppressed over the heart so its own pointer shows.
+  const cursorVisible = isDesktop && hovered && !overHeart;
 
   return (
     <a
@@ -71,6 +76,17 @@ export function ProductCard({
             className="object-cover"
           />
         </div>
+
+        {/* Wishlist toggle */}
+        {slug && (
+          <div
+            className="absolute top-[12px] right-[12px] z-[2]"
+            onMouseEnter={() => setOverHeart(true)}
+            onMouseLeave={() => setOverHeart(false)}
+          >
+            <WishlistButton slug={slug} title={title} />
+          </div>
+        )}
 
         {/* Discount Wrapper — hidden when discount === 0 */}
         {discount !== 0 && (

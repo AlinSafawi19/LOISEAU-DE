@@ -10,12 +10,12 @@ const MotionBodySm = motion(BodySm);
 
 const titleVariants = {
   default: { color: "var(--color-black)" },
-  hover:   { color: "var(--color-dark-green)" },
+  hover:   { color: "var(--color-plum)" },
 };
 
 const detailVariants = {
   default: { color: "var(--color-brown)" },
-  hover:   { color: "var(--color-dark-green)" },
+  hover:   { color: "var(--color-plum)" },
 };
 
 interface BrandCardProps {
@@ -27,8 +27,8 @@ interface BrandCardProps {
 }
 
 export function BrandCard({
-  title        = "Dior",
-  description  = "Beauty and Makeup",
+  title        = "Brand",
+  description  = "Korean skincare",
   productCount = 12,
   href         = "#",
   className    = "",

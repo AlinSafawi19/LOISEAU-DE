@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/ui/footer";
-import { LogoXMenu } from "@/components/ui/logo-x-menu";
+import { Header } from "@/components/ui/header";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -10,8 +10,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "L'OISEAU DÉ",
-  description: "Premium Beauty & Lifestyle",
+  title: "GLAZE",
+  description: "Korean skincare, curated",
 };
 
 export default function RootLayout({
@@ -43,9 +43,7 @@ export default function RootLayout({
             </symbol>
           </defs>
         </svg>
-        <div className="fixed top-4 left-4 right-4 desktop:right-auto z-[100]">
-          <LogoXMenu />
-        </div>
+        <Header />
         {children}
         <Footer />
       </body>

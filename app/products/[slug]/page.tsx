@@ -250,7 +250,7 @@ export default function ProductPage() {
 
                 {/* Sales type */}
                 {product.sales_type && (
-                  <div className="flex flex-row justify-end items-center gap-[8px] py-[8px] px-[16px] bg-pistachio overflow-clip rounded-none">
+                  <div className="flex flex-row justify-end items-center gap-[8px] py-[8px] px-[16px] bg-blush overflow-clip rounded-none">
                     <SubtitleSm className="!text-black !text-left w-auto">{product.sales_type}</SubtitleSm>
                   </div>
                 )}
@@ -269,7 +269,7 @@ export default function ProductPage() {
 
                   {/* Discount */}
                   {product.discount !== 0 && (
-                    <div className="flex flex-row items-center gap-[6px] py-[4px] px-[12px] bg-golden overflow-clip rounded-none">
+                    <div className="flex flex-row items-center gap-[6px] py-[4px] px-[12px] bg-berry overflow-clip rounded-none">
                       <H4 className="!text-brown !text-left w-auto">%</H4>
                       <H4 className="!text-brown !text-left w-auto">{product.discount}</H4>
                     </div>
@@ -407,6 +407,7 @@ export default function ProductPage() {
                 price={p.price}
                 discount={p.discount}
                 imageSrc={p.cover_img_1}
+                slug={p.slug}
                 href={`/products/${p.slug}`}
                 className="!w-full"
               />

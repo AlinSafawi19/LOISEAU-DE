@@ -13,9 +13,9 @@ interface NewInTitleItem {
 }
 
 const DEFAULT_ITEMS: NewInTitleItem[] = [
-  { id: "elegance", label: "Elegance", number: 1 },
-  { id: "amenity",  label: "Amenity",  number: 2 },
-  { id: "nature",   label: "Nature",   number: 3 },
+  { id: "hydration",   label: "Hydration",   number: 1 },
+  { id: "nourishment", label: "Nourishment", number: 2 },
+  { id: "botanicals",  label: "Botanicals",  number: 3 },
 ];
 
 interface NewInTitleProps {

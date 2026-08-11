@@ -189,7 +189,7 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
   }
 
   return (
-    <section className="relative w-full flex flex-col justify-start items-center gap-[10px] p-0 overflow-visible rounded-none bg-white z-[10]">
+    <section className="relative w-full flex flex-col justify-start items-center gap-[10px] p-0 overflow-visible rounded-none bg-caledon z-[10]">
 
       {/* Container */}
       <div className="w-full max-w-[1920px] flex flex-col justify-start items-center
@@ -244,6 +244,7 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
                     price={product.price}
                     discount={product.discount}
                     imageSrc={product.imageSrc}
+                    slug={product.slug}
                     href={`/products/${product.slug}`}
                     className="!w-full"
                   />

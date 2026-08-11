@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { LiquidLogo } from "@/components/ui/liquid-logo";
 import { H3, SubtitleMd } from "@/components/ui/typography";
-import { FitText } from "@/components/ui/fit-text";
+import { Logomark } from "@/components/ui/logomark";
 
 const UTILITY_URL  = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/utility-pages`;
 const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
@@ -52,18 +52,13 @@ export default function TermsOfUse() {
 
           {/* Subtitles */}
           <div className="w-full flex flex-row justify-between items-center overflow-clip rounded-none border-b border-dashed border-white" style={{ padding: "16px 0" }}>
-            <SubtitleMd className="w-auto grow !text-white !text-left">E-commerce</SubtitleMd>
-            <SubtitleMd className="w-auto grow !text-white !text-center">Cosmetics</SubtitleMd>
-            <SubtitleMd className="w-auto grow !text-white !text-right">Beauty</SubtitleMd>
+            <SubtitleMd className="w-auto grow !text-white !text-left">K-Beauty</SubtitleMd>
+            <SubtitleMd className="w-auto grow !text-white !text-center">Rituals</SubtitleMd>
+            <SubtitleMd className="w-auto grow !text-white !text-right">Radiance</SubtitleMd>
           </div>
 
           {/* Hero logotype */}
-          <FitText
-            className="w-full font-clash font-normal clash-features text-center text-white not-italic"
-            style={{ letterSpacing: "0em", lineHeight: "1.2" }}
-          >
-            TERMS OF USE
-          </FitText>
+          <Logomark className="text-white" />
 
         </div>
 
@@ -71,7 +66,7 @@ export default function TermsOfUse() {
 
       {/* â”€â”€ Content â”€â”€ */}
       <motion.section
-        className="w-full flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip rounded-none bg-pistachio"
+        className="w-full flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip rounded-none bg-blush"
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.05 }}

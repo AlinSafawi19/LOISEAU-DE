@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { LiquidLogo } from "@/components/ui/liquid-logo";
 import { H2, H3, ItalicBodyLg, SubtitleMd } from "@/components/ui/typography";
 import { FaqCardContact } from "@/components/ui/faq-card";
 import { Button } from "@/components/ui/button";
@@ -15,22 +14,25 @@ const FAQS = [
   },
   {
     question: "How long does shipping take?",
-    answer: "Orders are typically processed within 1–2 business days, with delivery times varying based on your location. You'll receive tracking details once your order is shipped.",
+    answer: "Orders leave our warehouse within 1–2 business days. Restocks come direct from Korea, so a sold-out item can take longer — the product page always shows current availability.",
   },
   {
     question: "Can I return or exchange an item?",
-    answer: "Yes, we offer a hassle-free return and exchange policy within a specified period. Items must be unused and in their original condition.",
+    answer: "Yes, within the stated return window. Skincare must be unopened and sealed — once a formula has been used we cannot resell it.",
   },
   {
     question: "How can I track my order?",
     answer: "Once your order is shipped, you'll receive a confirmation email with a tracking link to monitor your delivery in real time.",
   },
   {
+    question: "Where do your products come from?",
+    answer: "Everything we sell is Korean skincare, made in Korea by the brand named on the packaging. GLAZE is a retailer — we source from the brands and their authorised distributors, and we do not formulate, blend, or repackage anything ourselves.",
+  },
+  {
     question: "Is my personal data secure?",
     answer: "Absolutely. We use advanced encryption and secure systems to protect your data and ensure a safe shopping experience.",
   },
 ];
-import { FitText } from "@/components/ui/fit-text";
 
 const SPRING = { type: "spring" as const, duration: 0.6, bounce: 0, delay: 0 };
 
@@ -42,47 +44,6 @@ export default function Contact() {
 
   return (
     <main>
-
-      {/* ── Hero ── */}
-      <section className="relative w-full h-screen flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip">
-
-        {/* LiquidLogo — absolute, fills hero, z-1 */}
-        <div className="absolute inset-0 z-[1]">
-          <LiquidLogo
-            image="https://framerusercontent.com/images/ZbYyoU6EfYLcinn2akWs02lFfg.png?scale-down-to=2048&width=2400&height=1800"
-            distortionStrength={0.06}
-            hoverRadius={0.07}
-            decayTime={1400}
-          />
-        </div>
-
-        {/* Container — z-2, pointer-none, relative for absolute children */}
-        <div
-          className="relative z-[2] w-full flex-1 max-w-[1920px] flex flex-col justify-end items-center gap-[64px] overflow-clip pointer-events-none rounded-none"
-          style={{ padding: "80px 32px 32px 32px" }}
-        >
-          <H3 className="absolute top-[120px] right-[32px] !text-accent !text-right z-[1] w-auto">
-            Get in touch
-          </H3>
-
-          {/* Subtitles */}
-          <div className="w-full flex flex-row justify-between items-center overflow-clip rounded-none border-b border-dashed border-white" style={{ padding: "16px 0" }}>
-            <SubtitleMd className="w-auto grow !text-white !text-left">E-commerce</SubtitleMd>
-            <SubtitleMd className="w-auto grow !text-white !text-center">Cosmetics</SubtitleMd>
-            <SubtitleMd className="w-auto grow !text-white !text-right">Beauty</SubtitleMd>
-          </div>
-
-          {/* Hero logotype */}
-          <FitText
-            className="w-full font-clash font-normal clash-features text-center text-white not-italic"
-            style={{ letterSpacing: "0em", lineHeight: "1.2" }}
-          >
-            CONTACT
-          </FitText>
-
-        </div>
-
-      </section>
 
       {/* ── FAQ ── */}
       <motion.section
@@ -107,14 +68,14 @@ export default function Contact() {
 
           {/* Title wrapper */}
           <div className="w-full max-w-[1920px] flex flex-col justify-start items-center overflow-clip rounded-none z-[2]
-            gap-[24px] pt-[48px] px-0 pb-[48px]
-            tablet:gap-[24px] tablet:pt-[80px] tablet:px-[24px] tablet:pb-[80px]
-            desktop:pt-[120px] desktop:px-[32px] desktop:pb-[120px]">
+            gap-[24px] pt-[24px] px-0 pb-[24px]
+            tablet:gap-[24px] tablet:pt-[40px] tablet:px-[24px] tablet:pb-[40px]
+            desktop:pt-[56px] desktop:px-[32px] desktop:pb-[56px]">
 
             {/* Title top wrapper */}
             <div className="w-full flex flex-col justify-start items-center gap-[4px] p-0 overflow-clip rounded-none">
               <H2 className="w-full max-w-[800px] !text-black !text-center [text-wrap:balance]">
-                WE CARE OUR CLIENTS
+                WE CARE FOR OUR CLIENTS
               </H2>
             </div>
 

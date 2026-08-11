@@ -31,8 +31,8 @@ export function FooterMenu({ title = "RETURN POLICY", href = "#", className = ""
       <motion.span
         className="font-clash font-normal clash-features text-left tracking-normal not-italic text-[14px] tablet:text-[16px] leading-[1.4]"
         variants={{
-          default: { color: "var(--color-accent)" },
-          hover:   { color: "var(--color-beige)" },
+          default: { color: "var(--color-blush)" },
+          hover:   { color: "var(--color-accent)" },
         }}
         transition={SPRING}
       >

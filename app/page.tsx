@@ -1,22 +1,24 @@
 ﻿"use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { LiquidLogo } from "@/components/ui/liquid-logo";
-import { H2, H3, H4, SubtitleMd, ItalicBodyLg, ItalicBodySm } from "@/components/ui/typography";
-import { FitText } from "@/components/ui/fit-text";
+import { Logomark } from "@/components/ui/logomark";
+import { H3, H4, SubtitleMd, ItalicBodySm } from "@/components/ui/typography";
 import { Ticker } from "@/components/ui/ticker";
-import { Book } from "@/components/ui/book";
 import Link from "next/link";
 import { OutlineButton } from "@/components/ui/button";
-import { NewInTitle } from "@/components/ui/new-in-title";
 import { ProductCard } from "@/components/ui/product-card";
 import { BrandCard } from "@/components/ui/brand-card";
+import { OffersSection } from "@/components/ui/offers-section";
 
 const EASE = [0.44, 0, 0.56, 1] as const;
 
 const PRODUCTS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/products`;
+const BRANDS_URL     = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/brands`;
+// The API pages at 20 by default; brand counts must see every product.
+const ALL_PRODUCTS_URL = `${PRODUCTS_URL}?limit=100`;
 const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 
 interface FeaturedProduct {
@@ -63,92 +65,84 @@ function useFeaturedProducts(limit: number) {
   return { products, loading };
 }
 
-function FormingTruchet() {
-  const svgRef = useRef<SVGSVGElement>(null);
-  const [c, setC] = useState(14);
+interface Brand {
+  id:           string;
+  title:        string;
+  description:  string;
+  productCount: number;
+}
+
+interface RawBrandEntry {
+  id:          string;
+  Slug:        string;
+  Title:       string;
+  Description: string;
+}
+
+interface RawBrandProduct {
+  Brand: string;
+}
+
+/**
+ * Title and Description come straight from the CMS. The count does not: the
+ * brands endpoint serves a stored "Product counts" value that lags behind the
+ * live figure the CMS admin shows, so it is tallied from the products instead.
+ */
+function useBrands() {
+  const [brands,  setBrands]  = useState<Brand[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const el = svgRef.current;
-    if (!el) return;
-    const update = (w: number) => setC(w / 400);
-    update(el.getBoundingClientRect().width);
-    const ro = new ResizeObserver(([entry]) => update(entry.contentRect.width));
-    ro.observe(el);
-    return () => ro.disconnect();
+    Promise.all([
+      fetch(BRANDS_URL,       { headers: API_HEADERS }).then((r) => r.json()),
+      fetch(ALL_PRODUCTS_URL, { headers: API_HEADERS }).then((r) => r.json()),
+    ])
+      .then(([brandsData, productsData]) => {
+        const entries:  RawBrandEntry[]   = brandsData?.data   ?? [];
+        const products: RawBrandProduct[] = productsData?.data ?? [];
+
+        setBrands(
+          entries.map((e) => ({
+            id:           e.id,
+            title:        e.Title,
+            description:  e.Description,
+            productCount: products.filter((p) => p.Brand === e.Slug).length,
+          }))
+        );
+      })
+      .finally(() => setLoading(false));
   }, []);
 
-  const r = c / 2;
-  const sw = Math.max(0.3, c * 0.08);
-
-  const arcs = [
-    // A(0,0): top-mid â†’ left-mid, CCW
-    `M${r},0 A${r},${r} 0 0,0 0,${r}`,
-    // B(c,0): top-mid â†’ right-mid, CW
-    `M${c+r},0 A${r},${r} 0 0,1 ${c*2},${r}`,
-    // B(0,c): top-mid â†’ right-mid, CW
-    `M${r},${c} A${r},${r} 0 0,1 ${c},${c+r}`,
-    // A(c,c): top-mid â†’ left-mid, CCW
-    `M${c+r},${c} A${r},${r} 0 0,0 ${c},${c+r}`,
-  ].join(" ");
-
-  return (
-    <svg ref={svgRef} className="absolute inset-0 w-full h-full" aria-hidden>
-      <defs>
-        <pattern id="forming-tp" x="0" y="0" width={c * 2} height={c * 2} patternUnits="userSpaceOnUse">
-          <path d={arcs} fill="none" stroke="var(--color-accent)" strokeWidth={sw} strokeLinecap="round" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#forming-tp)" />
-    </svg>
-  );
+  return { brands, loading };
 }
 
 const categories = [
   {
     name: "SKINCARE",
-    description: "gentle, nourishing, essential",
-    mainImage: "https://framerusercontent.com/images/Q47VLts0wZHYv6m7pTOGrZXbPQ.png",
+    description: "gentle, layered, essential",
+    mainImage: "https://framerusercontent.com/images/VUFOdY8DyW3XNyJHXlrjZz3t8w.png?scale-down-to=2048&width=2400&height=1800",
     previewImage: "https://framerusercontent.com/images/dM2O8O1L9vG9OPpdktWUlo5BEH8.png",
-    bgColor: "bg-accent",
+    bgColor: "bg-blush",
     reversed: false,
     zIndex: 1,
-    href: "/skin-care",
-  },
-  {
-    name: "COSMETICS",
-    description: "Stay beautiful",
-    mainImage: "https://framerusercontent.com/images/ODQ36qkhe7tR0sipiZD6Nfl5gg.png",
-    previewImage: "https://framerusercontent.com/images/yXRxnphuCuHdNpribjI8JPEnrQU.png",
-    bgColor: "bg-warm",
-    reversed: true,
-    zIndex: 2,
-    href: "/cosmetics",
-  },
-  {
-    name: "FACE HEALTH",
-    description: "Close-up smiles",
-    mainImage: "https://framerusercontent.com/images/VUFOdY8DyW3XNyJHXlrjZz3t8w.png",
-    previewImage: "https://framerusercontent.com/images/PglvvWAeYN6FDLuONhirTL5iA.png",
-    bgColor: "bg-pistachio",
-    reversed: false,
-    zIndex: 3,
-    href: "/face-health",
+    href: "/shop-all",
   },
 ];
 
 export default function Home() {
   const { products: featuredProducts, loading: featuredLoading } = useFeaturedProducts(3);
+  const { brands,                     loading: brandsLoading   } = useBrands();
 
   return (
     <main>
 
       {/* â”€â”€ Hero â”€â”€ */}
-      <section className="relative w-full h-screen flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip">
+      <section className="relative w-full h-[calc(100vh-60px)] tablet:h-[calc(100vh-68px)] desktop:h-[calc(100vh-72px)] flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip">
 
         {/* LiquidLogo â€” absolute, fills hero, z-1 */}
         <div className="absolute inset-0 z-[1]">
           <LiquidLogo
-            image="https://framerusercontent.com/images/JMlFxkbPdV16dtqSqtwzOcRoCZs.png"
+            image="https://framerusercontent.com/images/ZbYyoU6EfYLcinn2akWs02lFfg.png?scale-down-to=2048&width=2400&height=1800"
             distortionStrength={0.06}
             hoverRadius={0.07}
             decayTime={1400}
@@ -160,25 +154,19 @@ export default function Home() {
           className="relative z-[2] w-full flex-1 max-w-[1920px] flex flex-col justify-end items-center gap-[64px] overflow-clip pointer-events-none rounded-none"
           style={{ padding: "80px 32px 32px 32px" }}
         >
-          {/* Paradis */}
           <H3 className="absolute top-[120px] right-[32px] !text-accent !text-right z-[1] w-auto">
-            Paradis
+            From Seoul
           </H3>
 
           {/* Subtitles */}
           <div className="w-full flex flex-row justify-between items-center overflow-clip rounded-none border-b border-dashed border-white" style={{ padding: "16px 0" }}>
-            <SubtitleMd className="w-auto grow !text-white !text-left">E-commerce</SubtitleMd>
-            <SubtitleMd className="w-auto grow !text-white !text-center">Cosmetics</SubtitleMd>
-            <SubtitleMd className="w-auto grow !text-white !text-right">Beauty</SubtitleMd>
+            <SubtitleMd className="w-auto grow !text-white !text-left">K-Beauty</SubtitleMd>
+            <SubtitleMd className="w-auto grow !text-white !text-center">Rituals</SubtitleMd>
+            <SubtitleMd className="w-auto grow !text-white !text-right">Radiance</SubtitleMd>
           </div>
 
-          {/* Hero logotype */}
-          <FitText
-            className="w-full font-clash font-normal clash-features text-center text-white not-italic"
-            style={{ letterSpacing: "0em", lineHeight: "1.2" }}
-          >
-            L&apos;OISEAU DÃ‰
-          </FitText>
+          {/* Hero title */}
+          <Logomark className="text-white" />
 
         </div>
 
@@ -203,54 +191,8 @@ export default function Home() {
 
       </section>
 
-      {/* â”€â”€ Short Intro â”€â”€ */}
-      <section className="w-full flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip rounded-none">
 
-        <div className="w-full max-w-[1920px] flex flex-col justify-start items-center gap-[32px] overflow-clip rounded-none z-[2]
-          pt-[48px] px-[16px] pb-[48px]
-          tablet:pt-[80px] tablet:px-[24px] tablet:pb-[80px]
-          desktop:pt-[120px] desktop:px-[32px] desktop:pb-[120px]">
-
-          {/* 1. Title Wrapper */}
-          <div className="w-full flex flex-col justify-start items-center gap-[4px] p-0 overflow-clip rounded-none">
-            <H2 className="w-full !text-black !text-center [text-wrap:balance]">
-              L&apos;OISEAU DÃ‰ IS A MODERN ATELIER
-            </H2>
-            <ItalicBodyLg className="w-full !text-black !text-center [text-wrap:balance]">
-              L&apos;OISEAU DÃ‰ IS A MODERN ATELIER
-            </ItalicBodyLg>
-          </div>
-
-          {/* 2. Imgs Wrapper */}
-          <div className="w-full flex flex-row justify-center items-start overflow-visible rounded-none z-[2] gap-[8px] tablet:gap-[24px]">
-            <Book
-              title="VELVET CITRUS"
-              author="fresh, radiant, uplifting"
-              coverSrc="https://framerusercontent.com/images/E6a7MjNJfTJwoQIGy9vZkAmbo.png"
-              className="flex-1 !w-full !max-w-[320px] !h-[218px] tablet:!h-[400px]"
-            />
-            <Book
-              title="EARTH NOIR"
-              author="warm, sensual, timeless"
-              coverSrc="https://framerusercontent.com/images/1KcvzweNQm6syDDQO50GYtIL1g.png"
-              className="flex-1 !w-full !max-w-[320px] !h-[218px] tablet:!h-[400px]"
-            />
-          </div>
-
-          {/* 3. Bottom Body */}
-          <div className="w-full flex flex-row justify-center items-center overflow-clip rounded-none gap-[12px] tablet:gap-[16px]">
-            <ItalicBodyLg className="w-auto !text-black !text-right [text-wrap:balance]">
-              best style for
-            </ItalicBodyLg>
-            <div className="flex-1 tablet:flex-none tablet:w-[300px] desktop:w-[400px] h-[1px] bg-black overflow-clip rounded-none flex-shrink-0" />
-            <ItalicBodyLg className="w-auto !text-black !text-left [text-wrap:balance]">
-              and live with
-            </ItalicBodyLg>
-          </div>
-
-        </div>
-
-      </section>
+      <OffersSection />
 
       {/* â”€â”€ Categories â”€â”€ */}
       <section className="w-full flex flex-col justify-start items-center gap-0 p-0 overflow-clip rounded-none">
@@ -317,233 +259,11 @@ export default function Home() {
 
       </section>
 
-      {/* â”€â”€ Gallery â”€â”€ */}
-      <section className="w-full flex flex-col items-center justify-start gap-[10px] overflow-visible bg-dark-green rounded-none
-        py-[64px] px-0
-        tablet:py-[80px]
-        desktop:py-[120px]">
-
-        {/* Container */}
-        <div className="w-full max-w-[1920px] flex flex-col items-start justify-start overflow-visible rounded-none z-[2]
-          gap-[64px] px-[16px]
-          tablet:flex-row tablet:gap-[32px] tablet:px-[24px]
-          desktop:gap-[32px] desktop:px-[32px]">
-
-          {/* Titles Wrapper */}
-          <div className="relative w-full tablet:sticky tablet:top-0 tablet:self-start tablet:max-w-[400px] flex flex-col items-start justify-start gap-[8px] overflow-visible rounded-none
-            p-0
-            tablet:pt-[80px]
-            desktop:pt-[80px]">
-            <H4 className="w-full !text-pistachio !text-left [text-wrap:balance]">
-              We bring brands to life through
-            </H4>
-            <NewInTitle className="w-full z-[1]" />
-          </div>
-
-          {/* Covers Wrapper */}
-          <div className="flex-1 flex flex-col items-start justify-start gap-0 overflow-visible rounded-none">
-
-            {/* Row 1 */}
-            <div className="w-full grid grid-cols-4 gap-0 items-center">
-              <div className="col-span-1 overflow-hidden">
-                <Image
-                  src="https://framerusercontent.com/images/O6XBkcg3hFpjBWW691c6ywRc4.png"
-                  alt=""
-                  width={1200}
-                  height={900}
-                  sizes="(max-width: 809px) 50vw, 25vw"
-                  quality={100}
-                  unoptimized
-                  className="w-full h-auto block"
-                />
-              </div>
-            </div>
-
-            {/* Row 2 â€” #elegance */}
-            <div id="elegance" className="w-full grid grid-cols-4 gap-0 items-center">
-              <div className="col-span-1 opacity-0" style={{ height: 142 }} />
-              <div className="col-span-2 overflow-hidden">
-                <Image
-                  src="https://framerusercontent.com/images/zbbDbXoot8SIyCil65WxCX1VTI.png"
-                  alt=""
-                  width={2400}
-                  height={1800}
-                  sizes="(max-width: 809px) 100vw, 50vw"
-                  quality={100}
-                  unoptimized
-                  className="w-full h-auto block"
-                />
-              </div>
-            </div>
-
-            {/* Row 3 */}
-            <div className="w-full grid grid-cols-4 gap-0 items-center">
-              <div className="col-span-1 relative overflow-hidden" style={{ height: 160 }}>
-                <Image
-                  src="https://framerusercontent.com/images/Zhb1XtfWB8pYnL51t1R3B1RzXxE.png"
-                  alt=""
-                  fill
-                  sizes="(max-width: 809px) 50vw, 25vw"
-                  quality={100}
-                  unoptimized
-                  className="object-cover object-center"
-                />
-              </div>
-              <div className="col-span-1 opacity-0" style={{ height: 142 }} />
-              <div className="col-span-1 opacity-0" style={{ height: 142 }} />
-              <div className="col-span-1 relative overflow-hidden" style={{ height: 160 }}>
-                <Image
-                  src="https://framerusercontent.com/images/4ea6FQ9E1U5BMApwsOB29CdxxFE.png"
-                  alt=""
-                  fill
-                  sizes="(max-width: 809px) 50vw, 25vw"
-                  quality={100}
-                  unoptimized
-                  className="object-cover object-center"
-                />
-              </div>
-            </div>
-
-            {/* Row 4 */}
-            <div className="w-full grid grid-cols-4 gap-0 items-center">
-              <div className="col-span-1 opacity-0" style={{ height: 142 }} />
-              <div className="col-span-1 opacity-0" style={{ height: 142 }} />
-              <div className="col-span-1 relative overflow-hidden" style={{ height: 146 }}>
-                <Image
-                  src="https://framerusercontent.com/images/bPNXTyIDbTqSUMEVHfTFZfqs.png"
-                  alt=""
-                  fill
-                  sizes="(max-width: 809px) 50vw, 25vw"
-                  quality={100}
-                  unoptimized
-                  className="object-cover object-center"
-                />
-              </div>
-            </div>
-
-            {/* Row 5 â€” #amenity */}
-            <div id="amenity" className="w-full grid grid-cols-4 gap-0 items-center">
-              <div className="col-span-2 overflow-hidden">
-                <Image
-                  src="https://framerusercontent.com/images/dbOxER3vt6fUIxnLYrhjRH4g7c.png"
-                  alt=""
-                  width={1200}
-                  height={900}
-                  sizes="(max-width: 809px) 100vw, 50vw"
-                  quality={100}
-                  unoptimized
-                  className="w-full h-auto block"
-                />
-              </div>
-              <div className="col-span-1 opacity-0" style={{ height: 160 }} />
-              <div className="col-span-1 opacity-0" style={{ height: 160 }} />
-            </div>
-
-            {/* Row 6 */}
-            <div className="w-full grid grid-cols-4 gap-0 items-center">
-              <div className="col-span-1 opacity-0" style={{ height: 142 }} />
-              <div className="col-span-1 opacity-0" style={{ height: 142 }} />
-              <div className="col-span-1 relative overflow-hidden" style={{ height: 142 }}>
-                <Image
-                  src="https://framerusercontent.com/images/HKEFVGd6ys7beHYKYOu93dTs14.png"
-                  alt=""
-                  fill
-                  sizes="(max-width: 809px) 50vw, 25vw"
-                  quality={100}
-                  unoptimized
-                  className="object-cover object-center"
-                />
-              </div>
-              <div className="col-span-1 opacity-0" style={{ height: 142 }} />
-            </div>
-
-            {/* Row 7 â€” #nature */}
-            <div id="nature" className="w-full grid grid-cols-4 gap-0 items-center">
-              <div className="col-span-1 opacity-0" style={{ height: 142 }} />
-              <div className="col-span-1 relative overflow-hidden" style={{ height: 142 }}>
-                <Image
-                  src="https://framerusercontent.com/images/Lf1OF5PRh9mPBCHe8MYHsdwdFCk.png"
-                  alt=""
-                  fill
-                  sizes="(max-width: 809px) 50vw, 25vw"
-                  quality={100}
-                  unoptimized
-                  className="object-cover object-center"
-                />
-              </div>
-              <div className="col-span-1 opacity-0" style={{ height: 142 }} />
-              <div className="col-span-1 relative overflow-hidden" style={{ height: 142 }}>
-                <Image
-                  src="https://framerusercontent.com/images/JPj0I8zAAq66MSX9CECf0MVNswg.png"
-                  alt=""
-                  fill
-                  sizes="(max-width: 809px) 50vw, 25vw"
-                  quality={100}
-                  unoptimized
-                  className="object-cover object-center"
-                />
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      {/* â”€â”€ Forming â”€â”€ */}
-      <section className="relative w-full flex flex-col items-center justify-start gap-[10px] p-0 overflow-clip rounded-none">
-
-        {/* Scrolling image ticker */}
-        <div className="absolute inset-0 z-[1] overflow-hidden">
-          <motion.div
-            className="flex flex-row absolute top-0 bottom-0 left-0"
-            animate={{ x: ["0%", "-50%"] }}
-            transition={{ duration: 120, repeat: Infinity, ease: "linear", repeatType: "loop" }}
-          >
-            {Array.from({ length: 10 }).map((_, i) => (
-              <div key={i} className="relative flex-shrink-0 h-full" style={{ width: "100vw" }}>
-                <Image
-                  src="https://framerusercontent.com/images/5NNKQ4BSIWoSfBzymrR6KDmQee8.png"
-                  alt=""
-                  fill
-                  sizes="100vw"
-                  quality={100}
-                  unoptimized
-                  className="object-cover"
-                />
-              </div>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Truchet overlay */}
-        <div className="absolute inset-0 z-[2]">
-          <FormingTruchet />
-        </div>
-
-        {/* Container */}
-        <div className="relative w-full max-w-[1920px] flex flex-col items-center justify-center overflow-clip rounded-none z-[3]
-          gap-[40px] py-[64px] px-[16px]
-          tablet:gap-[160px] tablet:py-[80px] tablet:px-[24px]
-          desktop:gap-[120px] desktop:py-[160px] desktop:px-[32px]">
-
-          {([ ["CURATED", "Grace"], ["DAILY LIFE", "For"], ["The", "Simplicity"] ] as const).map(([left, right]) => (
-            <div key={left} className="w-full flex flex-row justify-between items-center p-0 overflow-clip rounded-none">
-              <H2 className="w-auto !text-accent">{left}</H2>
-              <H2 className="w-auto !text-accent">{right}</H2>
-            </div>
-          ))}
-
-        </div>
-
-      </section>
-
       {/* â”€â”€ Featured â”€â”€ */}
       <section className="w-full flex flex-col justify-start items-center gap-[10px] p-0 overflow-visible rounded-none bg-caledon
-        py-[64px]
-        tablet:py-[80px]
-        desktop:py-[120px]">
+        py-[32px]
+        tablet:py-[40px]
+        desktop:py-[56px]">
 
         {/* Container */}
         <div className="w-full max-w-[1920px] flex flex-col justify-start items-start overflow-visible rounded-none z-[2]
@@ -576,6 +296,7 @@ export default function Home() {
                   price={product.price}
                   discount={product.discount}
                   imageSrc={product.imageSrc}
+                  slug={product.slug}
                   href={`/products/${product.slug}`}
                   className="!w-full"
                 />
@@ -588,7 +309,7 @@ export default function Home() {
       </section>
 
       {/* â”€â”€ Brands â”€â”€ */}
-      <section className="w-full flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip rounded-none bg-pistachio">
+      <section className="w-full flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip rounded-none bg-blush">
 
         {/* Container */}
         <div className="w-full max-w-[1920px] flex flex-col justify-start items-center overflow-clip rounded-none
@@ -610,17 +331,28 @@ export default function Home() {
               style={{
                 columnGap: "32px",
                 rowGap: "16px",
-                borderTop: "1px dashed var(--color-dark-green)",
-                borderBottom: "1px dashed var(--color-dark-green)",
+                borderTop: "1px dashed var(--color-plum)",
+                borderBottom: "1px dashed var(--color-plum)",
               }}
             >
-              <BrandCard title="Dior" description="Luxury Fashion" productCount={12} href="/shop-all" />
-              <BrandCard title="EstÃ©e Lauder" description="Premium Beauty" productCount={8} href="/shop-all" />
-              <BrandCard title="Clinique" description="Dermatologist Skincare" productCount={23} href="/shop-all" />
-              <BrandCard title="Kiehl's" description="Apothecary Skincare" productCount={34} href="/shop-all" />
-              <BrandCard title="L'OrÃ©al" description="Beauty Innovation" productCount={38} href="/shop-all" />
-              <BrandCard title="LancÃ´me" description="Luxury Beauty" productCount={9} href="/shop-all" />
-              <BrandCard title="Mac Cosmetics" description="Professional Makeup" productCount={14} href="/shop-all" />
+              {brandsLoading ? (
+                <div className="flex items-center justify-center w-full py-[24px]">
+                  <div
+                    className="w-[40px] h-[40px] rounded-full border-[2px] border-beige animate-spin"
+                    style={{ borderTopColor: "var(--color-brown)" }}
+                  />
+                </div>
+              ) : (
+                brands.map((brand) => (
+                  <BrandCard
+                    key={brand.id}
+                    title={brand.title}
+                    description={brand.description}
+                    productCount={brand.productCount}
+                    href="/shop-all"
+                  />
+                ))
+              )}
             </div>
 
           </div>

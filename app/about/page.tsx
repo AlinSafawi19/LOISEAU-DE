@@ -3,35 +3,65 @@
 import Image from "next/image";
 import { LiquidLogo } from "@/components/ui/liquid-logo";
 import { H2, H3, H5, ItalicBodyLg, SubtitleMd } from "@/components/ui/typography";
-import { FitText } from "@/components/ui/fit-text";
+import { Logomark } from "@/components/ui/logomark";
 import { ImgBox } from "@/components/ui/img-box";
 import { Ticker } from "@/components/ui/ticker";
 import { BrandLogo } from "@/components/ui/brand-logo";
+import { useEffect, useState } from "react";
 
-const TICKER_1 = [
-  { src: "https://framerusercontent.com/images/HAqoJmC6uDrBF5GXDT2oLWXODlo.svg?width=389&height=183", alt: "Brand 1" },
-  { src: "https://framerusercontent.com/images/i2Wr6QOsjNJApfHVu4YkrI8.svg?width=364&height=130",    alt: "Brand 2" },
-  { src: "https://framerusercontent.com/images/3UOx28WKBALj0p66HA3ixV2Dd5w.svg?width=355&height=121", alt: "Brand 3" },
-  { src: "https://framerusercontent.com/images/8RiK4o7scZpKeUhmcaiRY8H4TOQ.svg?width=357&height=150", alt: "Brand 4" },
-];
+const BRANDS_URL  = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/brands?limit=100`;
+const API_HEADERS = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 
-const TICKER_2 = [
-  { src: "https://framerusercontent.com/images/23P6ZwK7caiEddSzPFWMb5psTMk.svg?width=407&height=160", alt: "Brand 5" },
-  { src: "https://framerusercontent.com/images/GDMYF8sGVMu1nKIKy5GNl7SSFM.svg?width=334&height=166",  alt: "Brand 6" },
-  { src: "https://framerusercontent.com/images/3wDVzgrP4w3cOYZkBTQmZFDRvY.svg?width=487&height=196",  alt: "Brand 7" },
-];
+interface BrandLogoItem {
+  id:    string;
+  title: string;
+  image: string;
+}
+
+interface RawBrand {
+  id:    string;
+  Title: string;
+  Image: string;
+}
+
+/** Brand logos for the marquees, straight from the CMS brands collection. */
+function useBrandLogos() {
+  const [brands, setBrands] = useState<BrandLogoItem[]>([]);
+
+  useEffect(() => {
+    fetch(BRANDS_URL, { headers: API_HEADERS })
+      .then((r) => r.json())
+      .then((data) => {
+        const entries: RawBrand[] = data?.data ?? [];
+        setBrands(
+          entries
+            .filter((e) => e.Image)
+            .map((e) => ({ id: e.id, title: e.Title, image: e.Image }))
+        );
+      })
+      .catch(() => setBrands([]));
+  }, []);
+
+  return brands;
+}
 
 export default function About() {
+  const brandLogos = useBrandLogos();
+  // Split across the two marquees so both rows stay populated.
+  const half     = Math.ceil(brandLogos.length / 2);
+  const tickerA  = brandLogos.slice(0, half);
+  const tickerB  = brandLogos.slice(half);
+
   return (
     <main>
 
       {/* ── Hero ── */}
-      <section className="relative w-full h-screen flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip">
+      <section className="relative w-full h-[calc(100vh-60px)] tablet:h-[calc(100vh-68px)] desktop:h-[calc(100vh-72px)] flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip">
 
         {/* LiquidLogo — absolute, fills hero, z-1 */}
         <div className="absolute inset-0 z-[1]">
           <LiquidLogo
-            image="https://framerusercontent.com/images/uVIYzrvlrxs0dswtq4SIwUbJRgw.png?scale-down-to=2048&width=2400&height=1600"
+            image="https://framerusercontent.com/images/TkVzmeVSBibyrsJOcu5U4ccoM.png?scale-down-to=2048&width=2400&height=1800"
             distortionStrength={0.06}
             hoverRadius={0.07}
             decayTime={1400}
@@ -49,18 +79,13 @@ export default function About() {
 
           {/* Subtitles */}
           <div className="w-full flex flex-row justify-between items-center overflow-clip rounded-none border-b border-dashed border-white" style={{ padding: "16px 0" }}>
-            <SubtitleMd className="w-auto grow !text-white !text-left">E-commerce</SubtitleMd>
-            <SubtitleMd className="w-auto grow !text-white !text-center">Cosmetics</SubtitleMd>
-            <SubtitleMd className="w-auto grow !text-white !text-right">Beauty</SubtitleMd>
+            <SubtitleMd className="w-auto grow !text-white !text-left">K-Beauty</SubtitleMd>
+            <SubtitleMd className="w-auto grow !text-white !text-center">Rituals</SubtitleMd>
+            <SubtitleMd className="w-auto grow !text-white !text-right">Radiance</SubtitleMd>
           </div>
 
           {/* Hero logotype */}
-          <FitText
-            className="w-full font-clash font-normal clash-features text-center text-white not-italic"
-            style={{ letterSpacing: "0em", lineHeight: "1.2" }}
-          >
-            ABOUT US
-          </FitText>
+          <Logomark className="text-white" />
 
         </div>
 
@@ -74,13 +99,6 @@ export default function About() {
           tablet:gap-[64px] tablet:pt-[48px] tablet:px-[24px] tablet:pb-[64px]
           desktop:gap-[64px] desktop:pt-[64px] desktop:px-[32px] desktop:pb-[80px]">
 
-          {/* Primary title wrapper */}
-          <div className="w-full max-w-[800px] flex flex-col justify-start items-center gap-[8px] p-0 overflow-clip rounded-none z-[1]">
-            <ItalicBodyLg className="w-auto h-auto z-[1] !text-brown !text-center">
-              L&apos;OISEAU DÉ PARADIS
-            </ItalicBodyLg>
-          </div>
-
           {/* Img info wrapper */}
           <div className="w-full flex flex-col justify-start items-center gap-0 p-0 overflow-clip rounded-none">
             <ImgBox />
@@ -89,7 +107,7 @@ export default function About() {
           {/* Secondary title wrapper */}
           <div className="w-full max-w-[800px] flex flex-col justify-start items-center gap-[8px] p-0 overflow-clip rounded-none z-[1]">
             <H5 className="w-auto h-auto z-[1] !text-brown !text-center [text-wrap:balance]">
-              Pairing modern minimalist design with meaningful messaging, we craft exquisite identities that reveal each brand&apos;s unique story.
+              We source skincare from the Korean houses that formulate it, and pass it on unchanged. Same formula, same bottle, nothing relabelled.
             </H5>
           </div>
 
@@ -105,7 +123,7 @@ export default function About() {
           {/* Title wrapper */}
           <div className="w-full max-w-[800px] flex flex-col justify-start items-center gap-[8px] p-0 overflow-clip rounded-none z-[1]">
             <SubtitleMd className="w-auto h-auto z-[1] !text-brown !text-center [text-wrap:balance]">
-              Our work communicates quality at every touchpoint to create a presence that resonates deeply, generating the trust that leads to marketplace success.
+              Every product we list is made in Korea by the brand named on it. We are a shop, not a laboratory — what we add is the selection, never the formula.
             </SubtitleMd>
           </div>
 
@@ -141,7 +159,7 @@ export default function About() {
           {/* Title wrapper */}
           <div className="w-full max-w-[800px] flex flex-col justify-start items-center gap-[8px] p-0 overflow-clip rounded-none z-[1]">
             <H3 className="w-auto h-auto !text-brown !text-center">Brands</H3>
-            <ItalicBodyLg className="w-auto h-auto !text-brown !text-center">we are partners</ItalicBodyLg>
+            <ItalicBodyLg className="w-auto h-auto !text-brown !text-center">the Korean houses we stock</ItalicBodyLg>
           </div>
 
           {/* Brands wrapper */}
@@ -152,9 +170,9 @@ export default function About() {
 
             {/* Ticker 1 — direction right */}
             <Ticker
-              items={TICKER_1.map((b) => (
-                <div key={b.src} className="flex flex-row justify-start items-center gap-0 p-0 overflow-clip rounded-none">
-                  <BrandLogo src={b.src} alt={b.alt} />
+              items={tickerA.map((b) => (
+                <div key={b.id} className="flex flex-row justify-start items-center gap-0 p-0 overflow-clip rounded-none">
+                  <BrandLogo src={b.image} alt={b.title} />
                 </div>
               ))}
               gap={16}
@@ -166,9 +184,9 @@ export default function About() {
 
             {/* Ticker 2 — direction right */}
             <Ticker
-              items={TICKER_2.map((b) => (
-                <div key={b.src} className="flex flex-row justify-start items-center gap-0 p-0 overflow-clip rounded-none">
-                  <BrandLogo src={b.src} alt={b.alt} />
+              items={tickerB.map((b) => (
+                <div key={b.id} className="flex flex-row justify-start items-center gap-0 p-0 overflow-clip rounded-none">
+                  <BrandLogo src={b.image} alt={b.title} />
                 </div>
               ))}
               gap={16}

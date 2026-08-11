@@ -28,19 +28,19 @@ export default function NotFound() {
           style={{ padding: "80px 32px 32px 32px" }}
         >
           <H3 className="absolute top-[96px] left-[32px] !text-beige !text-left z-[1] w-auto">
-            L'O
+            GL
           </H3>
           <H3 className="absolute top-[96px] right-[32px] !text-beige !text-right z-[1] w-auto">
-            ISO
+            AZE
           </H3>
           <H3 className="absolute bottom-[96px] left-[32px] !text-beige !text-left z-[1] w-auto">
-            AU
+            SKIN
           </H3>
           <H3 className="absolute bottom-[96px] right-[32px] !text-beige !text-right z-[1] w-auto">
-            DÉ
+            CARE
           </H3>
           <div className="flex flex-col items-center gap-[24] pointer-events-auto">
-            <H1 className="!text-pistachio !text-center z-[1] w-auto max-w-[720px]">
+            <H1 className="!text-blush !text-center z-[1] w-auto max-w-[720px]">
               404:<br/>The page not found
             </H1>
             <a href="/">
