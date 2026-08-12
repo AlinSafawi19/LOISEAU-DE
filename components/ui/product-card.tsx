@@ -32,7 +32,6 @@ export function ProductCard({
 }: ProductCardProps) {
   const [isDesktop, setIsDesktop] = useState(false);
   const [hovered, setHovered] = useState(false);
-  const [overHeart, setOverHeart] = useState(false);
   const [overCta,   setOverCta]   = useState(false);
   const { add } = useCart();
 
@@ -50,8 +49,8 @@ export function ProductCard({
   }, []);
 
   // The Discover cursor is suppressed over the heart so its own pointer shows.
-  // The Discover cursor steps aside over the interactive controls.
-  const cursorVisible = isDesktop && hovered && !overHeart && !overCta;
+  // The Discover cursor steps aside over the card controls.
+  const cursorVisible = isDesktop && hovered && !overCta;
 
   return (
     <a
@@ -81,17 +80,6 @@ export function ProductCard({
           />
         </div>
 
-        {/* Wishlist toggle */}
-        {slug && (
-          <div
-            className="absolute top-[12px] right-[12px] z-[2]"
-            onMouseEnter={() => setOverHeart(true)}
-            onMouseLeave={() => setOverHeart(false)}
-          >
-            <WishlistButton slug={slug} title={title} />
-          </div>
-        )}
-
         {/* Discount Wrapper — hidden when discount === 0 */}
         {discount !== 0 && (
           <div
@@ -116,10 +104,10 @@ export function ProductCard({
           <SubtitleMd className="!text-black !text-left">{price}</SubtitleMd>
         </div>
 
-        {/* Add to cart */}
+        {/* Add to cart + wishlist */}
         {slug && (
           <div
-            className="w-full pt-[4px]"
+            className="w-full flex flex-row justify-start items-stretch gap-[8px] pt-[4px]"
             onMouseEnter={() => setOverCta(true)}
             onMouseLeave={() => setOverCta(false)}
           >
@@ -130,10 +118,16 @@ export function ProductCard({
                 e.stopPropagation();
                 add(slug);
               }}
-              className="w-full font-clash font-medium clash-features uppercase text-brown text-[13px] leading-[1.4] border border-dashed border-beige px-[16px] py-[10px] rounded-none bg-transparent cursor-pointer transition-colors duration-300 hover:bg-blush hover:text-plum"
+              className="flex-1 font-clash font-medium clash-features uppercase text-brown text-[13px] leading-[1.4] border border-dotted border-beige px-[16px] py-[10px] rounded-none bg-transparent cursor-pointer transition-colors duration-300 hover:bg-blush hover:text-plum"
             >
               Add to cart
             </button>
+
+            <WishlistButton
+              slug={slug}
+              title={title}
+              className="!w-[40px] !h-auto shrink-0 !rounded-none !bg-transparent !border !border-dotted !border-beige hover:!bg-blush"
+            />
           </div>
         )}
 

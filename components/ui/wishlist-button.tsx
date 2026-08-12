@@ -29,7 +29,7 @@ export function WishlistButton({ slug, title = "this product", className = "" }:
         e.stopPropagation();
         toggle(slug);
       }}
-      className={`flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm border-none cursor-pointer transition-colors duration-300 hover:bg-white w-[32px] h-[32px] tablet:w-[37px] tablet:h-[37px] desktop:w-[41px] desktop:h-[41px] ${className}`}
+      className={`flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm border-0 cursor-pointer transition-colors duration-300 hover:bg-white w-[32px] h-[32px] tablet:w-[37px] tablet:h-[37px] desktop:w-[41px] desktop:h-[41px] ${className}`}
     >
       <Heart
         strokeWidth={1.5}

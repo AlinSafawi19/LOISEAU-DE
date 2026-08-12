@@ -11,7 +11,6 @@ import { useCart } from "./use-cart";
 import { useScrollLock } from "./use-scroll-lock";
 
 const EASE   = [0.44, 0, 0.56, 1] as const;
-const SPRING = { type: "spring" as const, duration: 0.4, bounce: 0.2 };
 // Long, low-bounce ease so the panel glides rather than snaps.
 const PANEL  = { duration: 0.45, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] };
 
@@ -39,11 +38,11 @@ function NavLink({ title, href, active }: { title: string; href: string; active:
       onMouseLeave={() => setHovered(false)}
       className="relative flex flex-row items-center justify-center px-[12px] py-[6px] rounded-none overflow-clip"
     >
-      <motion.span
+      <span
         aria-hidden
-        className="absolute inset-0 bg-plum rounded-none"
-        animate={{ opacity: on ? 1 : 0 }}
-        transition={SPRING}
+        className={`absolute inset-0 bg-plum rounded-none transition-opacity duration-300 ease-[cubic-bezier(0.44,0,0.56,1)] ${
+          on ? "opacity-100" : "opacity-0"
+        }`}
       />
       <ButtonSm
         className="relative z-10 text-left"
@@ -82,7 +81,7 @@ function WishlistLink({ className = "" }: { className?: string }) {
           <Heart strokeWidth={1.5} className="text-brown w-[21px] h-[21px] tablet:w-[22px] tablet:h-[22px] desktop:w-[23px] desktop:h-[23px]" fill="none" />
         </motion.span>
         <motion.span
-          className="absolute inset-0 flex items-center justify-center"
+          className="absolute inset-0 flex items-center justify-center opacity-0"
           animate={{ opacity: filled ? 1 : 0, scale: filled ? 1 : 0.8 }}
           transition={{ duration: 0.3, ease: EASE }}
         >

@@ -10,15 +10,11 @@ import { Ticker } from "@/components/ui/ticker";
 import Link from "next/link";
 import { OutlineButton } from "@/components/ui/button";
 import { ProductCard } from "@/components/ui/product-card";
-import { BrandCard } from "@/components/ui/brand-card";
 import { OffersSection } from "@/components/ui/offers-section";
 
 const EASE = [0.44, 0, 0.56, 1] as const;
 
 const PRODUCTS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/products`;
-const BRANDS_URL     = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/brands`;
-// The API pages at 20 by default; brand counts must see every product.
-const ALL_PRODUCTS_URL = `${PRODUCTS_URL}?limit=100`;
 const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 
 interface FeaturedProduct {
@@ -65,57 +61,6 @@ function useFeaturedProducts(limit: number) {
   return { products, loading };
 }
 
-interface Brand {
-  id:           string;
-  title:        string;
-  description:  string;
-  productCount: number;
-}
-
-interface RawBrandEntry {
-  id:          string;
-  Slug:        string;
-  Title:       string;
-  Description: string;
-}
-
-interface RawBrandProduct {
-  Brand: string;
-}
-
-/**
- * Title and Description come straight from the CMS. The count does not: the
- * brands endpoint serves a stored "Product counts" value that lags behind the
- * live figure the CMS admin shows, so it is tallied from the products instead.
- */
-function useBrands() {
-  const [brands,  setBrands]  = useState<Brand[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    Promise.all([
-      fetch(BRANDS_URL,       { headers: API_HEADERS }).then((r) => r.json()),
-      fetch(ALL_PRODUCTS_URL, { headers: API_HEADERS }).then((r) => r.json()),
-    ])
-      .then(([brandsData, productsData]) => {
-        const entries:  RawBrandEntry[]   = brandsData?.data   ?? [];
-        const products: RawBrandProduct[] = productsData?.data ?? [];
-
-        setBrands(
-          entries.map((e) => ({
-            id:           e.id,
-            title:        e.Title,
-            description:  e.Description,
-            productCount: products.filter((p) => p.Brand === e.Slug).length,
-          }))
-        );
-      })
-      .finally(() => setLoading(false));
-  }, []);
-
-  return { brands, loading };
-}
-
 const categories = [
   {
     name: "SKINCARE",
@@ -131,7 +76,6 @@ const categories = [
 
 export default function Home() {
   const { products: featuredProducts, loading: featuredLoading } = useFeaturedProducts(3);
-  const { brands,                     loading: brandsLoading   } = useBrands();
 
   return (
     <main>
@@ -308,58 +252,6 @@ export default function Home() {
 
       </section>
 
-      {/* â”€â”€ Brands â”€â”€ */}
-      <section className="w-full flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip rounded-none bg-blush">
-
-        {/* Container */}
-        <div className="w-full max-w-[1920px] flex flex-col justify-start items-center overflow-clip rounded-none
-          gap-[24px] py-[48px] px-[16px]
-          tablet:py-[64px] tablet:px-[24px]
-          desktop:py-[80px] desktop:px-[32px]">
-
-          {/* Brand Wrapper */}
-          <div className="w-full flex flex-col justify-start items-start gap-[32px] overflow-clip rounded-none p-0">
-
-            {/* Title Wrapper */}
-            <div className="sticky top-0 w-full max-w-[400px] flex flex-col justify-start items-start gap-[8px] overflow-visible rounded-none p-0 z-[1]">
-              <H4 className="w-full !text-brown !text-left [text-wrap:balance]">Brands</H4>
-            </div>
-
-            {/* Brand Logos Wrapper */}
-            <div
-              className="w-full flex flex-row flex-wrap justify-start items-start overflow-clip rounded-none py-[24px] px-0"
-              style={{
-                columnGap: "32px",
-                rowGap: "16px",
-                borderTop: "1px dashed var(--color-plum)",
-                borderBottom: "1px dashed var(--color-plum)",
-              }}
-            >
-              {brandsLoading ? (
-                <div className="flex items-center justify-center w-full py-[24px]">
-                  <div
-                    className="w-[40px] h-[40px] rounded-full border-[2px] border-beige animate-spin"
-                    style={{ borderTopColor: "var(--color-brown)" }}
-                  />
-                </div>
-              ) : (
-                brands.map((brand) => (
-                  <BrandCard
-                    key={brand.id}
-                    title={brand.title}
-                    description={brand.description}
-                    productCount={brand.productCount}
-                    href="/shop-all"
-                  />
-                ))
-              )}
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
 
     </main>
   );

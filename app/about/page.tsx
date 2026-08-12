@@ -5,53 +5,8 @@ import { LiquidLogo } from "@/components/ui/liquid-logo";
 import { H2, H3, H5, ItalicBodyLg, SubtitleMd } from "@/components/ui/typography";
 import { Logomark } from "@/components/ui/logomark";
 import { ImgBox } from "@/components/ui/img-box";
-import { Ticker } from "@/components/ui/ticker";
-import { BrandLogo } from "@/components/ui/brand-logo";
-import { useEffect, useState } from "react";
-
-const BRANDS_URL  = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/brands?limit=100`;
-const API_HEADERS = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
-
-interface BrandLogoItem {
-  id:    string;
-  title: string;
-  image: string;
-}
-
-interface RawBrand {
-  id:    string;
-  Title: string;
-  Image: string;
-}
-
-/** Brand logos for the marquees, straight from the CMS brands collection. */
-function useBrandLogos() {
-  const [brands, setBrands] = useState<BrandLogoItem[]>([]);
-
-  useEffect(() => {
-    fetch(BRANDS_URL, { headers: API_HEADERS })
-      .then((r) => r.json())
-      .then((data) => {
-        const entries: RawBrand[] = data?.data ?? [];
-        setBrands(
-          entries
-            .filter((e) => e.Image)
-            .map((e) => ({ id: e.id, title: e.Title, image: e.Image }))
-        );
-      })
-      .catch(() => setBrands([]));
-  }, []);
-
-  return brands;
-}
 
 export default function About() {
-  const brandLogos = useBrandLogos();
-  // Split across the two marquees so both rows stay populated.
-  const half     = Math.ceil(brandLogos.length / 2);
-  const tickerA  = brandLogos.slice(0, half);
-  const tickerB  = brandLogos.slice(half);
-
   return (
     <main>
 
@@ -149,56 +104,6 @@ export default function About() {
 
       {/* ── Our Shop ── */}
       <section className="w-full flex flex-col justify-start items-center gap-0 p-0 overflow-clip rounded-none bg-beige">
-
-        {/* Container 1 */}
-        <div className="w-full max-w-[1920px] flex flex-col justify-start items-center overflow-clip rounded-none
-          gap-[24px] pt-[32px] px-[16px] pb-[48px]
-          tablet:gap-[64px] tablet:pt-[48px] tablet:px-[24px] tablet:pb-[64px]
-          desktop:gap-[64px] desktop:pt-[80px] desktop:px-[32px] desktop:pb-[8px]">
-
-          {/* Title wrapper */}
-          <div className="w-full max-w-[800px] flex flex-col justify-start items-center gap-[8px] p-0 overflow-clip rounded-none z-[1]">
-            <H3 className="w-auto h-auto !text-brown !text-center">Brands</H3>
-            <ItalicBodyLg className="w-auto h-auto !text-brown !text-center">the Korean houses we stock</ItalicBodyLg>
-          </div>
-
-          {/* Brands wrapper */}
-          <div className="w-full max-w-[800px] flex flex-col justify-start items-center overflow-clip rounded-none p-0
-            gap-[16px]
-            tablet:gap-[24px]
-            desktop:gap-[16px]">
-
-            {/* Ticker 1 — direction right */}
-            <Ticker
-              items={tickerA.map((b) => (
-                <div key={b.id} className="flex flex-row justify-start items-center gap-0 p-0 overflow-clip rounded-none">
-                  <BrandLogo src={b.image} alt={b.title} />
-                </div>
-              ))}
-              gap={16}
-              speed={30}
-              hoverSpeed={100}
-              direction="right"
-              className="w-full overflow-clip rounded-none"
-            />
-
-            {/* Ticker 2 — direction right */}
-            <Ticker
-              items={tickerB.map((b) => (
-                <div key={b.id} className="flex flex-row justify-start items-center gap-0 p-0 overflow-clip rounded-none">
-                  <BrandLogo src={b.image} alt={b.title} />
-                </div>
-              ))}
-              gap={16}
-              speed={30}
-              hoverSpeed={100}
-              direction="right"
-              className="w-full overflow-clip rounded-none"
-            />
-
-          </div>
-
-        </div>
 
         {/* Container 2 */}
         <div className="relative w-full max-w-[1920px] flex flex-col justify-start items-center overflow-clip rounded-none z-[2]
