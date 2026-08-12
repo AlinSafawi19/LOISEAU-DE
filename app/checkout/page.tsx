@@ -99,10 +99,12 @@ export default function Checkout() {
           tablet:gap-[40px] tablet:py-[64px] tablet:px-[24px]
           desktop:gap-[48px] desktop:py-[80px] desktop:px-[32px]">
 
-          <div className="w-full flex flex-col justify-start items-start gap-[4px] p-0 rounded-none">
-            <H2 className="w-full !text-black !text-left">CHECKOUT</H2>
-            <ItalicBodyLg className="w-full !text-brown !text-left">cash on delivery</ItalicBodyLg>
-          </div>
+          {settled && (
+            <div className="w-full flex flex-col justify-start items-start gap-[4px] p-0 rounded-none">
+              <H2 className="w-full !text-black !text-left">CHECKOUT</H2>
+              <ItalicBodyLg className="w-full !text-brown !text-left">cash on delivery</ItalicBodyLg>
+            </div>
+          )}
 
           {!settled && (
             <div className="flex items-center justify-center w-full py-[48px]">

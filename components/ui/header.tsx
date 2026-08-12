@@ -69,29 +69,29 @@ function WishlistLink({ className = "" }: { className?: string }) {
       aria-label={ready && count > 0 ? `Wishlist, ${count} saved` : "Wishlist"}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={`relative flex items-center justify-center w-[36px] h-[36px] tablet:w-[40px] tablet:h-[40px] desktop:w-[44px] desktop:h-[44px] rounded-none ${className}`}
+      className={`relative flex items-center justify-center w-[42px] h-[42px] tablet:w-[43px] tablet:h-[43px] desktop:w-[44px] desktop:h-[44px] rounded-none ${className}`}
     >
       {/* Two stacked hearts crossfade — the SVG `fill` attribute cannot be
           CSS-transitioned, so opacity does the work instead. */}
-      <span className="relative flex items-center justify-center w-[16px] h-[16px] tablet:w-[19px] tablet:h-[19px] desktop:w-[23px] desktop:h-[23px]">
+      <span className="relative flex items-center justify-center w-[21px] h-[21px] tablet:w-[22px] tablet:h-[22px] desktop:w-[23px] desktop:h-[23px]">
         <motion.span
           className="absolute inset-0 flex items-center justify-center"
           animate={{ opacity: filled ? 0 : 1 }}
           transition={{ duration: 0.3, ease: EASE }}
         >
-          <Heart strokeWidth={1.5} className="text-brown w-[16px] h-[16px] tablet:w-[19px] tablet:h-[19px] desktop:w-[23px] desktop:h-[23px]" fill="none" />
+          <Heart strokeWidth={1.5} className="text-brown w-[21px] h-[21px] tablet:w-[22px] tablet:h-[22px] desktop:w-[23px] desktop:h-[23px]" fill="none" />
         </motion.span>
         <motion.span
           className="absolute inset-0 flex items-center justify-center"
           animate={{ opacity: filled ? 1 : 0, scale: filled ? 1 : 0.8 }}
           transition={{ duration: 0.3, ease: EASE }}
         >
-          <Heart strokeWidth={1.5} className="text-plum w-[16px] h-[16px] tablet:w-[19px] tablet:h-[19px] desktop:w-[23px] desktop:h-[23px]" fill="var(--color-plum)" />
+          <Heart strokeWidth={1.5} className="text-plum w-[21px] h-[21px] tablet:w-[22px] tablet:h-[22px] desktop:w-[23px] desktop:h-[23px]" fill="var(--color-plum)" />
         </motion.span>
       </span>
       {ready && count > 0 && (
-        <span className="absolute top-[4px] right-[2px] min-w-[16px] h-[16px] px-[3px] flex items-center justify-center bg-plum rounded-none">
-          <span className="font-clash font-medium text-[10px] leading-none text-white">{count}</span>
+        <span className="absolute top-[3px] right-[1px] min-w-[17px] h-[17px] px-[4px] flex items-center justify-center bg-plum rounded-full">
+          <span className="font-clash font-medium text-[11px] leading-none text-white">{count}</span>
         </span>
       )}
     </Link>
@@ -108,7 +108,7 @@ function CartLink({ className = "" }: { className?: string }) {
       aria-label={ready && count > 0 ? `Cart, ${count} items` : "Cart"}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={`relative flex items-center justify-center w-[36px] h-[36px] tablet:w-[40px] tablet:h-[40px] desktop:w-[44px] desktop:h-[44px] rounded-none ${className}`}
+      className={`relative flex items-center justify-center w-[42px] h-[42px] tablet:w-[43px] tablet:h-[43px] desktop:w-[44px] desktop:h-[44px] rounded-none ${className}`}
     >
       <motion.span
         className="flex items-center justify-center"
@@ -118,13 +118,13 @@ function CartLink({ className = "" }: { className?: string }) {
         <ShoppingBag
           strokeWidth={1.5}
           fill="none"
-          className={`${hovered ? "text-plum" : "text-brown"} w-[16px] h-[16px] tablet:w-[19px] tablet:h-[19px] desktop:w-[23px] desktop:h-[23px]`}
+          className={`${hovered ? "text-plum" : "text-brown"} w-[21px] h-[21px] tablet:w-[22px] tablet:h-[22px] desktop:w-[23px] desktop:h-[23px]`}
           style={{ transition: "color 0.3s cubic-bezier(0.44,0,0.56,1)" }}
         />
       </motion.span>
       {ready && count > 0 && (
-        <span className="absolute top-[4px] right-[2px] min-w-[16px] h-[16px] px-[3px] flex items-center justify-center bg-plum rounded-none">
-          <span className="font-clash font-medium text-[10px] leading-none text-white">{count}</span>
+        <span className="absolute top-[3px] right-[1px] min-w-[17px] h-[17px] px-[4px] flex items-center justify-center bg-plum rounded-full">
+          <span className="font-clash font-medium text-[11px] leading-none text-white">{count}</span>
         </span>
       )}
     </Link>
@@ -133,15 +133,15 @@ function CartLink({ className = "" }: { className?: string }) {
 
 function Hamburger({ open }: { open: boolean }) {
   return (
-    <span className="relative block w-[24px] h-[11px]" aria-hidden>
+    <span className="relative block w-[28px] h-[13px] tablet:w-[26px] tablet:h-[12px]" aria-hidden>
       <motion.span
-        className="absolute left-0 h-px w-full bg-brown rounded-none"
-        animate={open ? { top: 5, rotate: 45 } : { top: 0, rotate: 0 }}
+        className="absolute left-0 h-[1.5px] w-full bg-brown rounded-none"
+        animate={open ? { top: 6, rotate: 45 } : { top: 0, rotate: 0 }}
         transition={{ duration: 0.3, ease: EASE }}
       />
       <motion.span
-        className="absolute left-0 h-px w-full bg-brown rounded-none"
-        animate={open ? { top: 5, rotate: -45 } : { top: 10, rotate: 0 }}
+        className="absolute left-0 h-[1.5px] w-full bg-brown rounded-none"
+        animate={open ? { top: 6, rotate: -45 } : { top: 12, rotate: 0 }}
         transition={{ duration: 0.3, ease: EASE }}
       />
     </span>
@@ -176,18 +176,16 @@ export function Header() {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
-  // Contact opens straight into content rather than a hero image, so the header
-  // needs its own edge from the start; elsewhere the rule appears on scroll.
-  const alwaysBordered = pathname.startsWith("/contact");
+  // Contact opens straight into content rather than a hero image, so it is the
+  // only page where the header needs its own edge.
+  const bordered = pathname.startsWith("/contact");
 
   return (
     <>
       <header
         className={`sticky top-0 z-[100] w-full rounded-none border-b border-dashed transition-colors duration-300 ${
-          scrolled || alwaysBordered
-            ? "bg-lavender/95 backdrop-blur-md border-beige"
-            : "bg-lavender/75 backdrop-blur-sm border-transparent"
-        }`}
+          scrolled ? "bg-lavender/95 backdrop-blur-md" : "bg-lavender/75 backdrop-blur-sm"
+        } ${bordered ? "border-beige" : "border-transparent"}`}
       >
         <div className="relative w-full max-w-[1920px] mx-auto flex flex-row justify-between items-center rounded-none
           h-[60px] px-[16px]
@@ -220,7 +218,7 @@ export function Header() {
               onClick={() => setOpen(true)}
               aria-label="Open menu"
               aria-expanded={open}
-              className="tablet:hidden flex items-center justify-center w-[40px] h-[40px] -mr-[8px] rounded-none bg-transparent border-none cursor-pointer"
+              className="tablet:hidden flex items-center justify-center w-[44px] h-[44px] -mr-[8px] rounded-none bg-transparent border-none cursor-pointer"
             >
               <Hamburger open={false} />
             </button>
@@ -261,7 +259,7 @@ export function Header() {
                   type="button"
                   onClick={() => setOpen(false)}
                   aria-label="Close menu"
-                  className="flex items-center justify-center w-[40px] h-[40px] -mr-[8px] rounded-none bg-transparent border-none cursor-pointer"
+                  className="flex items-center justify-center w-[44px] h-[44px] -mr-[8px] rounded-none bg-transparent border-none cursor-pointer"
                 >
                   <Hamburger open />
                 </button>
@@ -273,12 +271,11 @@ export function Header() {
                     key={href}
                     href={href}
                     aria-current={isActive(href) ? "page" : undefined}
-                    className="w-full flex flex-row justify-between items-center gap-[10px] pb-[12px] rounded-none border-b border-dashed border-beige"
+                    className="w-full flex flex-row justify-start items-center gap-[10px] pb-[12px] rounded-none border-b border-dashed border-beige"
                   >
                     <ButtonSm className={`!text-left !text-[16px] ${isActive(href) ? "!text-plum" : "!text-brown"}`}>
                       {title}
                     </ButtonSm>
-                    {isActive(href) && <span className="w-[6px] h-[6px] bg-plum rounded-none shrink-0" aria-hidden />}
                   </Link>
                 ))}
               </nav>
