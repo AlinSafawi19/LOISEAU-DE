@@ -7,8 +7,20 @@ import { H4, SubtitleMd } from "./typography";
 
 const CATEGORIES_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/categories`;
 const BRANDS_URL     = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/brands`;
+const COLLECTIONS_URL= `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/collections`;
 const PRODUCTS_URL   = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/products`;
 const API_HEADERS    = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
+
+/**
+ * Relation fields come back either expanded into an object or as a bare slug
+ * string, depending on the entry — normalise both down to a slug.
+ */
+type Relation = string | { Slug?: string } | null | undefined;
+
+function relationSlug(value: Relation): string {
+  if (!value) return "";
+  return typeof value === "string" ? value : value.Slug ?? "";
+}
 
 interface RawProduct {
   id:              string;
@@ -18,9 +30,9 @@ interface RawProduct {
   Price:           string;
   Discount:        string;
   Gender:          string;
-  Category:        string;
-  Brand:           string;
-  Collections:     string;
+  Category:        Relation;
+  Brand:           Relation;
+  Collections:     Relation;
 }
 
 interface Product {
@@ -60,9 +72,9 @@ async function fetchProducts(url: string): Promise<Product[]> {
     discount:    parseFloat(e.Discount)     || 0,
     imageSrc:    e["Cover img 1"],
     gender:      e.Gender,
-    category:    e.Category,
-    brand:       e.Brand,
-    collections: e.Collections ?? "",
+    category:    relationSlug(e.Category),
+    brand:       relationSlug(e.Brand),
+    collections: relationSlug(e.Collections),
   }));
 }
 
@@ -93,6 +105,7 @@ function EmptyState() {
 export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}) {
   const [categories,          setCategories]          = useState<FilterItem[]>([]);
   const [brands,              setBrands]              = useState<FilterItem[]>([]);
+  const [collections,         setCollections]         = useState<FilterItem[]>([]);
   const [allProducts,         setAllProducts]         = useState<Product[]>([]);
   const [loading,             setLoading]             = useState(true);
   const [page,                setPage]                = useState(1);
@@ -103,6 +116,7 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
   const [selectedGender,      setSelectedGender]      = useState("ALL");
   const [selectedCategories,  setSelectedCategories]  = useState<Set<string>>(new Set());
   const [selectedBrands,      setSelectedBrands]      = useState<Set<string>>(new Set());
+  const [selectedCollections, setSelectedCollections] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 810);
@@ -116,10 +130,12 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
     Promise.all([
       fetchFilterItems(CATEGORIES_URL),
       fetchFilterItems(BRANDS_URL),
+      fetchFilterItems(COLLECTIONS_URL),
       fetchProducts(PRODUCTS_URL),
-    ]).then(([cats, brnds, prods]) => {
+    ]).then(([cats, brnds, cols, prods]) => {
       setCategories(cats);
       setBrands(brnds);
+      setCollections(cols);
       setAllProducts(prods);
     }).finally(() => setLoading(false));
   }, []);
@@ -137,13 +153,16 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
     return m;
   }, [brands]);
 
+  const collectionSlugToId = useMemo(() => {
+    const m: Record<string, string> = {};
+    collections.forEach((c) => { m[c.slug] = c.id; });
+    return m;
+  }, [collections]);
+
   const filtered = useMemo(() => {
     const q = searchValue.trim().toLowerCase();
     return allProducts.filter((p) => {
-      if (collectionSlug) {
-        const cols = p.collections.split(",").map((s) => s.trim());
-        if (!cols.includes(collectionSlug)) return false;
-      }
+      if (collectionSlug && p.collections !== collectionSlug) return false;
       if (q && !p.title.toLowerCase().includes(q)) return false;
       if (selectedGender !== "ALL" && p.gender !== selectedGender) return false;
       if (selectedCategories.size > 0) {
@@ -154,12 +173,16 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
         const brandId = brandSlugToId[p.brand];
         if (!brandId || !selectedBrands.has(brandId)) return false;
       }
+      if (selectedCollections.size > 0) {
+        const colId = collectionSlugToId[p.collections];
+        if (!colId || !selectedCollections.has(colId)) return false;
+      }
       return true;
     });
-  }, [allProducts, collectionSlug, searchValue, selectedGender, selectedCategories, selectedBrands, categorySlugToId, brandSlugToId]);
+  }, [allProducts, collectionSlug, searchValue, selectedGender, selectedCategories, selectedBrands, selectedCollections, categorySlugToId, brandSlugToId, collectionSlugToId]);
 
   // Reset to page 1 whenever filters change
-  useEffect(() => { setPage(1); }, [searchValue, selectedGender, selectedCategories, selectedBrands]);
+  useEffect(() => { setPage(1); }, [searchValue, selectedGender, selectedCategories, selectedBrands, selectedCollections]);
 
   const pageSize  = isMobile ? MOBILE_PAGE_SIZE : DESKTOP_PAGE_SIZE;
   const paginated = filtered.slice(0, page * pageSize);
@@ -181,11 +204,20 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
     });
   }
 
+  function handleCollectionToggle(id: string) {
+    setSelectedCollections((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
+
   function handleClear() {
     setSearchValue("");
     setSelectedGender("ALL");
     setSelectedCategories(new Set());
     setSelectedBrands(new Set());
+    setSelectedCollections(new Set());
   }
 
   return (
@@ -209,10 +241,11 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
           desktop:gap-[32px]">
 
           {/* Filters sidebar */}
-          <div className="sticky top-[58px] md:top-[80px] self-start w-full tablet:w-auto z-[20] tablet:z-auto">
+          <div className="sticky top-[60px] tablet:top-[68px] desktop:top-[72px] self-start w-[calc(100%+32px)] -mx-[16px] tablet:w-auto tablet:mx-0 z-[20] tablet:z-auto">
             <Filters
               categories={categories}
               brands={brands}
+              collections={collections}
               searchValue={searchValue}
               onSearchChange={setSearchValue}
               selectedGender={selectedGender}
@@ -221,6 +254,8 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
               onCategoryToggle={handleCategoryToggle}
               selectedBrands={selectedBrands}
               onBrandToggle={handleBrandToggle}
+              selectedCollections={selectedCollections}
+              onCollectionToggle={handleCollectionToggle}
               onClear={handleClear}
             />
           </div>

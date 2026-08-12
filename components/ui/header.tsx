@@ -210,7 +210,7 @@ export function Header() {
           <div className="flex flex-row items-center gap-0">
 
             <WishlistLink />
-            <CartLink className="-mr-[6px] tablet:mr-0" />
+            <CartLink className="tablet:-mr-[6px]" />
 
             {/* Mobile trigger */}
             <button

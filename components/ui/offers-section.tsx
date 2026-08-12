@@ -1,79 +1,93 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { H4, SubtitleMd, SubtitleSm, ItalicBodySm, BodySm } from "./typography";
+import { H4, SubtitleMd, ItalicBodySm } from "./typography";
 import { OutlineButton } from "./button";
+import { ProductCard } from "./product-card";
 
-const OFFERS_URL  = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/offers?limit=100`;
-const API_HEADERS = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
+const PRODUCTS_URL    = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/products?limit=100`;
+const COLLECTIONS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/collections?limit=100`;
+const API_HEADERS     = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 
-interface RawOffer {
-  id:              string;
-  Slug:            string;
-  Title:           string;
-  Description:     string;
-  Image:           string;
-  Type:            string;
-  Price:           string;
-  "Compare price": string;
-  Badge:           string;
-  Link:            string;
-  Active:          string;
+// The entry in the CMS `collections` list that drives this section.
+const OFFERS_SLUG = "offers";
+
+/**
+ * A relation field arrives either expanded into an object or as a bare slug
+ * string, depending on the entry — normalise both down to a slug.
+ */
+type Relation = string | { Slug?: string } | null | undefined;
+
+function relationSlug(value: Relation): string {
+  if (!value) return "";
+  return typeof value === "string" ? value : value.Slug ?? "";
 }
 
-interface Offer {
-  id:           string;
-  title:        string;
-  description:  string;
-  image:        string;
-  type:         string;
-  price:        number;
-  comparePrice: number;
-  badge:        string;
-  href:         string;
+interface RawProduct {
+  id:            string;
+  Slug:          string;
+  Title:         string;
+  "Cover img 1": string;
+  Price:         string;
+  Discount:      string;
+  Collections:   Relation;
+}
+
+interface RawCollection {
+  Slug:       string;
+  Title:      string;
+  tagline:    string;
+  ButtonText: string;
+  ButtonPath: string;
+}
+
+interface OfferProduct {
+  id:       string;
+  slug:     string;
+  title:    string;
+  price:    number;
+  discount: number;
+  imageSrc: string;
 }
 
 function useOffers() {
-  const [offers,  setOffers]  = useState<Offer[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [products,   setProducts]   = useState<OfferProduct[]>([]);
+  const [collection, setCollection] = useState<RawCollection | null>(null);
+  const [loading,    setLoading]    = useState(true);
 
   useEffect(() => {
-    fetch(OFFERS_URL, { headers: API_HEADERS })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        const entries: RawOffer[] = data?.data ?? [];
-        setOffers(
+    Promise.all([
+      fetch(PRODUCTS_URL,    { headers: API_HEADERS }).then((r) => r.json()),
+      fetch(COLLECTIONS_URL, { headers: API_HEADERS }).then((r) => r.json()),
+    ])
+      .then(([productsData, collectionsData]) => {
+        const entries: RawProduct[]    = productsData?.data    ?? [];
+        const cols:    RawCollection[] = collectionsData?.data ?? [];
+
+        setCollection(cols.find((c) => c.Slug === OFFERS_SLUG) ?? null);
+        setProducts(
           entries
-            // An entry only goes live once Active is set to Yes in the CMS.
-            .filter((e) => (e.Active ?? "Yes").toLowerCase() !== "no")
+            .filter((e) => relationSlug(e.Collections) === OFFERS_SLUG)
             .map((e) => ({
-              id:           e.id,
-              title:        e.Title,
-              description:  e.Description ?? "",
-              image:        e.Image,
-              type:         e.Type ?? "",
-              price:        parseFloat(e.Price)             || 0,
-              comparePrice: parseFloat(e["Compare price"])  || 0,
-              badge:        e.Badge ?? "",
-              href:         e.Link || "/shop-all",
+              id:       e.id,
+              slug:     e.Slug,
+              title:    e.Title,
+              price:    parseFloat(e.Price)    || 0,
+              discount: parseFloat(e.Discount) || 0,
+              imageSrc: e["Cover img 1"],
             }))
         );
       })
-      // The collection may not exist yet; the section simply stays hidden.
-      .catch(() => setOffers([]))
+      .catch(() => setProducts([]))
       .finally(() => setLoading(false));
   }, []);
 
-  return { offers, loading };
+  return { products, collection, loading };
 }
 
 export function OffersSection() {
-  const { offers, loading } = useOffers();
-
-  // Nothing published, or no collection yet — render no empty shell.
-  if (!loading && offers.length === 0) return null;
+  const { products, collection, loading } = useOffers();
 
   return (
     <section className="w-full flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip rounded-none bg-dusty">
@@ -83,12 +97,24 @@ export function OffersSection() {
         tablet:gap-[32px] tablet:py-[64px] tablet:px-[24px]
         desktop:gap-[32px] desktop:py-[80px] desktop:px-[32px]">
 
-        {/* Title */}
-        <div className="w-full flex flex-col justify-start items-start gap-[4px] p-0 rounded-none">
-          <H4 className="w-full !text-brown !text-left [text-wrap:balance]">Bundles &amp; Offers</H4>
-          <ItalicBodySm className="w-full !text-brown !text-left [text-wrap:balance]">
-            sets worth more together
-          </ItalicBodySm>
+        {/* Title + CTA */}
+        <div className="w-full flex flex-row justify-between items-end gap-[16px] p-0 rounded-none">
+
+          <div className="flex flex-col justify-start items-start gap-[4px] min-w-0">
+            <H4 className="w-full !text-brown !text-left [text-wrap:balance]">
+              {collection?.Title || "Offers"}
+            </H4>
+            <ItalicBodySm className="w-full !text-brown !text-left [text-wrap:balance]">
+              {collection?.tagline || "bundles and reduced sets"}
+            </ItalicBodySm>
+          </div>
+
+          {!loading && products.length > 0 && (
+            <Link href={collection?.ButtonPath || "/shop-all"} className="shrink-0">
+              <OutlineButton>{collection?.ButtonText || "Shop all"}</OutlineButton>
+            </Link>
+          )}
+
         </div>
 
         {loading ? (
@@ -98,68 +124,33 @@ export function OffersSection() {
               style={{ borderTopColor: "var(--color-brown)" }}
             />
           </div>
+        ) : products.length === 0 ? (
+          /* No product is tagged into the Offers collection yet. */
+          <div className="w-full flex flex-col justify-center items-center gap-[16px] py-[32px] border border-dashed border-beige rounded-none">
+            <SubtitleMd className="!text-brown !text-center">No offers running right now</SubtitleMd>
+            <ItalicBodySm className="!text-brown !text-center max-w-[420px] [text-wrap:balance]">
+              New sets land regularly — in the meantime, everything is on the shop page.
+            </ItalicBodySm>
+            <Link href="/shop-all">
+              <OutlineButton>Shop all</OutlineButton>
+            </Link>
+          </div>
         ) : (
-          <div className="w-full flex flex-row flex-wrap justify-start items-stretch gap-[16px] tablet:gap-[24px]">
-            {offers.map((offer) => (
-              <Link
-                key={offer.id}
-                href={offer.href}
-                className="group w-full tablet:w-[calc(50%-12px)] desktop:w-[calc(33.333%-16px)] flex flex-col justify-start items-start gap-0 rounded-none overflow-clip bg-white"
-              >
-
-                {/* Image */}
-                <div className="relative w-full h-[220px] tablet:h-[260px] overflow-clip rounded-none">
-                  {offer.image && (
-                    <Image
-                      src={offer.image}
-                      alt=""
-                      fill
-                      sizes="(max-width: 809px) 100vw, (max-width: 1199px) 50vw, 33vw"
-                      quality={100}
-                      unoptimized
-                      className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.04]"
-                    />
-                  )}
-
-                  {offer.badge && (
-                    <div className="absolute top-[16px] left-[16px] bg-accent px-[12px] py-[4px] rounded-none z-[1]">
-                      <SubtitleSm className="!text-black !text-left">{offer.badge}</SubtitleSm>
-                    </div>
-                  )}
-
-                  {offer.type && (
-                    <div className="absolute top-[16px] right-[16px] bg-white px-[12px] py-[4px] rounded-none z-[1]">
-                      <SubtitleSm className="!text-brown !text-right">{offer.type}</SubtitleSm>
-                    </div>
-                  )}
-                </div>
-
-                {/* Details */}
-                <div className="w-full flex flex-col justify-start items-start gap-[12px] p-[24px] rounded-none">
-
-                  <div className="w-full flex flex-col justify-start items-start gap-[4px]">
-                    <SubtitleMd className="w-full !text-black !text-left">{offer.title}</SubtitleMd>
-                    {offer.description && (
-                      <BodySm className="w-full !text-brown !text-left [text-wrap:balance]">
-                        {offer.description}
-                      </BodySm>
-                    )}
-                  </div>
-
-                  <div className="w-full flex flex-row justify-between items-center gap-[10px] pt-[12px] border-t border-dashed border-beige">
-
-                    <div className="flex flex-row items-baseline gap-[8px]">
-                      <SubtitleMd className="!text-black !text-left">${offer.price}</SubtitleMd>
-                      {offer.comparePrice > offer.price && (
-                        <BodySm className="!text-beige !text-left line-through">${offer.comparePrice}</BodySm>
-                      )}
-                    </div>
-
-                    <OutlineButton>Shop</OutlineButton>
-                  </div>
-
-                </div>
-              </Link>
+          <div className="w-full grid
+              grid-cols-1 gap-x-[16px] gap-y-[48px]
+              tablet:grid-cols-2 tablet:gap-x-[24px] tablet:gap-y-[40px]
+              desktop:grid-cols-4 desktop:gap-x-[32px] desktop:gap-y-[48px]">
+              {products.map((p) => (
+                <ProductCard
+                  key={p.id}
+                  slug={p.slug}
+                  title={p.title}
+                  price={p.price}
+                  discount={p.discount}
+                  imageSrc={p.imageSrc}
+                  href={`/products/${p.slug}`}
+                  className="!w-full"
+                />
             ))}
           </div>
         )}

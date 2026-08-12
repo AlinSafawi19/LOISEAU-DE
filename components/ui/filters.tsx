@@ -68,6 +68,7 @@ function CheckboxItem({
 export interface FiltersProps {
   categories:         FilterItem[];
   brands:             FilterItem[];
+  collections:        FilterItem[];
   searchValue:        string;
   onSearchChange:     (v: string) => void;
   selectedGender:     string;
@@ -76,16 +77,19 @@ export interface FiltersProps {
   onCategoryToggle:   (id: string) => void;
   selectedBrands:     Set<string>;
   onBrandToggle:      (id: string) => void;
+  selectedCollections: Set<string>;
+  onCollectionToggle:  (id: string) => void;
   onClear:            () => void;
   className?:         string;
 }
 
 function FilterSections({
-  categories, brands,
+  categories, brands, collections,
   searchValue, onSearchChange,
   selectedGender, onGenderChange,
   selectedCategories, onCategoryToggle,
   selectedBrands, onBrandToggle,
+  selectedCollections, onCollectionToggle,
 }: Omit<FiltersProps, "onClear" | "className">) {
   return (
     <>
@@ -134,6 +138,19 @@ function FilterSections({
         ))}
       </div>
 
+      {/* Collections */}
+      <div className="w-full flex flex-col justify-start items-start gap-[8px]">
+        <SubtitleSm className="w-full !text-black">Collection</SubtitleSm>
+        {collections.map((col) => (
+          <CheckboxItem
+            key={col.id}
+            item={col}
+            checked={selectedCollections.has(col.id)}
+            onToggle={() => onCollectionToggle(col.id)}
+          />
+        ))}
+      </div>
+
       {/* Brands */}
       <div className="w-full flex flex-col justify-start items-start gap-[8px]">
         <SubtitleSm className="w-full !text-black">Brand</SubtitleSm>
@@ -151,11 +168,12 @@ function FilterSections({
 }
 
 export function Filters({
-  categories, brands,
+  categories, brands, collections,
   searchValue, onSearchChange,
   selectedGender, onGenderChange,
   selectedCategories, onCategoryToggle,
   selectedBrands, onBrandToggle,
+  selectedCollections, onCollectionToggle,
   onClear,
   className = "",
 }: FiltersProps) {
@@ -181,11 +199,12 @@ export function Filters({
   useScrollLock(isMobile && filterOpen);
 
   const sectionProps = {
-    categories, brands,
+    categories, brands, collections,
     searchValue, onSearchChange,
     selectedGender, onGenderChange,
     selectedCategories, onCategoryToggle,
     selectedBrands, onBrandToggle,
+    selectedCollections, onCollectionToggle,
   };
 
   return (
@@ -240,13 +259,13 @@ export function Filters({
               />
               <motion.div
                 key="sheet"
-                className="fixed inset-0 z-50 flex items-center justify-center p-0 pointer-events-none"
+                className="fixed inset-0 z-50 flex items-center justify-center p-[24px] pointer-events-none"
                 initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.96 }}
                 transition={SPRING_POPUP}
               >
-                <div className="bg-white w-full max-w-none max-h-[85vh] rounded-none overflow-y-auto flex flex-col gap-[32px] px-[16px] pt-[24px] pb-[32px] pointer-events-auto">
+                <div className="bg-white w-full max-w-[400px] max-h-[85vh] rounded-none overflow-y-auto flex flex-col gap-[32px] px-[24px] pt-[24px] pb-[32px] pointer-events-auto">
                   <div className="flex flex-row justify-between items-center">
                     <ButtonLg className="text-left !text-[20px] !leading-[1.4] !text-black">Filters</ButtonLg>
                     <button
