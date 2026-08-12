@@ -29,7 +29,6 @@ interface RawProduct {
   "Cover img 1":   string;
   Price:           string;
   Discount:        string;
-  Gender:          string;
   Category:        Relation;
   Brand:           Relation;
   Collections:     Relation;
@@ -42,7 +41,6 @@ interface Product {
   price:       number;
   discount:    number;
   imageSrc:    string;
-  gender:      string;
   category:    string;
   brand:       string;
   collections: string;
@@ -71,7 +69,6 @@ async function fetchProducts(url: string): Promise<Product[]> {
     price:       parseFloat(e.Price)        || 0,
     discount:    parseFloat(e.Discount)     || 0,
     imageSrc:    e["Cover img 1"],
-    gender:      e.Gender,
     category:    relationSlug(e.Category),
     brand:       relationSlug(e.Brand),
     collections: relationSlug(e.Collections),
@@ -113,7 +110,6 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
 
   // Filter state
   const [searchValue,         setSearchValue]         = useState("");
-  const [selectedGender,      setSelectedGender]      = useState("ALL");
   const [selectedCategories,  setSelectedCategories]  = useState<Set<string>>(new Set());
   const [selectedBrands,      setSelectedBrands]      = useState<Set<string>>(new Set());
   const [selectedCollections, setSelectedCollections] = useState<Set<string>>(new Set());
@@ -164,7 +160,6 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
     return allProducts.filter((p) => {
       if (collectionSlug && p.collections !== collectionSlug) return false;
       if (q && !p.title.toLowerCase().includes(q)) return false;
-      if (selectedGender !== "ALL" && p.gender !== selectedGender) return false;
       if (selectedCategories.size > 0) {
         const catId = categorySlugToId[p.category];
         if (!catId || !selectedCategories.has(catId)) return false;
@@ -179,10 +174,10 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
       }
       return true;
     });
-  }, [allProducts, collectionSlug, searchValue, selectedGender, selectedCategories, selectedBrands, selectedCollections, categorySlugToId, brandSlugToId, collectionSlugToId]);
+  }, [allProducts, collectionSlug, searchValue, selectedCategories, selectedBrands, selectedCollections, categorySlugToId, brandSlugToId, collectionSlugToId]);
 
   // Reset to page 1 whenever filters change
-  useEffect(() => { setPage(1); }, [searchValue, selectedGender, selectedCategories, selectedBrands, selectedCollections]);
+  useEffect(() => { setPage(1); }, [searchValue, selectedCategories, selectedBrands, selectedCollections]);
 
   const pageSize  = isMobile ? MOBILE_PAGE_SIZE : DESKTOP_PAGE_SIZE;
   const paginated = filtered.slice(0, page * pageSize);
@@ -214,7 +209,6 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
 
   function handleClear() {
     setSearchValue("");
-    setSelectedGender("ALL");
     setSelectedCategories(new Set());
     setSelectedBrands(new Set());
     setSelectedCollections(new Set());
@@ -248,8 +242,6 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
               collections={collections}
               searchValue={searchValue}
               onSearchChange={setSearchValue}
-              selectedGender={selectedGender}
-              onGenderChange={setSelectedGender}
               selectedCategories={selectedCategories}
               onCategoryToggle={handleCategoryToggle}
               selectedBrands={selectedBrands}

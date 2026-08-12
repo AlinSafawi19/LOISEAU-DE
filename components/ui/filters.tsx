@@ -7,7 +7,6 @@ import {
   Search,
   SlidersHorizontal,
   X,
-  ChevronDown,
   Eraser,
   Eye,
   Check,
@@ -19,7 +18,6 @@ import { useScrollLock } from "./use-scroll-lock";
 const SPRING        = { type: "spring" as const, duration: 0.4, bounce: 0.2, delay: 0 };
 const SPRING_POPUP  = { type: "spring" as const, duration: 0.4, bounce: 0,   delay: 0 };
 
-const GENDERS = ["ALL", "Women", "Men", "Unisex"];
 
 export interface FilterItem {
   id:   string;
@@ -71,8 +69,6 @@ export interface FiltersProps {
   collections:        FilterItem[];
   searchValue:        string;
   onSearchChange:     (v: string) => void;
-  selectedGender:     string;
-  onGenderChange:     (v: string) => void;
   selectedCategories: Set<string>;
   onCategoryToggle:   (id: string) => void;
   selectedBrands:     Set<string>;
@@ -86,7 +82,6 @@ export interface FiltersProps {
 function FilterSections({
   categories, brands, collections,
   searchValue, onSearchChange,
-  selectedGender, onGenderChange,
   selectedCategories, onCategoryToggle,
   selectedBrands, onBrandToggle,
   selectedCollections, onCollectionToggle,
@@ -106,22 +101,6 @@ function FilterSections({
             style={{ lineHeight: "1.2em", letterSpacing: "0em", transition: "border-color 0.3s cubic-bezier(0.44, 0, 0.56, 1)" }}
           />
           <Search size={16} strokeWidth={1.5} className="absolute left-3 top-1/2 -translate-y-1/2 text-brown pointer-events-none" />
-        </div>
-      </div>
-
-      {/* Gender */}
-      <div className="w-full flex flex-col justify-start items-start gap-[8px]">
-        <SubtitleSm className="w-full !text-black">Gender</SubtitleSm>
-        <div className="relative w-full h-[40px]">
-          <select
-            value={selectedGender}
-            onChange={(e) => onGenderChange(e.target.value)}
-            className="w-full h-full font-inter font-normal text-black text-[14px] appearance-none bg-transparent border-none rounded-none p-0 pr-6 focus:outline-none cursor-pointer"
-            style={{ lineHeight: "1.2em", letterSpacing: "0em" }}
-          >
-            {GENDERS.map((g) => <option key={g} value={g}>{g}</option>)}
-          </select>
-          <ChevronDown size={16} strokeWidth={1.5} className="absolute right-0 top-1/2 -translate-y-1/2 text-black pointer-events-none" />
         </div>
       </div>
 
@@ -170,7 +149,6 @@ function FilterSections({
 export function Filters({
   categories, brands, collections,
   searchValue, onSearchChange,
-  selectedGender, onGenderChange,
   selectedCategories, onCategoryToggle,
   selectedBrands, onBrandToggle,
   selectedCollections, onCollectionToggle,
@@ -201,8 +179,7 @@ export function Filters({
   const sectionProps = {
     categories, brands, collections,
     searchValue, onSearchChange,
-    selectedGender, onGenderChange,
-    selectedCategories, onCategoryToggle,
+      selectedCategories, onCategoryToggle,
     selectedBrands, onBrandToggle,
     selectedCollections, onCollectionToggle,
   };
