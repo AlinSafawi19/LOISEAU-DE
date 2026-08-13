@@ -3,9 +3,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { LiquidLogo } from "@/components/ui/liquid-logo";
-import { H3, SubtitleMd } from "@/components/ui/typography";
-import { Logomark } from "@/components/ui/logomark";
 
 const UTILITY_URL  = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/utility-pages`;
 const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
@@ -27,42 +24,6 @@ export default function TermsOfUse() {
 
   return (
     <main>
-
-      {/* â”€â”€ Hero â”€â”€ */}
-      <section className="relative w-full h-screen flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip">
-
-        {/* LiquidLogo â€” absolute, fills hero, z-1 */}
-        <div className="absolute inset-0 z-[1]">
-          <LiquidLogo
-            image="https://framerusercontent.com/images/stui7nLH0W6suNpRBxaAAz6OFU.png?width=1200&height=800"
-            distortionStrength={0.06}
-            hoverRadius={0.07}
-            decayTime={1400}
-          />
-        </div>
-
-        {/* Container â€” z-2, pointer-none, relative for absolute children */}
-        <div
-          className="relative z-[2] w-full flex-1 max-w-[1920px] flex flex-col justify-end items-center gap-[64px] overflow-clip pointer-events-none rounded-none"
-          style={{ padding: "80px 32px 32px 32px" }}
-        >
-          <H3 className="absolute top-[120px] right-[32px] !text-accent !text-right z-[1] w-auto">
-            Conditions
-          </H3>
-
-          {/* Subtitles */}
-          <div className="w-full flex flex-row justify-between items-center overflow-clip rounded-none border-b border-dashed border-white" style={{ padding: "16px 0" }}>
-            <SubtitleMd className="w-auto grow !text-white !text-left">K-Beauty</SubtitleMd>
-            <SubtitleMd className="w-auto grow !text-white !text-center">Rituals</SubtitleMd>
-            <SubtitleMd className="w-auto grow !text-white !text-right">Radiance</SubtitleMd>
-          </div>
-
-          {/* Hero logotype */}
-          <Logomark className="text-white" />
-
-        </div>
-
-      </section>
 
       {/* â”€â”€ Content â”€â”€ */}
       <motion.section

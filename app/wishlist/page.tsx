@@ -113,6 +113,7 @@ export default function Wishlist() {
                     discount={p.discount}
                     imageSrc={p.imageSrc}
                     href={`/products/${p.slug}`}
+                    className="!w-full tablet:!w-[320px]"
                   />
                 ))}
               </div>

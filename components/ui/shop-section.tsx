@@ -1,6 +1,7 @@
 ﻿"use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import { Filters, type FilterItem } from "./filters";
 import { ProductCard } from "./product-card";
 import { H4, SubtitleMd } from "./typography";
@@ -114,6 +115,10 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
   const [selectedBrands,      setSelectedBrands]      = useState<Set<string>>(new Set());
   const [selectedCollections, setSelectedCollections] = useState<Set<string>>(new Set());
 
+  // `/shop-all?collection=<slug>` arrives pre-filtered — e.g. the Offers CTA.
+  const collectionParam = useSearchParams().get("collection") ?? "";
+  const appliedParam    = useRef("");
+
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 810);
     check();
@@ -154,6 +159,17 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
     collections.forEach((c) => { m[c.slug] = c.id; });
     return m;
   }, [collections]);
+
+  // Tick the matching Collection box once the filter list is in — the shopper can
+  // still clear it like any other filter, so this only runs per distinct param.
+  useEffect(() => {
+    if (!collectionParam || collections.length === 0) return;
+    if (appliedParam.current === collectionParam) return;
+    const match = collections.find((c) => c.slug === collectionParam);
+    if (!match) return;
+    appliedParam.current = collectionParam;
+    setSelectedCollections(new Set([match.id]));
+  }, [collectionParam, collections]);
 
   const filtered = useMemo(() => {
     const q = searchValue.trim().toLowerCase();

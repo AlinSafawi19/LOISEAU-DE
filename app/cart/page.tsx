@@ -157,9 +157,14 @@ export default function Cart() {
                   </BodySm>
                 </div>
 
-                <Link href="/checkout" className="w-full">
-                  <FilledButton className="w-full">Checkout</FilledButton>
-                </Link>
+                <div className="w-full flex flex-col justify-start items-start gap-[12px]">
+                  <Link href="/checkout" className="w-full">
+                    <FilledButton className="w-full">Checkout</FilledButton>
+                  </Link>
+                  <Link href="/shop-all" className="w-full">
+                    <OutlineButton className="w-full">Continue shopping</OutlineButton>
+                  </Link>
+                </div>
 
               </div>
 

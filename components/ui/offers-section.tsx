@@ -89,6 +89,10 @@ function useOffers() {
 export function OffersSection() {
   const { products, collection, loading } = useOffers();
 
+  // Land on the shop with the Offers collection already ticked in the filters.
+  const buttonPath = collection?.ButtonPath || "/shop-all";
+  const shopAllHref = `${buttonPath}${buttonPath.includes("?") ? "&" : "?"}collection=${OFFERS_SLUG}`;
+
   return (
     <section className="w-full flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip rounded-none bg-dusty">
 
@@ -110,8 +114,8 @@ export function OffersSection() {
           </div>
 
           {!loading && products.length > 0 && (
-            <Link href={collection?.ButtonPath || "/shop-all"} className="shrink-0">
-              <OutlineButton>{collection?.ButtonText || "Shop all"}</OutlineButton>
+            <Link href={shopAllHref} className="shrink-0">
+              <OutlineButton>{collection?.ButtonText || "See all offers"}</OutlineButton>
             </Link>
           )}
 

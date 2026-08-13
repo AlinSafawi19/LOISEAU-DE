@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { LiquidLogo } from "@/components/ui/liquid-logo";
 import { H3, SubtitleMd } from "@/components/ui/typography";
 import { Logomark } from "@/components/ui/logomark";
@@ -46,7 +47,10 @@ export default function ShopAll() {
 
       </section>
 
-      <ShopSection />
+      {/* ShopSection reads `?collection=` — Suspense keeps the hero prerenderable. */}
+      <Suspense fallback={null}>
+        <ShopSection />
+      </Suspense>
 
     </main>
   );

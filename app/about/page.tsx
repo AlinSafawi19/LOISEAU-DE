@@ -118,7 +118,7 @@ export default function About() {
 
             {/* Title wrapper */}
             <div className="w-full flex flex-col justify-start items-center gap-[4px] p-0 overflow-clip rounded-none">
-              <H2 className="w-full max-w-[800px] !text-black !text-center">Our shop</H2>
+              <H2 className="w-full max-w-[800px] !text-black !text-center">The selection</H2>
             </div>
 
             {/* Img wrapper */}
@@ -140,9 +140,9 @@ export default function About() {
               </div>
             </div>
 
-            {/* Happy to serve you */}
+            {/* Selection caption */}
             <ItalicBodyLg className="w-auto h-auto !text-black !text-center [text-wrap:balance]">
-              Happy to serve you
+              Korean skincare, chosen one bottle at a time
             </ItalicBodyLg>
 
           </div>
