@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-const UTILITY_URL  = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/utility-pages`;
+const UTILITY_URL  = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/utility-pages`;
 const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 const SPRING = { type: "spring" as const, duration: 0.6, bounce: 0, delay: 0 };
 

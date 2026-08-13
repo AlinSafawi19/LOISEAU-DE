@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: "/api/loiseau/:path*",
+        source: "/api/glaze/:path*",
         destination: "http://localhost:5173/api/public/v1/:path*",
       },
     ];

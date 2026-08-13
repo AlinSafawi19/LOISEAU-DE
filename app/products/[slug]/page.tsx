@@ -12,7 +12,7 @@ import { ProductCard } from "@/components/ui/product-card";
 import { WishlistDetailButton } from "@/components/ui/wishlist-button";
 import { useCart } from "@/components/ui/use-cart";
 
-const PRODUCTS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/products`;
+const PRODUCTS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/products`;
 const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 
 interface Product {

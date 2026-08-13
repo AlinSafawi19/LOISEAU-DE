@@ -6,8 +6,8 @@ import { H4, SubtitleMd, ItalicBodySm } from "./typography";
 import { OutlineButton } from "./button";
 import { ProductCard } from "./product-card";
 
-const PRODUCTS_URL    = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/products?limit=100`;
-const COLLECTIONS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/collections?limit=100`;
+const PRODUCTS_URL    = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/products?limit=100`;
+const COLLECTIONS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/collections?limit=100`;
 const API_HEADERS     = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 
 // The entry in the CMS `collections` list that drives this section.

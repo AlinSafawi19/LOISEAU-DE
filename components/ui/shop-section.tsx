@@ -7,11 +7,11 @@ import { BrandIndex } from "./brand-index";
 import { ProductCard } from "./product-card";
 import { H4, SubtitleMd } from "./typography";
 
-const CATEGORIES_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/categories`;
-const BRANDS_URL     = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/brands`;
-const COLLECTIONS_URL= `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/collections`;
-const SKIN_TYPES_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/skin-types`;
-const PRODUCTS_URL   = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/products`;
+const CATEGORIES_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/categories`;
+const BRANDS_URL     = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/brands`;
+const COLLECTIONS_URL= `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/collections`;
+const SKIN_TYPES_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/skin-types`;
+const PRODUCTS_URL   = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/products`;
 const API_HEADERS    = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 
 /**

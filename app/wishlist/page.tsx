@@ -7,7 +7,7 @@ import { ProductCard } from "@/components/ui/product-card";
 import { OutlineButton } from "@/components/ui/button";
 import { useWishlist } from "@/components/ui/use-wishlist";
 
-const PRODUCTS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/products?limit=100`;
+const PRODUCTS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/products?limit=100`;
 const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 
 interface RawEntry {

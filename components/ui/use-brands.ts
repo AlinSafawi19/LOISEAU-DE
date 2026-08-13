@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const BRANDS_URL  = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/brands`;
+const BRANDS_URL  = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/brands`;
 const API_HEADERS = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 
 export interface Brand {

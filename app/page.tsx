@@ -14,7 +14,7 @@ import { OffersSection } from "@/components/ui/offers-section";
 
 const EASE = [0.44, 0, 0.56, 1] as const;
 
-const PRODUCTS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/products`;
+const PRODUCTS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/products`;
 const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 
 interface FeaturedProduct {

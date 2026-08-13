@@ -8,7 +8,7 @@ import { OutlineButton, Button, type ButtonState } from "@/components/ui/button"
 import { useCart } from "@/components/ui/use-cart";
 import { useProducts } from "@/components/ui/use-products";
 
-const ORDERS_URL  = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/orders`;
+const ORDERS_URL  = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/orders`;
 const API_HEADERS = {
   "Content-Type":  "application/json",
   Authorization:   `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}`,
