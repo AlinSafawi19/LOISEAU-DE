@@ -9,6 +9,7 @@ import Link from "next/link";
 import { OutlineButton, FilledButton } from "@/components/ui/button";
 import { FaqCardProduct } from "@/components/ui/faq-card";
 import { ProductCard } from "@/components/ui/product-card";
+import { WishlistDetailButton } from "@/components/ui/wishlist-button";
 import { useCart } from "@/components/ui/use-cart";
 
 const PRODUCTS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/products`;
@@ -314,39 +315,39 @@ export default function ProductPage() {
               <BodySm className="w-full max-w-[480px] tablet:max-w-[600px] h-auto !text-black !text-left">{product.description}</BodySm>
             </div>
 
-            {/* Add to cart */}
-            <FilledButton
-              className="w-full"
-              icon={<ShoppingBag size={16} strokeWidth={1.5} />}
-              onClick={() => {
-                add(product.slug);
-                setAdded(true);
-              }}
-            >
-              {added ? "Added to cart" : "Add to cart"}
-            </FilledButton>
+            {/* Add to cart × wishlist */}
+            <div className="w-full flex flex-row justify-start items-stretch gap-[8px]">
+              <FilledButton
+                className="flex-1"
+                icon={<ShoppingBag size={16} strokeWidth={1.5} />}
+                onClick={() => {
+                  add(product.slug);
+                  setAdded(true);
+                }}
+              >
+                {added ? "Added to cart" : "Add to cart"}
+              </FilledButton>
+              <WishlistDetailButton slug={product.slug} title={product.title} />
+            </div>
 
-            {/* Bottom wrapper */}
-            <div className="w-full flex flex-col justify-start items-start gap-[8px] p-0 overflow-clip rounded-none">
-              <div className="w-full h-[1px] overflow-clip rounded-none bg-beige" />
+            {/* Bottom wrapper — rules are element borders rather than 1px boxes so
+                every boundary snaps to the device pixel grid the same way. */}
+            <div className="w-full flex flex-col justify-start items-stretch gap-0 p-0 rounded-none border-y border-solid border-beige divide-y divide-beige">
               <FaqCardProduct
                 question="Delivery & Shipping"
                 answer="Orders are processed within 1–2 business days and the delivery fee is confirmed before dispatch."
-                className="w-full"
+                className="w-full py-[8px]"
               />
-              <div className="w-full h-[1px] overflow-clip rounded-none bg-beige" />
               <FaqCardProduct
                 question="Payment"
                 answer="Cash on delivery only — you pay the courier when the order reaches you. All sales are final."
-                className="w-full"
+                className="w-full py-[8px]"
               />
-              <div className="w-full h-[1px] overflow-clip rounded-none bg-beige" />
               <FaqCardProduct
                 question="Product Details / Safety"
                 answer="All products are carefully crafted using high-quality, safe ingredients and materials."
-                className="w-full"
+                className="w-full py-[8px]"
               />
-              <div className="w-full h-[1px] overflow-clip rounded-none bg-beige" />
             </div>
 
           </div>

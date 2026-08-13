@@ -39,3 +39,32 @@ export function WishlistButton({ slug, title = "this product", className = "" }:
     </motion.button>
   );
 }
+
+/**
+ * Detail-page counterpart of {@link WishlistButton}. Squares off to sit beside a
+ * full-width FilledButton rather than floating over an image, so it takes a
+ * border instead of a translucent pill and stretches to the row's height.
+ */
+export function WishlistDetailButton({ slug, title = "this product", className = "" }: WishlistButtonProps) {
+  const { has, toggle, ready } = useWishlist();
+  const saved = ready && has(slug);
+
+  return (
+    <motion.button
+      type="button"
+      aria-label={saved ? `Remove ${title} from wishlist` : `Save ${title} to wishlist`}
+      aria-pressed={saved}
+      whileTap={{ scale: 0.94 }}
+      onClick={() => toggle(slug)}
+      className={`flex items-center justify-center shrink-0 w-[48px] desktop:w-[52px] self-stretch rounded-none border border-solid border-black bg-transparent cursor-pointer transition-colors duration-300 ease-[cubic-bezier(0.44,0,0.56,1)] hover:bg-blush ${className}`}
+    >
+      <Heart
+        strokeWidth={1.5}
+        aria-hidden
+        className={`${saved ? "text-plum" : "text-black"} w-[20px] h-[20px] desktop:w-[22px] desktop:h-[22px]`}
+        fill={saved ? "var(--color-plum)" : "none"}
+        style={{ transition: "color 0.3s cubic-bezier(0.44,0,0.56,1)" }}
+      />
+    </motion.button>
+  );
+}

@@ -11,7 +11,7 @@ import {
   Eye,
   Check,
 } from "lucide-react";
-import { SubtitleSm, bodySmBaseCls } from "./typography";
+import { H5, SubtitleSm, bodySmBaseCls } from "./typography";
 import { OutlineButton, FilledButton } from "./button";
 import { useScrollLock } from "./use-scroll-lock";
 
@@ -198,7 +198,8 @@ export function Filters({
         transition={SPRING}
       >
         {/* Toggle — mobile only, the sections stand on their own from tablet up */}
-        <div className="w-full tablet:hidden flex flex-row justify-end items-center">
+        <div className="w-full tablet:hidden flex flex-row justify-between items-center gap-[16px]">
+          <SubtitleSm className="!text-black !text-left">Filters</SubtitleSm>
           <button
             className="flex items-center justify-center p-0 bg-transparent border-none cursor-pointer text-black"
             onClick={() => setFilterOpen((v) => !v)}
@@ -241,8 +242,14 @@ export function Filters({
                 exit={{ opacity: 0, scale: 0.96 }}
                 transition={SPRING_POPUP}
               >
-                <div className="bg-white w-full max-w-[400px] max-h-[85vh] rounded-none overflow-y-auto flex flex-col gap-[32px] px-[24px] pt-[24px] pb-[32px] pointer-events-auto">
-                  <div className="flex flex-row justify-end items-center">
+                <div
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby="filters-title"
+                  className="bg-white w-full max-w-[400px] max-h-[85vh] rounded-none overflow-y-auto flex flex-col gap-[32px] px-[24px] pt-[24px] pb-[32px] pointer-events-auto"
+                >
+                  <div className="flex flex-row justify-between items-center gap-[16px]">
+                    <H5 id="filters-title" className="!text-black !text-left">Filters</H5>
                     <button
                       className="flex items-center justify-center p-0 bg-transparent border-none cursor-pointer text-black"
                       onClick={() => setFilterOpen(false)}
