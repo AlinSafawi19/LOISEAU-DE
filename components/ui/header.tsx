@@ -385,12 +385,29 @@ export function Header() {
           tablet:h-[68px] tablet:px-[24px]
           desktop:h-[72px] desktop:px-[32px]">
 
-          {/* Wordmark */}
-          <Link href="/" className="flex items-center shrink-0" aria-label="GLAZE — home">
-            <span className="block w-[112px] tablet:w-[128px] desktop:w-[142px]">
-              <Logomark tone="plum" />
-            </span>
-          </Link>
+          {/* Left group — trigger then wordmark on mobile, wordmark alone from
+              tablet up. The 13px gap plus the trigger's own 8px of padding adds
+              up to the same 21px of daylight the wishlist and cart icons leave
+              between their glyphs. */}
+          <div className="flex flex-row items-center gap-[13px]">
+
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              aria-label="Open menu"
+              aria-expanded={open}
+              className="tablet:hidden flex items-center justify-center w-[44px] h-[44px] -ml-[8px] rounded-none bg-transparent border-none cursor-pointer"
+            >
+              <Hamburger open={false} />
+            </button>
+
+            <Link href="/" className="flex items-center shrink-0" aria-label="GLAZE — home">
+              <span className="block w-[112px] tablet:w-[128px] desktop:w-[142px]">
+                <Logomark tone="plum" />
+              </span>
+            </Link>
+
+          </div>
 
           {/* Centred nav — absolute so the wordmark and actions never shift it off-centre */}
           <nav className="hidden tablet:flex absolute left-1/2 -translate-x-1/2 flex-row items-center gap-[8px] desktop:gap-[16px]">
@@ -405,21 +422,8 @@ export function Header() {
 
           {/* Right side */}
           <div className="flex flex-row items-center gap-0">
-
             <WishlistLink />
-            <CartLink className="tablet:-mr-[6px]" />
-
-            {/* Mobile trigger */}
-            <button
-              type="button"
-              onClick={() => setOpen(true)}
-              aria-label="Open menu"
-              aria-expanded={open}
-              className="tablet:hidden flex items-center justify-center w-[44px] h-[44px] -mr-[8px] rounded-none bg-transparent border-none cursor-pointer"
-            >
-              <Hamburger open={false} />
-            </button>
-
+            <CartLink className="-mr-[6px]" />
           </div>
 
         </div>
