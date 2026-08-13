@@ -1,25 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, ShoppingBag } from "lucide-react";
+import { Heart, ShoppingBag, ChevronDown } from "lucide-react";
 import { ButtonSm, ButtonLg, BodySm } from "./typography";
 import { useWishlist } from "./use-wishlist";
 import { useCart } from "./use-cart";
+import { useBrands, type Brand } from "./use-brands";
 import { useScrollLock } from "./use-scroll-lock";
 
 const EASE   = [0.44, 0, 0.56, 1] as const;
 // Long, low-bounce ease so the panel glides rather than snaps.
 const PANEL  = { duration: 0.45, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] };
 
-const NAV = [
+const NAV: { title: string; href: string; submenu?: boolean }[] = [
   { title: "Home",     href: "/"         },
-  { title: "Shop All", href: "/shop-all" },
+  { title: "Brands",   href: "/shop-all", submenu: true },
   { title: "About",    href: "/about"    },
   { title: "Contact",  href: "/contact"  },
 ];
+
+/** `#shop` drops the shopper past the hero, onto the freshly filtered grid. */
+const brandHref = (slug?: string) =>
+  slug ? `/shop-all?brand=${slug}#shop` : "/shop-all#shop";
 
 /**
  * Nav link built on the same sweep-fill interaction as OutlineButton: a solid
@@ -53,6 +58,130 @@ function NavLink({ title, href, active }: { title: string; href: string; active:
       >
         {title}
       </ButtonSm>
+    </Link>
+  );
+}
+
+/**
+ * Brands nav item — the label opens a panel of brands instead of navigating,
+ * on every breakpoint. "All brands" inside the panel keeps the shop reachable.
+ */
+function BrandsNavItem({ title, active }: { title: string; active: boolean }) {
+  const brands   = useBrands();
+  const pathname = usePathname();
+  const [open,    setOpen]    = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const wrapRef = useRef<HTMLDivElement>(null);
+
+  const on = active || hovered || open;
+
+  // A click-driven panel needs an explicit way out.
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (!wrapRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("mousedown", onDown);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  // Brand links only change the query, so the route effect above cannot close
+  // the panel on its own — but a jump to another page still should.
+  useEffect(() => { setOpen(false); }, [pathname]);
+
+  return (
+    <div ref={wrapRef} className="relative flex items-center">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        aria-expanded={open}
+        aria-haspopup="menu"
+        aria-current={active ? "page" : undefined}
+        className="relative flex flex-row items-center justify-center gap-[6px] px-[12px] py-[6px] rounded-none overflow-clip bg-transparent border-none cursor-pointer"
+      >
+        <span
+          aria-hidden
+          className={`absolute inset-0 bg-plum rounded-none transition-opacity duration-300 ease-[cubic-bezier(0.44,0,0.56,1)] ${
+            on ? "opacity-100" : "opacity-0"
+          }`}
+        />
+        <ButtonSm
+          className="relative z-10 text-left"
+          style={{
+            color: on ? "var(--color-lavender)" : "var(--color-brown)",
+            transition: `color 0.4s cubic-bezier(0.44, 0, 0.56, 1)`,
+          }}
+        >
+          {title}
+        </ButtonSm>
+        <ChevronDown
+          size={14}
+          strokeWidth={1.5}
+          aria-hidden
+          className="relative z-10 shrink-0"
+          style={{
+            color: on ? "var(--color-lavender)" : "var(--color-brown)",
+            transform: open ? "rotate(180deg)" : "rotate(0deg)",
+            transition: `color 0.4s cubic-bezier(0.44, 0, 0.56, 1), transform 0.3s cubic-bezier(0.44, 0, 0.56, 1)`,
+          }}
+        />
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            role="menu"
+            className="absolute top-full left-1/2 -translate-x-1/2 pt-[8px] z-[110]"
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.25, ease: EASE }}
+          >
+            <div className="min-w-[220px] max-h-[60vh] overflow-y-auto flex flex-col justify-start items-stretch gap-[2px] bg-lavender border border-dashed border-beige rounded-none p-[8px]">
+              <BrandMenuLink href={brandHref()} label="All brands" onNavigate={() => setOpen(false)} />
+              {brands.map((brand) => (
+                <BrandMenuLink
+                  key={brand.id}
+                  href={brandHref(brand.slug)}
+                  label={brand.name}
+                  onNavigate={() => setOpen(false)}
+                />
+              ))}
+              {brands.length === 0 && (
+                <BodySm className="!text-brown !text-left px-[10px] py-[8px]">Loading…</BodySm>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function BrandMenuLink({
+  href,
+  label,
+  onNavigate,
+}: {
+  href:       string;
+  label:      string;
+  onNavigate: () => void;
+}) {
+  return (
+    <Link
+      href={href}
+      role="menuitem"
+      onClick={onNavigate}
+      className="w-full flex flex-row justify-start items-center px-[10px] py-[8px] rounded-none transition-colors duration-300 ease-[cubic-bezier(0.44,0,0.56,1)] hover:bg-blush"
+    >
+      <ButtonSm className="!text-left !text-[14px] !text-brown">{label}</ButtonSm>
     </Link>
   );
 }
@@ -147,8 +276,72 @@ function Hamburger({ open }: { open: boolean }) {
   );
 }
 
+/** Drawer counterpart of {@link BrandsNavItem} — taps expand in place. */
+function BrandsDrawerItem({
+  title,
+  active,
+  brands,
+  onNavigate,
+}: {
+  title:      string;
+  active:     boolean;
+  brands:     Brand[];
+  onNavigate: () => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className="w-full flex flex-col justify-start items-start gap-[12px]">
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        aria-expanded={expanded}
+        className="w-full flex flex-row justify-between items-center gap-[10px] pb-[12px] rounded-none border-0 border-b border-dashed border-beige bg-transparent cursor-pointer"
+      >
+        <ButtonSm className={`!text-left !text-[16px] ${active ? "!text-plum" : "!text-brown"}`}>
+          {title}
+        </ButtonSm>
+        <ChevronDown
+          size={18}
+          strokeWidth={1.5}
+          aria-hidden
+          className={active ? "text-plum" : "text-brown"}
+          style={{
+            transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
+            transition: "transform 0.3s cubic-bezier(0.44, 0, 0.56, 1)",
+          }}
+        />
+      </button>
+
+      <AnimatePresence initial={false}>
+        {expanded && (
+          <motion.div
+            className="w-full overflow-clip"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+          >
+            <div className="w-full flex flex-col justify-start items-start gap-[12px] pl-[12px] border-l border-dashed border-beige">
+              <Link href={brandHref()} onClick={onNavigate} className="w-full">
+                <ButtonSm className="!text-left !text-[14px] !text-brown">All brands</ButtonSm>
+              </Link>
+              {brands.map((brand) => (
+                <Link key={brand.id} href={brandHref(brand.slug)} onClick={onNavigate} className="w-full">
+                  <ButtonSm className="!text-left !text-[14px] !text-brown">{brand.name}</ButtonSm>
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export function Header() {
   const pathname = usePathname();
+  const brands   = useBrands();
   const [open,     setOpen]     = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -200,9 +393,13 @@ export function Header() {
 
           {/* Centred nav — absolute so the wordmark and actions never shift it off-centre */}
           <nav className="hidden tablet:flex absolute left-1/2 -translate-x-1/2 flex-row items-center gap-[8px] desktop:gap-[16px]">
-            {NAV.map(({ title, href }) => (
-              <NavLink key={href} title={title} href={href} active={isActive(href)} />
-            ))}
+            {NAV.map(({ title, href, submenu }) =>
+              submenu ? (
+                <BrandsNavItem key={href} title={title} active={isActive(href)} />
+              ) : (
+                <NavLink key={href} title={title} href={href} active={isActive(href)} />
+              )
+            )}
           </nav>
 
           {/* Right side */}
@@ -265,18 +462,28 @@ export function Header() {
               </div>
 
               <nav className="w-full flex flex-col justify-start items-start gap-[16px]">
-                {NAV.map(({ title, href }) => (
-                  <Link
-                    key={href}
-                    href={href}
-                    aria-current={isActive(href) ? "page" : undefined}
-                    className="w-full flex flex-row justify-start items-center gap-[10px] pb-[12px] rounded-none border-b border-dashed border-beige"
-                  >
-                    <ButtonSm className={`!text-left !text-[16px] ${isActive(href) ? "!text-plum" : "!text-brown"}`}>
-                      {title}
-                    </ButtonSm>
-                  </Link>
-                ))}
+                {NAV.map(({ title, href, submenu }) =>
+                  submenu ? (
+                    <BrandsDrawerItem
+                      key={href}
+                      title={title}
+                      active={isActive(href)}
+                      brands={brands}
+                      onNavigate={() => setOpen(false)}
+                    />
+                  ) : (
+                    <Link
+                      key={href}
+                      href={href}
+                      aria-current={isActive(href) ? "page" : undefined}
+                      className="w-full flex flex-row justify-start items-center gap-[10px] pb-[12px] rounded-none border-b border-dashed border-beige"
+                    >
+                      <ButtonSm className={`!text-left !text-[16px] ${isActive(href) ? "!text-plum" : "!text-brown"}`}>
+                        {title}
+                      </ButtonSm>
+                    </Link>
+                  )
+                )}
               </nav>
 
               <div className="w-full mt-auto flex flex-col justify-start items-start gap-[4px]">

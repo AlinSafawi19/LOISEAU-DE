@@ -11,7 +11,7 @@ import {
   Eye,
   Check,
 } from "lucide-react";
-import { SubtitleSm, ButtonLg, bodySmBaseCls } from "./typography";
+import { SubtitleSm, bodySmBaseCls } from "./typography";
 import { OutlineButton, FilledButton } from "./button";
 import { useScrollLock } from "./use-scroll-lock";
 
@@ -65,26 +65,26 @@ function CheckboxItem({
 
 export interface FiltersProps {
   categories:         FilterItem[];
-  brands:             FilterItem[];
   collections:        FilterItem[];
+  skinTypes:          FilterItem[];
   searchValue:        string;
   onSearchChange:     (v: string) => void;
   selectedCategories: Set<string>;
   onCategoryToggle:   (id: string) => void;
-  selectedBrands:     Set<string>;
-  onBrandToggle:      (id: string) => void;
   selectedCollections: Set<string>;
   onCollectionToggle:  (id: string) => void;
+  selectedSkinTypes:  Set<string>;
+  onSkinTypeToggle:   (id: string) => void;
   onClear:            () => void;
   className?:         string;
 }
 
 function FilterSections({
-  categories, brands, collections,
+  categories, collections, skinTypes,
   searchValue, onSearchChange,
   selectedCategories, onCategoryToggle,
-  selectedBrands, onBrandToggle,
   selectedCollections, onCollectionToggle,
+  selectedSkinTypes, onSkinTypeToggle,
 }: Omit<FiltersProps, "onClear" | "className">) {
   return (
     <>
@@ -117,6 +117,21 @@ function FilterSections({
         ))}
       </div>
 
+      {/* Skin type — stays hidden until the CMS list has entries */}
+      {skinTypes.length > 0 && (
+        <div className="w-full flex flex-col justify-start items-start gap-[8px]">
+          <SubtitleSm className="w-full !text-black">Skin type</SubtitleSm>
+          {skinTypes.map((skin) => (
+            <CheckboxItem
+              key={skin.id}
+              item={skin}
+              checked={selectedSkinTypes.has(skin.id)}
+              onToggle={() => onSkinTypeToggle(skin.id)}
+            />
+          ))}
+        </div>
+      )}
+
       {/* Collections */}
       <div className="w-full flex flex-col justify-start items-start gap-[8px]">
         <SubtitleSm className="w-full !text-black">Collection</SubtitleSm>
@@ -129,29 +144,16 @@ function FilterSections({
           />
         ))}
       </div>
-
-      {/* Brands */}
-      <div className="w-full flex flex-col justify-start items-start gap-[8px]">
-        <SubtitleSm className="w-full !text-black">Brand</SubtitleSm>
-        {brands.map((brand) => (
-          <CheckboxItem
-            key={brand.id}
-            item={brand}
-            checked={selectedBrands.has(brand.id)}
-            onToggle={() => onBrandToggle(brand.id)}
-          />
-        ))}
-      </div>
     </>
   );
 }
 
 export function Filters({
-  categories, brands, collections,
+  categories, collections, skinTypes,
   searchValue, onSearchChange,
   selectedCategories, onCategoryToggle,
-  selectedBrands, onBrandToggle,
   selectedCollections, onCollectionToggle,
+  selectedSkinTypes, onSkinTypeToggle,
   onClear,
   className = "",
 }: FiltersProps) {
@@ -177,11 +179,11 @@ export function Filters({
   useScrollLock(isMobile && filterOpen);
 
   const sectionProps = {
-    categories, brands, collections,
+    categories, collections, skinTypes,
     searchValue, onSearchChange,
-      selectedCategories, onCategoryToggle,
-    selectedBrands, onBrandToggle,
+    selectedCategories, onCategoryToggle,
     selectedCollections, onCollectionToggle,
+    selectedSkinTypes, onSkinTypeToggle,
   };
 
   return (
@@ -195,13 +197,10 @@ export function Filters({
           ${className}`}
         transition={SPRING}
       >
-        {/* Title + Toggle */}
-        <div className="w-full flex flex-row justify-between items-center">
-          <ButtonLg className="text-left !text-[20px] desktop:!text-[24px] !leading-[1.4] !text-black">
-            Filters
-          </ButtonLg>
+        {/* Toggle — mobile only, the sections stand on their own from tablet up */}
+        <div className="w-full tablet:hidden flex flex-row justify-end items-center">
           <button
-            className="tablet:hidden flex items-center justify-center p-0 bg-transparent border-none cursor-pointer text-black"
+            className="flex items-center justify-center p-0 bg-transparent border-none cursor-pointer text-black"
             onClick={() => setFilterOpen((v) => !v)}
             aria-label="Toggle filters"
           >
@@ -243,8 +242,7 @@ export function Filters({
                 transition={SPRING_POPUP}
               >
                 <div className="bg-white w-full max-w-[400px] max-h-[85vh] rounded-none overflow-y-auto flex flex-col gap-[32px] px-[24px] pt-[24px] pb-[32px] pointer-events-auto">
-                  <div className="flex flex-row justify-between items-center">
-                    <ButtonLg className="text-left !text-[20px] !leading-[1.4] !text-black">Filters</ButtonLg>
+                  <div className="flex flex-row justify-end items-center">
                     <button
                       className="flex items-center justify-center p-0 bg-transparent border-none cursor-pointer text-black"
                       onClick={() => setFilterOpen(false)}

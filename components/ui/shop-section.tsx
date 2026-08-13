@@ -3,12 +3,14 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { Filters, type FilterItem } from "./filters";
+import { BrandIndex } from "./brand-index";
 import { ProductCard } from "./product-card";
 import { H4, SubtitleMd } from "./typography";
 
 const CATEGORIES_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/categories`;
 const BRANDS_URL     = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/brands`;
 const COLLECTIONS_URL= `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/collections`;
+const SKIN_TYPES_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/skin-types`;
 const PRODUCTS_URL   = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/loiseau-d/products`;
 const API_HEADERS    = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 
@@ -23,6 +25,14 @@ function relationSlug(value: Relation): string {
   return typeof value === "string" ? value : value.Slug ?? "";
 }
 
+/** Skin type reads as a list so a product can suit Dry *and* Sensitive, whether
+ *  the CMS field ends up single- or multi-valued. */
+function relationSlugs(value: Relation | Relation[]): string[] {
+  if (Array.isArray(value)) return value.map(relationSlug).filter(Boolean);
+  const slug = relationSlug(value);
+  return slug ? [slug] : [];
+}
+
 interface RawProduct {
   id:              string;
   Slug:            string;
@@ -33,6 +43,7 @@ interface RawProduct {
   Category:        Relation;
   Brand:           Relation;
   Collections:     Relation;
+  "Skin Type":     Relation | Relation[];
 }
 
 interface Product {
@@ -45,19 +56,25 @@ interface Product {
   category:    string;
   brand:       string;
   collections: string;
+  skinTypes:   string[];
 }
 
 const DESKTOP_PAGE_SIZE = 12;
 const MOBILE_PAGE_SIZE  = 8;
 
+/** A list the CMS does not have yet just yields no filter — never a dead page. */
 async function fetchFilterItems(url: string): Promise<FilterItem[]> {
-  const res  = await fetch(url, { headers: API_HEADERS });
-  const data = await res.json();
-  return (data?.data ?? []).map((e: { id: string; Title: string; Slug: string }) => ({
-    id:   e.id,
-    name: e.Title,
-    slug: e.Slug,
-  }));
+  try {
+    const res  = await fetch(url, { headers: API_HEADERS });
+    const data = await res.json();
+    return (data?.data ?? []).map((e: { id: string; Title: string; Slug: string }) => ({
+      id:   e.id,
+      name: e.Title,
+      slug: e.Slug,
+    }));
+  } catch {
+    return [];
+  }
 }
 
 async function fetchProducts(url: string): Promise<Product[]> {
@@ -73,6 +90,7 @@ async function fetchProducts(url: string): Promise<Product[]> {
     category:    relationSlug(e.Category),
     brand:       relationSlug(e.Brand),
     collections: relationSlug(e.Collections),
+    skinTypes:   relationSlugs(e["Skin Type"]),
   }));
 }
 
@@ -100,10 +118,32 @@ function EmptyState() {
   );
 }
 
+/**
+ * Tick the filter box named by a URL param once its list has loaded. Only fires
+ * per distinct param value, so the shopper can untick it again and it stays off.
+ */
+function useParamSelection(
+  param: string,
+  items: FilterItem[],
+  select: (ids: Set<string>) => void,
+) {
+  const applied = useRef("");
+
+  useEffect(() => {
+    if (!param || items.length === 0) return;
+    if (applied.current === param) return;
+    const match = items.find((i) => i.slug === param);
+    if (!match) return;
+    applied.current = param;
+    select(new Set([match.id]));
+  }, [param, items, select]);
+}
+
 export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}) {
   const [categories,          setCategories]          = useState<FilterItem[]>([]);
   const [brands,              setBrands]              = useState<FilterItem[]>([]);
   const [collections,         setCollections]         = useState<FilterItem[]>([]);
+  const [skinTypes,           setSkinTypes]           = useState<FilterItem[]>([]);
   const [allProducts,         setAllProducts]         = useState<Product[]>([]);
   const [loading,             setLoading]             = useState(true);
   const [page,                setPage]                = useState(1);
@@ -114,10 +154,11 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
   const [selectedCategories,  setSelectedCategories]  = useState<Set<string>>(new Set());
   const [selectedBrands,      setSelectedBrands]      = useState<Set<string>>(new Set());
   const [selectedCollections, setSelectedCollections] = useState<Set<string>>(new Set());
+  const [selectedSkinTypes,   setSelectedSkinTypes]   = useState<Set<string>>(new Set());
 
-  // `/shop-all?collection=<slug>` arrives pre-filtered — e.g. the Offers CTA.
-  const collectionParam = useSearchParams().get("collection") ?? "";
-  const appliedParam    = useRef("");
+  // `/shop-all?collection=<slug>` and `?brand=<slug>` arrive pre-filtered —
+  // the Offers CTA and the header Brands menu respectively.
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 810);
@@ -132,11 +173,13 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
       fetchFilterItems(CATEGORIES_URL),
       fetchFilterItems(BRANDS_URL),
       fetchFilterItems(COLLECTIONS_URL),
+      fetchFilterItems(SKIN_TYPES_URL),
       fetchProducts(PRODUCTS_URL),
-    ]).then(([cats, brnds, cols, prods]) => {
+    ]).then(([cats, brnds, cols, skins, prods]) => {
       setCategories(cats);
       setBrands(brnds);
       setCollections(cols);
+      setSkinTypes(skins);
       setAllProducts(prods);
     }).finally(() => setLoading(false));
   }, []);
@@ -160,16 +203,22 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
     return m;
   }, [collections]);
 
-  // Tick the matching Collection box once the filter list is in — the shopper can
-  // still clear it like any other filter, so this only runs per distinct param.
+  const skinTypeSlugToId = useMemo(() => {
+    const m: Record<string, string> = {};
+    skinTypes.forEach((s) => { m[s.slug] = s.id; });
+    return m;
+  }, [skinTypes]);
+
+  useParamSelection(searchParams.get("collection") ?? "", collections, setSelectedCollections);
+  useParamSelection(searchParams.get("brand")      ?? "", brands,      setSelectedBrands);
+
+  // The header menu deep-links to `#shop`. This section renders inside Suspense,
+  // so the anchor can be missing when the router first looks for it — and a
+  // second pick from the menu is only a query change, with no remount at all.
   useEffect(() => {
-    if (!collectionParam || collections.length === 0) return;
-    if (appliedParam.current === collectionParam) return;
-    const match = collections.find((c) => c.slug === collectionParam);
-    if (!match) return;
-    appliedParam.current = collectionParam;
-    setSelectedCollections(new Set([match.id]));
-  }, [collectionParam, collections]);
+    if (window.location.hash !== "#shop") return;
+    document.getElementById("shop")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [searchParams]);
 
   const filtered = useMemo(() => {
     const q = searchValue.trim().toLowerCase();
@@ -188,12 +237,17 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
         const colId = collectionSlugToId[p.collections];
         if (!colId || !selectedCollections.has(colId)) return false;
       }
+      if (selectedSkinTypes.size > 0) {
+        // A product qualifies on any one of the skin types it is tagged with.
+        const ids = p.skinTypes.map((s) => skinTypeSlugToId[s]).filter(Boolean);
+        if (!ids.some((id) => selectedSkinTypes.has(id))) return false;
+      }
       return true;
     });
-  }, [allProducts, collectionSlug, searchValue, selectedCategories, selectedBrands, selectedCollections, categorySlugToId, brandSlugToId, collectionSlugToId]);
+  }, [allProducts, collectionSlug, searchValue, selectedCategories, selectedBrands, selectedCollections, selectedSkinTypes, categorySlugToId, brandSlugToId, collectionSlugToId, skinTypeSlugToId]);
 
   // Reset to page 1 whenever filters change
-  useEffect(() => { setPage(1); }, [searchValue, selectedCategories, selectedBrands, selectedCollections]);
+  useEffect(() => { setPage(1); }, [searchValue, selectedCategories, selectedBrands, selectedCollections, selectedSkinTypes]);
 
   const pageSize  = isMobile ? MOBILE_PAGE_SIZE : DESKTOP_PAGE_SIZE;
   const paginated = filtered.slice(0, page * pageSize);
@@ -223,21 +277,40 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
     });
   }
 
+  function handleSkinTypeToggle(id: string) {
+    setSelectedSkinTypes((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
+
   function handleClear() {
     setSearchValue("");
     setSelectedCategories(new Set());
     setSelectedBrands(new Set());
     setSelectedCollections(new Set());
+    setSelectedSkinTypes(new Set());
   }
 
   return (
-    <section className="relative w-full flex flex-col justify-start items-center gap-[10px] p-0 overflow-visible rounded-none bg-caledon z-[10]">
+    <section id="shop" className="relative w-full flex flex-col justify-start items-center gap-[10px] scroll-mt-[60px] tablet:scroll-mt-[68px] desktop:scroll-mt-[72px] p-0 overflow-visible rounded-none bg-caledon z-[10]">
 
       {/* Container */}
       <div className="w-full max-w-[1920px] flex flex-col justify-start items-center
         gap-[24px] pt-[32px] px-[16px] pb-[48px]
         tablet:gap-[40px] tablet:pt-[48px] tablet:px-[24px] tablet:pb-[64px]
         desktop:pt-[64px] desktop:px-[32px] desktop:pb-[80px]">
+
+        {/* Brands — an A–Z index above the shop, not a sidebar checkbox list */}
+        {!loading && (
+          <BrandIndex
+            brands={brands}
+            selected={selectedBrands}
+            onToggle={handleBrandToggle}
+            onClear={() => setSelectedBrands(new Set())}
+          />
+        )}
 
         {/* Title wrapper */}
         <div className="w-full flex flex-row justify-start items-center gap-[16px] p-0 overflow-visible rounded-none">
@@ -254,16 +327,16 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
           <div className="sticky top-[60px] tablet:top-[68px] desktop:top-[72px] self-start w-[calc(100%+32px)] -mx-[16px] tablet:w-auto tablet:mx-0 z-[20] tablet:z-auto">
             <Filters
               categories={categories}
-              brands={brands}
               collections={collections}
               searchValue={searchValue}
               onSearchChange={setSearchValue}
               selectedCategories={selectedCategories}
               onCategoryToggle={handleCategoryToggle}
-              selectedBrands={selectedBrands}
-              onBrandToggle={handleBrandToggle}
               selectedCollections={selectedCollections}
               onCollectionToggle={handleCollectionToggle}
+              skinTypes={skinTypes}
+              selectedSkinTypes={selectedSkinTypes}
+              onSkinTypeToggle={handleSkinTypeToggle}
               onClear={handleClear}
             />
           </div>
