@@ -40,7 +40,7 @@ export default function About() {
           </div>
 
           {/* Hero logotype */}
-          <Logomark className="text-white" />
+          <Logomark />
 
         </div>
 

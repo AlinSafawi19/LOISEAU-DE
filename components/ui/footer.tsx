@@ -130,7 +130,7 @@ export function Footer() {
 
         {/* ── 3. Logo wrapper ── */}
         <div className="w-full relative
-          pt-[40px] desktop:pt-[80px] pb-0 px-[32px]
+          py-[40px] desktop:py-[80px] px-[32px]
           overflow-clip rounded-none">
 
           {/* Truchet background */}
@@ -149,8 +149,10 @@ export function Footer() {
           {/* Truchet overlay (accent background + arc pattern) */}
           <TruchetOverlay />
 
-          {/* Large logotype — font-size scales to fill container */}
-          <Logomark className="relative z-[3] text-white" />
+          {/* Large logotype — scales to fill container */}
+          <div className="relative z-[3] flex justify-center items-center">
+            <Logomark className="mx-auto" />
+          </div>
 
         </div>
 

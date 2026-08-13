@@ -5,7 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart, ShoppingBag, ChevronDown } from "lucide-react";
-import { ButtonSm, ButtonLg, BodySm } from "./typography";
+import { ButtonSm, BodySm } from "./typography";
+import { Logomark } from "./logomark";
 import { useWishlist } from "./use-wishlist";
 import { useCart } from "./use-cart";
 import { useBrands, type Brand } from "./use-brands";
@@ -386,9 +387,9 @@ export function Header() {
 
           {/* Wordmark */}
           <Link href="/" className="flex items-center shrink-0" aria-label="GLAZE — home">
-            <ButtonLg className="!text-black !text-left !text-[20px] desktop:!text-[24px]">
-              GLAZE
-            </ButtonLg>
+            <span className="block w-[112px] tablet:w-[128px] desktop:w-[142px]">
+              <Logomark tone="plum" />
+            </span>
           </Link>
 
           {/* Centred nav — absolute so the wordmark and actions never shift it off-centre */}
@@ -450,7 +451,9 @@ export function Header() {
             >
 
               <div className="w-full flex flex-row justify-between items-center pb-[14px] border-b border-dashed border-beige">
-                <ButtonLg className="!text-black !text-left !text-[20px]">GLAZE</ButtonLg>
+                <span className="block w-[112px]">
+                  <Logomark tone="plum" />
+                </span>
                 <button
                   type="button"
                   onClick={() => setOpen(false)}

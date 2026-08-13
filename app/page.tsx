@@ -110,7 +110,7 @@ export default function Home() {
           </div>
 
           {/* Hero title */}
-          <Logomark className="text-white" />
+          <Logomark />
 
         </div>
 

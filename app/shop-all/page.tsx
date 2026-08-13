@@ -41,7 +41,7 @@ export default function ShopAll() {
           </div>
 
           {/* Hero logotype */}
-          <Logomark className="text-white" />
+          <Logomark />
 
         </div>
 

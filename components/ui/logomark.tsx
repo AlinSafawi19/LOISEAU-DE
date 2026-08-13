@@ -1,35 +1,31 @@
+import Image from "next/image";
+
 interface LogomarkProps {
   className?: string;
   label?:     string;
+  /** `white` for dark surfaces, `plum` for the light lavender header/drawer. */
+  tone?:      "white" | "plum";
 }
 
+const SRC = {
+  white: "/glaze-monochrome-white.svg",
+  plum:  "/glaze-monochrome-plum.svg",
+} as const;
+
 /**
- * Placeholder brand mark for the hero and footer wordmark slots, standing in
- * until the real logo artwork lands. Scales to the full width of its container
- * and inherits the surrounding `color`, so callers set the colour with a text
- * utility rather than a fill.
+ * The GLAZE wordmark, used in the hero, footer and header logotype slots. Scales
+ * to the full width of its container. The artwork carries its own colour, so
+ * callers pick a `tone` to match the surface rather than a text utility.
  */
-export function Logomark({ className = "", label = "GLAZE" }: LogomarkProps) {
+export function Logomark({ className = "", label = "GLAZE", tone = "white" }: LogomarkProps) {
   return (
-    <svg
-      viewBox="0 0 1000 240"
-      role="img"
-      aria-label={label}
-      preserveAspectRatio="xMidYMid meet"
+    <Image
+      src={SRC[tone]}
+      alt={label}
+      width={982}
+      height={152}
+      priority
       className={`w-full h-auto block ${className}`}
-    >
-      <text
-        x="500"
-        y="190"
-        textAnchor="middle"
-        fill="currentColor"
-        fontFamily="var(--font-clash)"
-        fontSize="220"
-        fontWeight="400"
-        letterSpacing="12"
-      >
-        {label}
-      </text>
-    </svg>
+    />
   );
 }
