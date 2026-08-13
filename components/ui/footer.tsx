@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useRef, useState, useEffect } from "react";
 import { H4, SubtitleMd, BodyMd, LinkContact } from "./typography";
-import { FooterMenu } from "./footer-menu";
+import { FooterWordmark, WordmarkImage } from "./footer-wordmark";
 import { Logomark } from "./logomark";
 
 function TruchetOverlay() {
@@ -45,18 +45,6 @@ function TruchetOverlay() {
     </svg>
   );
 }
-
-function CopyrightIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-      <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.2" />
-      <text x="8" y="11.5" textAnchor="middle" fontSize="8" fill="currentColor" fontFamily="inherit">
-        C
-      </text>
-    </svg>
-  );
-}
-
 
 export function Footer() {
   return (
@@ -109,21 +97,36 @@ export function Footer() {
 
           {/* Logo inner wrapper */}
           <div className="w-full tablet:flex-1 flex flex-row justify-start items-center gap-[10px] overflow-clip rounded-none">
-            <FooterMenu title="GLAZE" href="/" className="flex-1" />
+            <FooterWordmark
+              src="/glaze-monochrome-blush.svg"
+              width={982}
+              label="GLAZE — home"
+              href="/"
+              className="flex-1"
+            />
 
             {/* Copyright wrapper */}
-            <div className="flex-1 flex flex-row justify-start items-center gap-[10px] overflow-clip rounded-none">
-              <span className="text-accent flex-shrink-0">
-                <CopyrightIcon />
-              </span>
-              <BodyMd className="!text-blush !text-left [text-wrap:balance]">2026</BodyMd>
+            <div className="flex-1 min-w-0 flex flex-row justify-start items-center overflow-clip rounded-none">
+              <WordmarkImage src="/copyright-2026-monochrome.svg" width={902} alt="Copyright 2026" />
             </div>
           </div>
 
           {/* Footer menu wrapper */}
           <div className="w-full tablet:flex-1 flex flex-row justify-start items-center gap-[10px] overflow-clip rounded-none">
-            <FooterMenu title="CONTACT" href="/contact" className="flex-1" />
-            <FooterMenu title="TERMS OF USE"  href="/terms-of-use"  className="flex-1" />
+            <FooterWordmark
+              src="/contact-monochrome-blush.svg"
+              width={1400}
+              label="Contact"
+              href="/contact"
+              className="flex-1"
+            />
+            <FooterWordmark
+              src="/terms-of-use-monochrome-blush.svg"
+              width={2069}
+              label="Terms of use"
+              href="/terms-of-use"
+              className="flex-1"
+            />
           </div>
 
         </div>

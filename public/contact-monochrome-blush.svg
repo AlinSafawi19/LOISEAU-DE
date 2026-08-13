@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1400"
+     height="152"
+     viewBox="-5 437 1400 152">
+  <title>CONTACT custom wordmark</title>
+  <desc>CONTACT drawn on the GLAZE wordmark's construction — same cap height, 8.5 stroke and crossbar-free A.</desc>
+  <g id="CONTACT-wordmark"
+     fill="none"
+     stroke="#f7d9e5"
+     stroke-width="8.5"
+     stroke-linecap="butt"
+     stroke-linejoin="miter"
+     stroke-miterlimit="10">
+    <path id="C-1" d="M 155 466 C 137 451 111 444 85 444 C 35 444 0 474 0 515 C 0 556 32 584 82 584 C 113 584 138 575 159 559"/>
+    <path id="O"   d="M 310.5 444 C 354.4 444 390 475.3 390 514 C 390 552.7 354.4 584 310.5 584 C 266.6 584 231 552.7 231 514 C 231 475.3 266.6 444 310.5 444 Z"/>
+    <path id="N"   d="M 462 582 V 447 L 592 582 V 447"/>
+    <path id="T-1-bar"  d="M 664 447 H 789"/>
+    <path id="T-1-stem" d="M 726.5 447 V 582"/>
+    <path id="A"   d="M 839 586 L 912 447 L 985 586"/>
+    <path id="C-2" d="M 1195 466 C 1177 451 1151 444 1125 444 C 1075 444 1040 474 1040 515 C 1040 556 1072 584 1122 584 C 1153 584 1178 575 1199 559"/>
+    <path id="T-2-bar"  d="M 1265 447 H 1390"/>
+    <path id="T-2-stem" d="M 1327.5 447 V 582"/>
+  </g>
+</svg>

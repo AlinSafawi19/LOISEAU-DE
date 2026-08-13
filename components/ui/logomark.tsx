@@ -3,13 +3,17 @@ import Image from "next/image";
 interface LogomarkProps {
   className?: string;
   label?:     string;
-  /** `white` for dark surfaces, `plum` for the light lavender header/drawer. */
-  tone?:      "white" | "plum";
+  /**
+   * `white` for dark surfaces, `plum` for the light lavender header/drawer,
+   * `blush` to sit inline with footer body copy on the plum ground.
+   */
+  tone?:      "white" | "plum" | "blush";
 }
 
 const SRC = {
   white: "/glaze-monochrome-white.svg",
   plum:  "/glaze-monochrome-plum.svg",
+  blush: "/glaze-monochrome-blush.svg",
 } as const;
 
 /**
