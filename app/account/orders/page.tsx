@@ -115,7 +115,7 @@ export default async function OrdersPage() {
               </ItalicBodyLg>
             </div>
             <Link href="/account">
-              <OutlineButton icon={<></>}>Account details</OutlineButton>
+              <OutlineButton icon={null}>Account details</OutlineButton>
             </Link>
           </div>
 
@@ -126,7 +126,7 @@ export default async function OrdersPage() {
                 Anything you order will appear here, with its status as we pack and deliver it.
               </ItalicBodySm>
               <Link href="/shop-all">
-                <OutlineButton icon={<></>}>Shop all</OutlineButton>
+                <OutlineButton icon={null}>Shop all</OutlineButton>
               </Link>
             </div>
           ) : (

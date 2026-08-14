@@ -32,7 +32,7 @@ export default async function AccountPage() {
             </div>
             <div className="flex flex-row items-center gap-[12px]">
               <Link href="/account/orders">
-                <OutlineButton icon={<></>}>Your orders</OutlineButton>
+                <OutlineButton icon={null}>Your orders</OutlineButton>
               </Link>
               <SignOutButton />
             </div>

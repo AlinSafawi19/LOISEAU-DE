@@ -83,7 +83,7 @@ export function CheckoutForm({ identity }: { identity: CheckoutIdentity }) {
             <div className="flex flex-row flex-wrap justify-center items-center gap-[12px]">
               {identity.signedIn && (
                 <Link href="/account/orders">
-                  <OutlineButton icon={<></>}>Track this order</OutlineButton>
+                  <OutlineButton icon={null}>Track this order</OutlineButton>
                 </Link>
               )}
               <Link href="/shop-all">

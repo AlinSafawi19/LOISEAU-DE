@@ -33,7 +33,22 @@ const EASE = [0.44, 0, 0.56, 1] as const;
 const SPRING = { type: "spring" as const, duration: 0.4, bounce: 0.2 };
 
 interface OutlineButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  /**
+   * Omit for the default plus glyph, pass an element to replace it, or pass
+   * `null` for no icon at all.
+   *
+   * The distinction matters: `icon ?? <PlusIcon/>` would treat "no icon" and
+   * "not specified" alike, and an empty fragment cannot stand in for null
+   * either — React serialises `<></>` to null when a Server Component passes it
+   * to a Client Component, which silently restored the plus on exactly the
+   * pages that render on the server.
+   */
   icon?: ReactNode;
+}
+
+/** `undefined` means "unspecified"; any other value, including null, is a choice. */
+function iconOrDefault(icon: ReactNode): ReactNode {
+  return icon === undefined ? <PlusIcon size={16} /> : icon;
 }
 
 export function OutlineButton({
@@ -83,7 +98,7 @@ export function OutlineButton({
           transition: `color 0.4s cubic-bezier(0.44, 0, 0.56, 1)`,
         }}
       >
-        {icon ?? <PlusIcon size={16} />}
+        {iconOrDefault(icon)}
       </span>
     </button>
   );
@@ -134,7 +149,7 @@ export function FilledButton({
           transition: `color 0.4s cubic-bezier(0.44, 0, 0.56, 1)`,
         }}
       >
-        {icon ?? <PlusIcon size={16} />}
+        {iconOrDefault(icon)}
       </span>
     </button>
   );

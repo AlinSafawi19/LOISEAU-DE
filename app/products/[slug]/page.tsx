@@ -401,7 +401,7 @@ export default function ProductPage() {
           <div className="w-full flex flex-row justify-between items-center gap-[16px] overflow-visible rounded-none p-0">
             <H4 className="!text-black !text-left [text-wrap:balance]">Related <br/>Products</H4>
             <Link href="/shop-all" tabIndex={-1}>
-              <OutlineButton icon={<></>}>Explore all</OutlineButton>
+              <OutlineButton icon={null}>Explore all</OutlineButton>
             </Link>
           </div>
 

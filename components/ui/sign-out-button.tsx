@@ -19,7 +19,7 @@ export function SignOutButton() {
   return (
     <OutlineButton
       type="button"
-      icon={<></>}
+      icon={null}
       disabled={pending}
       onClick={() => {
         try {

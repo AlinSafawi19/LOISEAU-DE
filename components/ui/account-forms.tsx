@@ -160,7 +160,7 @@ export function SignInForm({ next }: { next?: string }) {
       <div className="w-full flex flex-col justify-center items-center gap-[12px]">
         <BodyMd className="w-full !text-brown !text-center">No account yet?</BodyMd>
         <Link href="/account/sign-up">
-          <OutlineButton icon={<></>}>Create one</OutlineButton>
+          <OutlineButton icon={null}>Create one</OutlineButton>
         </Link>
       </div>
     </Card>
@@ -242,7 +242,7 @@ export function SignUpForm({ next }: { next?: string }) {
       <div className="w-full flex flex-col justify-center items-center gap-[12px]">
         <BodyMd className="w-full !text-brown !text-center">Already have one?</BodyMd>
         <Link href="/account/sign-in">
-          <OutlineButton icon={<></>}>Sign in</OutlineButton>
+          <OutlineButton icon={null}>Sign in</OutlineButton>
         </Link>
       </div>
     </Card>
