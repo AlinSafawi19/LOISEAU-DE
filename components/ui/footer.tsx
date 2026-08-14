@@ -6,6 +6,9 @@ import { H4, SubtitleMd, BodyMd, LinkContact } from "./typography";
 import { FooterWordmark, WordmarkImage } from "./footer-wordmark";
 import { Logomark } from "./logomark";
 
+/** The address shoppers write to. Set NEXT_PUBLIC_STORE_EMAIL to change it. */
+const STORE_EMAIL = process.env.NEXT_PUBLIC_STORE_EMAIL || "hello@glaze.store";
+
 function TruchetOverlay() {
   const svgRef = useRef<SVGSVGElement>(null);
   const [c, setC] = useState(14);
@@ -76,10 +79,8 @@ export function Footer() {
             </div>
 
             <div className="flex-1 flex flex-col justify-start items-start gap-[10px] overflow-clip rounded-none">
-              <SubtitleMd className="w-full !text-white [text-wrap:balance]">Website</SubtitleMd>
-              <LinkContact href="https://glaze.alinsafawi.com" target="_blank" rel="noopener noreferrer">
-                glaze.alinsafawi.com
-              </LinkContact>
+              <SubtitleMd className="w-full !text-white [text-wrap:balance]">Email Us</SubtitleMd>
+              <LinkContact href={`mailto:${STORE_EMAIL}`}>{STORE_EMAIL}</LinkContact>
             </div>
 
             <div className="flex-1 flex flex-col justify-start items-start gap-[10px] overflow-clip rounded-none">
