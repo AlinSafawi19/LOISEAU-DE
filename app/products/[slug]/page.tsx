@@ -15,6 +15,17 @@ import { useCart } from "@/components/ui/use-cart";
 const PRODUCTS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/products`;
 const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
 
+/**
+ * A relation field arrives either expanded into an object or as a bare slug
+ * string, depending on the entry — normalise both down to a slug.
+ */
+type Relation = string | { Slug?: string } | null | undefined;
+
+function relationSlug(value: Relation): string {
+  if (!value) return "";
+  return typeof value === "string" ? value : value.Slug ?? "";
+}
+
 interface Product {
   id:              string;
   slug:            string;
@@ -25,7 +36,6 @@ interface Product {
   img_2:           string;
   img_3:           string;
   img_4:           string;
-  gender:          string;
   category:        string;
   brand:           string;
   size:            string;
@@ -46,15 +56,14 @@ interface RawEntry {
   "Img 2":         string;
   "Img 3":         string;
   "Img 4":         string;
-  Gender:          string;
-  Category:        string;
-  Brand:           string;
+  Category:        Relation;
+  Brand:           Relation;
   Size:            string;
   SKU:             string;
   Description:     string;
   "Key Ingredients": string;
   "Sales type":    string;
-  Collections:     string;
+  Collections:     Relation;
 }
 
 const FEATURES: { title: string; description: string; icon: ReactNode }[] = [
@@ -127,15 +136,14 @@ export default function ProductPage() {
             img_2:           e["Img 2"]             ?? "",
             img_3:           e["Img 3"]             ?? "",
             img_4:           e["Img 4"]             ?? "",
-            gender:          e.Gender               ?? "",
-            category:        e.Category             ?? "",
-            brand:           e.Brand                ?? "",
+            category:        relationSlug(e.Category),
+            brand:           relationSlug(e.Brand),
             size:            e.Size                 ?? "",
             sku:             parseInt(e.SKU)        || 0,
             description:     e.Description          ?? "",
             key_ingredients: e["Key Ingredients"]   ?? "",
             sales_type:      e["Sales type"]        ?? "",
-            collections:     e.Collections          ?? "",
+            collections:     relationSlug(e.Collections),
           }))
         );
       })

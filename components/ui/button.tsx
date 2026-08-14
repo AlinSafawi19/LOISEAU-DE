@@ -144,10 +144,17 @@ export type ButtonState = "default" | "loading" | "success" | "error";
 
 interface SubmitButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   buttonState?: ButtonState;
+  /** Labels default to the contact form's wording. */
+  label?:        string;
+  successLabel?: string;
+  errorLabel?:   string;
 }
 
 export function Button({
   buttonState = "default",
+  label        = "Send",
+  successLabel = "Thank you",
+  errorLabel   = "Something wrong",
   className = "",
   disabled,
   ...props
@@ -185,7 +192,7 @@ export function Button({
             transition={{ duration: 0.2, ease: EASE }}
           >
             <H6Span className="text-center !text-black">
-              Thank you
+              {successLabel}
             </H6Span>
           </motion.span>
         )}
@@ -200,7 +207,7 @@ export function Button({
             transition={{ duration: 0.2, ease: EASE }}
           >
             <H6Span className="text-center !text-error">
-              Something wrong
+              {errorLabel}
             </H6Span>
           </motion.span>
         )}
@@ -215,7 +222,7 @@ export function Button({
             transition={{ duration: 0.2, ease: EASE }}
           >
             <H5Span className="text-center [text-wrap:balance] !text-brown">
-              Send
+              {label}
             </H5Span>
             <CircleArrowRight
               size={24}

@@ -21,7 +21,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
+    // `globals.css` sets `scroll-behavior: smooth` for in-page anchors. Since
+    // Next 16 that also applies to route changes, which leaves a new page
+    // gliding down from wherever the last one was scrolled to. This attribute
+    // opts back into Next's override: it drops to `auto` for the navigation, so
+    // every page opens at the top, then restores smooth scrolling.
+    <html lang="en" className={inter.variable} data-scroll-behavior="smooth">
       <head>
         <link
           href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&display=swap"

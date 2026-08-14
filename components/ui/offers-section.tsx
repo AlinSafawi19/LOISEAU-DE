@@ -35,12 +35,15 @@ interface RawProduct {
 }
 
 interface RawCollection {
-  Slug:       string;
-  Title:      string;
-  tagline:    string;
-  ButtonText: string;
-  ButtonPath: string;
+  Slug:  string;
+  Title: string;
 }
+
+// The collection carries only a name now, so the section's supporting copy and
+// its call to action live here rather than being editable per collection.
+const OFFERS_TAGLINE = "bundles and reduced sets";
+const OFFERS_CTA     = "See all offers";
+const OFFERS_PATH    = "/shop-all";
 
 interface OfferProduct {
   id:       string;
@@ -90,8 +93,7 @@ export function OffersSection() {
   const { products, collection, loading } = useOffers();
 
   // Land on the shop with the Offers collection already ticked in the filters.
-  const buttonPath = collection?.ButtonPath || "/shop-all";
-  const shopAllHref = `${buttonPath}${buttonPath.includes("?") ? "&" : "?"}collection=${OFFERS_SLUG}`;
+  const shopAllHref = `${OFFERS_PATH}?collection=${OFFERS_SLUG}`;
 
   return (
     <section className="w-full flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip rounded-none bg-dusty">
@@ -109,13 +111,13 @@ export function OffersSection() {
               {collection?.Title || "Offers"}
             </H4>
             <ItalicBodySm className="w-full !text-brown !text-left [text-wrap:balance]">
-              {collection?.tagline || "bundles and reduced sets"}
+              {OFFERS_TAGLINE}
             </ItalicBodySm>
           </div>
 
           {!loading && products.length > 0 && (
             <Link href={shopAllHref} className="shrink-0">
-              <OutlineButton>{collection?.ButtonText || "See all offers"}</OutlineButton>
+              <OutlineButton>{OFFERS_CTA}</OutlineButton>
             </Link>
           )}
 

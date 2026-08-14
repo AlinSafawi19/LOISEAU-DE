@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, ShoppingBag, ChevronDown } from "lucide-react";
+import { Heart, ShoppingBag, ChevronDown, User } from "lucide-react";
 import { ButtonSm, BodySm } from "./typography";
 import { Logomark } from "./logomark";
 import { useWishlist } from "./use-wishlist";
@@ -260,6 +260,38 @@ function CartLink({ className = "" }: { className?: string }) {
   );
 }
 
+/**
+ * The account icon always points at `/account`; whether that lands on the
+ * profile or bounces to sign-in is decided on the server, so the header never
+ * has to know if anyone is signed in.
+ */
+function AccountLink({ className = "" }: { className?: string }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <Link
+      href="/account"
+      aria-label="Your account"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className={`relative flex items-center justify-center w-[42px] h-[42px] tablet:w-[43px] tablet:h-[43px] desktop:w-[44px] desktop:h-[44px] rounded-none ${className}`}
+    >
+      <motion.span
+        className="flex items-center justify-center"
+        animate={{ scale: hovered ? 1.08 : 1 }}
+        transition={{ duration: 0.3, ease: EASE }}
+      >
+        <User
+          strokeWidth={1.5}
+          fill="none"
+          className={`${hovered ? "text-plum" : "text-brown"} w-[21px] h-[21px] tablet:w-[22px] tablet:h-[22px] desktop:w-[23px] desktop:h-[23px]`}
+          style={{ transition: "color 0.3s cubic-bezier(0.44,0,0.56,1)" }}
+        />
+      </motion.span>
+    </Link>
+  );
+}
+
 function Hamburger({ open }: { open: boolean }) {
   return (
     <span className="relative block w-[28px] h-[13px] tablet:w-[26px] tablet:h-[12px]" aria-hidden>
@@ -422,6 +454,7 @@ export function Header() {
 
           {/* Right side */}
           <div className="flex flex-row items-center gap-0">
+            <AccountLink />
             <WishlistLink />
             <CartLink className="-mr-[6px]" />
           </div>

@@ -2,10 +2,13 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { makePusher, pullOnce } from "./use-saved-sync";
+
 const STORAGE_KEY  = "glaze:cart";
 const CHANGE_EVENT = "glaze:cart-change";
 // Adding a product asks the global cart drawer to slide open.
 const OPEN_EVENT   = "glaze:cart-open";
+const SYNC_URL     = "/api/account/cart";
 
 export interface CartLine {
   slug: string;
@@ -26,19 +29,57 @@ function read(): CartLine[] {
   }
 }
 
-function write(lines: CartLine[]) {
+const push = makePusher(SYNC_URL);
+
+/** `remote` skips the push, so pulling the server's own list does not echo back. */
+function write(lines: CartLine[], remote = true) {
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(lines));
   } catch {
     /* storage full or blocked */
   }
   window.dispatchEvent(new Event(CHANGE_EVENT));
+  if (remote && signedIn) {
+    push({ items: lines.map((l) => ({ Slug: l.slug, Qty: l.qty })) });
+  }
+}
+
+/** Set once the first pull confirms there is an account behind this browser. */
+let signedIn = false;
+
+/** Quantities add up; the higher wins nothing, both baskets are kept. */
+function merge(local: CartLine[], stored: CartLine[]): CartLine[] {
+  const totals = new Map<string, number>();
+  for (const line of [...stored, ...local]) {
+    totals.set(line.slug, (totals.get(line.slug) ?? 0) + line.qty);
+  }
+  return [...totals].map(([slug, qty]) => ({ slug, qty: Math.min(qty, 999) }));
+}
+
+async function hydrate(): Promise<void> {
+  const res = await fetch(SYNC_URL, { cache: "no-store" });
+  const data = (await res.json()) as {
+    signedIn: boolean;
+    items: Array<{ Slug: string; Qty: number }>;
+  };
+
+  signedIn = data.signedIn;
+  if (!data.signedIn) return;
+
+  const stored = data.items.map((i) => ({ slug: i.Slug, qty: i.Qty }));
+  const merged = merge(read(), stored);
+
+  // Write locally without pushing, then push the merged result once.
+  write(merged, false);
+  push({ items: merged.map((l) => ({ Slug: l.slug, Qty: l.qty })) });
 }
 
 /**
- * Cart of product slugs and quantities, persisted in localStorage and shared
- * across every component that calls this hook. `ready` stays false until the
- * first client read so server and client markup match on the initial render.
+ * Cart of product slugs and quantities. Held in localStorage and shared across
+ * every component that calls this hook; for a signed-in shopper it is also
+ * saved to their account, so it survives a cleared browser and follows them
+ * between devices. `ready` stays false until the first client read so server
+ * and client markup match on the initial render.
  */
 export function useCart() {
   const [lines, setLines] = useState<CartLine[]>([]);
@@ -50,6 +91,10 @@ export function useCart() {
     setReady(true);
     window.addEventListener(CHANGE_EVENT, sync);
     window.addEventListener("storage", sync);
+
+    // Fires the shared pull; the CHANGE_EVENT it raises updates every hook.
+    void pullOnce(SYNC_URL, hydrate).catch(() => undefined);
+
     return () => {
       window.removeEventListener(CHANGE_EVENT, sync);
       window.removeEventListener("storage", sync);
