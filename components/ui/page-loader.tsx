@@ -11,8 +11,8 @@ import { usePendingLoads, whenImagesSettled } from "./loading-gate";
  * page that was already warm from flashing the overlay for two frames; `cap` is
  * the safety net for a load, a fetch or a navigation that never reports back.
  */
-const INTRO = { cycle: "2.6s", min: 1600, cap: 10000 };
-const ROUTE = { cycle: "1.6s", min:  700, cap: 10000 };
+const INTRO = { cycle: "2.6s", min: 1600, cap: 8000 };
+const ROUTE = { cycle: "1.6s", min:  700, cap: 8000 };
 
 /** How long the reveal will wait on above-the-fold imagery before giving up. */
 const IMAGES = 3000;
