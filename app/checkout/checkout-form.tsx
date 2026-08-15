@@ -8,6 +8,7 @@ import { OutlineButton, Button, type ButtonState } from "@/components/ui/button"
 import { useCart } from "@/components/ui/use-cart";
 import { useProducts } from "@/components/ui/use-products";
 import { placeOrder } from "@/lib/actions/account";
+import { useLoadingGate } from "@/components/ui/loading-gate";
 
 const FIELD_CLS =
   "w-full h-[48px] bg-transparent outline-none border-0 border-b border-beige px-0 pt-0 pb-[8px] " +
@@ -45,6 +46,10 @@ export function CheckoutForm({ identity }: { identity: CheckoutIdentity }) {
   const subtotal = items.reduce((sum, i) => sum + i.finalPrice * i.qty, 0);
   const settled  = ready && !loading;
   const incomplete = !name.trim() || !phone.trim() || !address.trim() || !city.trim();
+
+  // The page loader covers the wait — both the catalogue and reading the saved
+  // lines back out of storage.
+  useLoadingGate(!settled);
 
   async function submitOrder(e: React.FormEvent) {
     e.preventDefault();
@@ -109,15 +114,6 @@ export function CheckoutForm({ identity }: { identity: CheckoutIdentity }) {
             <div className="w-full flex flex-col justify-start items-start gap-[4px] p-0 rounded-none">
               <H2 className="w-full !text-black !text-left">CHECKOUT</H2>
               <ItalicBodyLg className="w-full !text-brown !text-left">cash on delivery</ItalicBodyLg>
-            </div>
-          )}
-
-          {!settled && (
-            <div className="flex items-center justify-center w-full py-[48px]">
-              <div
-                className="w-[40px] h-[40px] rounded-full border-[2px] border-beige animate-spin"
-                style={{ borderTopColor: "var(--color-brown)" }}
-              />
             </div>
           )}
 

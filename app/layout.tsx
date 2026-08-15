@@ -4,6 +4,7 @@ import "./globals.css";
 import { Footer } from "@/components/ui/footer";
 import { Header } from "@/components/ui/header";
 import { CartDrawer } from "@/components/ui/cart-drawer";
+import { PageLoader } from "@/components/ui/page-loader";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -49,6 +50,8 @@ export default function RootLayout({
             </symbol>
           </defs>
         </svg>
+        {/* Above everything, including the cart drawer at z-300. */}
+        <PageLoader />
         <Header />
         <CartDrawer />
         {children}

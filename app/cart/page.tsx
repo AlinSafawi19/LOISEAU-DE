@@ -7,6 +7,7 @@ import { H2, H4, SubtitleMd, BodySm, ItalicBodyLg } from "@/components/ui/typogr
 import { OutlineButton, FilledButton } from "@/components/ui/button";
 import { useCart } from "@/components/ui/use-cart";
 import { useProducts } from "@/components/ui/use-products";
+import { useLoadingGate } from "@/components/ui/loading-gate";
 
 export default function Cart() {
   const { lines, ready, setQty, remove } = useCart();
@@ -21,6 +22,10 @@ export default function Cart() {
 
   const subtotal = items.reduce((sum, i) => sum + i.finalPrice * i.qty, 0);
   const settled  = ready && !loading;
+
+  // The page loader covers the wait — both the catalogue and reading the saved
+  // lines back out of storage.
+  useLoadingGate(!settled);
 
   return (
     <main>
@@ -37,15 +42,6 @@ export default function Cart() {
               <ItalicBodyLg className="w-full !text-brown !text-left">
                 {items.length} {items.length === 1 ? "product" : "products"} ready to order
               </ItalicBodyLg>
-            </div>
-          )}
-
-          {!settled && (
-            <div className="flex items-center justify-center w-full py-[48px]">
-              <div
-                className="w-[40px] h-[40px] rounded-full border-[2px] border-beige animate-spin"
-                style={{ borderTopColor: "var(--color-brown)" }}
-              />
             </div>
           )}
 

@@ -11,6 +11,7 @@ import Link from "next/link";
 import { OutlineButton } from "@/components/ui/button";
 import { ProductCard } from "@/components/ui/product-card";
 import { OffersSection } from "@/components/ui/offers-section";
+import { useLoadingGate } from "@/components/ui/loading-gate";
 
 const EASE = [0.44, 0, 0.56, 1] as const;
 
@@ -55,8 +56,12 @@ function useFeaturedProducts(limit: number) {
           }))
         );
       })
+      .catch(() => setProducts([]))
       .finally(() => setLoading(false));
   }, [limit]);
+
+  // Hold the page loader up rather than showing a spinner in the grid.
+  useLoadingGate(loading);
 
   return { products, loading };
 }
@@ -220,15 +225,8 @@ export default function Home() {
             <H4 className="w-full !text-brown !text-left [text-wrap:balance]">Featured Products</H4>
           </div>
 
-          {/* Products Wrapper */}
-          {featuredLoading ? (
-            <div className="flex items-center justify-center w-full py-[48px]">
-              <div
-                className="w-[40px] h-[40px] rounded-full border-[2px] border-beige animate-spin"
-                style={{ borderTopColor: "var(--color-brown)" }}
-              />
-            </div>
-          ) : (
+          {/* Products Wrapper — nothing to show until the loader lifts */}
+          {!featuredLoading && (
             <div
               className="w-full grid grid-cols-1 tablet:grid-cols-3 overflow-visible rounded-none p-0"
               style={{ columnGap: "16px", rowGap: "48px" }}

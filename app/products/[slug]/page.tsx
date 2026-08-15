@@ -11,6 +11,7 @@ import { FaqCardProduct } from "@/components/ui/faq-card";
 import { ProductCard } from "@/components/ui/product-card";
 import { WishlistDetailButton } from "@/components/ui/wishlist-button";
 import { useCart } from "@/components/ui/use-cart";
+import { useLoadingGate } from "@/components/ui/loading-gate";
 
 const PRODUCTS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/products`;
 const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
@@ -101,17 +102,6 @@ function FeatureCard({ title, description, icon }: { title: string; description:
   );
 }
 
-function LoadingScreen() {
-  return (
-    <main className="flex items-center justify-center w-full h-screen">
-      <div
-        className="w-[40px] h-[40px] rounded-full border-[2px] border-beige animate-spin"
-        style={{ borderTopColor: "var(--color-brown)" }}
-      />
-    </main>
-  );
-}
-
 export default function ProductPage() {
   const { slug } = useParams<{ slug: string }>();
 
@@ -147,12 +137,16 @@ export default function ProductPage() {
           }))
         );
       })
+      .catch(() => setProducts([]))
       .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => { setActiveImage(0); }, [slug]);
 
-  if (loading) return <LoadingScreen />;
+  // The page loader stays up until the catalogue lands, so there is nothing to
+  // render in the meantime.
+  useLoadingGate(loading);
+  if (loading) return null;
 
   const product = products.find((p) => p.slug === slug);
   const related = products.filter((p) => p.slug !== slug).slice(0, 4);

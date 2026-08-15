@@ -5,6 +5,7 @@ import Link from "next/link";
 import { H4, SubtitleMd, ItalicBodySm } from "./typography";
 import { OutlineButton } from "./button";
 import { ProductCard } from "./product-card";
+import { useLoadingGate } from "./loading-gate";
 
 const PRODUCTS_URL    = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/products?limit=100`;
 const COLLECTIONS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/collections?limit=100`;
@@ -86,6 +87,9 @@ function useOffers() {
       .finally(() => setLoading(false));
   }, []);
 
+  // Part of the home page proper, so it holds the page loader up.
+  useLoadingGate(loading);
+
   return { products, collection, loading };
 }
 
@@ -123,14 +127,7 @@ export function OffersSection() {
 
         </div>
 
-        {loading ? (
-          <div className="flex items-center justify-center w-full py-[24px]">
-            <div
-              className="w-[40px] h-[40px] rounded-full border-[2px] border-beige animate-spin"
-              style={{ borderTopColor: "var(--color-brown)" }}
-            />
-          </div>
-        ) : products.length === 0 ? (
+        {loading ? null : products.length === 0 ? (
           /* No product is tagged into the Offers collection yet. */
           <div className="w-full flex flex-col justify-center items-center gap-[16px] py-[32px] border border-dashed border-beige rounded-none">
             <SubtitleMd className="!text-brown !text-center">No offers running right now</SubtitleMd>

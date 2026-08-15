@@ -41,6 +41,31 @@
   }
 }
 
+@layer components {
+  /* Loading screen. Each letter is one open path drawn by pulling its dash
+     offset from full length to zero, held, then pushed out the far side so the
+     wordmark unwrites itself. `--glz-cycle` is set per instance so the first
+     open can run slower than a page change. */
+  .glz-loader path {
+    stroke-dasharray: 1;
+    animation: glz-draw var(--glz-cycle, 2.6s) cubic-bezier(0.6, 0, 0.35, 1) infinite;
+  }
+
+  @keyframes glz-draw {
+    0%   { stroke-dashoffset:  1; }
+    42%  { stroke-dashoffset:  0; }
+    74%  { stroke-dashoffset:  0; }
+    100% { stroke-dashoffset: -1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glz-loader path {
+      animation: none;
+      stroke-dasharray: none;
+    }
+  }
+}
+
 @layer utilities {
   .clash-features {
     font-feature-settings: "calt" 1, "liga" 1, "dlig" 0;

@@ -6,6 +6,7 @@ import { Filters, type FilterItem } from "./filters";
 import { BrandIndex } from "./brand-index";
 import { ProductCard } from "./product-card";
 import { H4, SubtitleMd } from "./typography";
+import { useLoadingGate, whenImagesSettled } from "./loading-gate";
 
 const CATEGORIES_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/categories`;
 const BRANDS_URL     = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/brands`;
@@ -94,14 +95,20 @@ async function fetchProducts(url: string): Promise<Product[]> {
   }));
 }
 
-function LoadingSpinner() {
+/**
+ * The one spinner left in the app, and deliberately small: appending the next
+ * page is a nudge at the bottom of a grid the shopper is already reading, so it
+ * would be wrong to throw the full-screen loader over it. Every other wait is
+ * the page loader's job.
+ */
+function PaginationSpinner() {
   return (
-    <div className="flex items-center justify-center w-full py-[48px]">
-      <div
-        className="w-[40px] h-[40px] rounded-full border-[2px] border-beige animate-spin"
-        style={{ borderTopColor: "var(--color-brown)" }}
-      />
-    </div>
+    <div
+      className="w-[20px] h-[20px] rounded-full border-[2px] border-beige animate-spin"
+      style={{ borderTopColor: "var(--color-brown)" }}
+      role="status"
+      aria-label="Loading more products"
+    />
   );
 }
 
@@ -147,6 +154,7 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
   const [allProducts,         setAllProducts]         = useState<Product[]>([]);
   const [loading,             setLoading]             = useState(true);
   const [page,                setPage]                = useState(1);
+  const [appending,           setAppending]           = useState(false);
   const [isMobile,            setIsMobile]            = useState(false);
 
   // Filter state
@@ -181,8 +189,28 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
       setCollections(cols);
       setSkinTypes(skins);
       setAllProducts(prods);
-    }).finally(() => setLoading(false));
+    }).catch(() => setAllProducts([]))
+      .finally(() => setLoading(false));
   }, []);
+
+  // The shop is the page — hold the loader up rather than filling the grid with
+  // a spinner.
+  useLoadingGate(loading);
+
+  // Load more: the extra rows are already in memory, so the spinner is really
+  // waiting on their imagery. A short floor keeps it from strobing when the
+  // pictures come straight out of cache.
+  useEffect(() => {
+    if (!appending) return;
+    const abort = new AbortController();
+    Promise.all([
+      whenImagesSettled(abort.signal, 2000),
+      new Promise((r) => setTimeout(r, 350)),
+    ]).then(() => {
+      if (!abort.signal.aborted) setAppending(false);
+    });
+    return () => abort.abort();
+  }, [appending, page]);
 
   // Build lookup maps: slug â†’ id
   const categorySlugToId = useMemo(() => {
@@ -344,9 +372,7 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
           {/* Products area */}
           <div className="flex-1 flex flex-col gap-[40px] w-full">
 
-            {loading ? (
-              <LoadingSpinner />
-            ) : filtered.length === 0 ? (
+            {loading ? null : filtered.length === 0 ? (
               <EmptyState />
             ) : (
               <div className="grid
@@ -371,13 +397,17 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
             {/* Load more */}
             {hasMore && !loading && (
               <div className="w-full flex justify-center">
-                <button
-                  onClick={() => setPage((p) => p + 1)}
-                  className="font-clash font-medium clash-features uppercase text-brown text-[14px] leading-[1.4] border border-dashed border-beige px-[32px] py-[12px] rounded-none bg-transparent cursor-pointer"
-                  style={{ transition: "border-color 0.3s cubic-bezier(0.44,0,0.56,1)" }}
-                >
-                  Load more
-                </button>
+                {appending ? (
+                  <PaginationSpinner />
+                ) : (
+                  <button
+                    onClick={() => { setAppending(true); setPage((p) => p + 1); }}
+                    className="font-clash font-medium clash-features uppercase text-brown text-[14px] leading-[1.4] border border-dashed border-beige px-[32px] py-[12px] rounded-none bg-transparent cursor-pointer"
+                    style={{ transition: "border-color 0.3s cubic-bezier(0.44,0,0.56,1)" }}
+                  >
+                    Load more
+                  </button>
+                )}
               </div>
             )}
 

@@ -6,6 +6,7 @@ import { H2, H4, ItalicBodyLg } from "@/components/ui/typography";
 import { ProductCard } from "@/components/ui/product-card";
 import { OutlineButton } from "@/components/ui/button";
 import { useWishlist } from "@/components/ui/use-wishlist";
+import { useLoadingGate } from "@/components/ui/loading-gate";
 
 const PRODUCTS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/products?limit=100`;
 const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
@@ -49,6 +50,7 @@ export default function Wishlist() {
           }))
         );
       })
+      .catch(() => setProducts([]))
       .finally(() => setLoading(false));
   }, []);
 
@@ -58,6 +60,10 @@ export default function Wishlist() {
     .filter((p): p is Product => Boolean(p));
 
   const settled = ready && !loading;
+
+  // The page loader covers the wait — both the catalogue and reading the saved
+  // slugs back out of storage.
+  useLoadingGate(!settled);
 
   return (
     <main>
@@ -75,15 +81,6 @@ export default function Wishlist() {
               <ItalicBodyLg className="w-full !text-brown !text-left [text-wrap:balance]">
                 {saved.length} {saved.length === 1 ? "product" : "products"} saved for later
               </ItalicBodyLg>
-            </div>
-          )}
-
-          {!settled && (
-            <div className="flex items-center justify-center w-full py-[48px]">
-              <div
-                className="w-[40px] h-[40px] rounded-full border-[2px] border-beige animate-spin"
-                style={{ borderTopColor: "var(--color-brown)" }}
-              />
             </div>
           )}
 
