@@ -6,7 +6,7 @@ import Image from "next/image";
 import { LiquidLogo } from "@/components/ui/liquid-logo";
 import { Logomark } from "@/components/ui/logomark";
 import { H3, H4, SubtitleMd, ItalicBodySm } from "@/components/ui/typography";
-import { Ticker } from "@/components/ui/ticker";
+import { TickerBar } from "@/components/ui/ticker-bar";
 import Link from "next/link";
 import { OutlineButton } from "@/components/ui/button";
 import { ProductCard } from "@/components/ui/product-card";
@@ -121,24 +121,8 @@ export default function Home() {
 
       </section>
 
-      {/* â”€â”€ Discount â”€â”€ */}
-      <section className="w-full flex flex-col justify-end items-center gap-[10px] p-0 overflow-clip rounded-none">
-
-        <div className="w-full flex flex-col justify-end items-center gap-[23px] overflow-clip rounded-none bg-accent py-[24px] px-0 tablet:py-[32px]">
-
-          <Ticker
-            items={["NEW IN", "50%", "Discount", "*"].map((t) => (
-              <H4 key={t} className="w-auto !text-black !text-center [text-wrap:balance]">{t}</H4>
-            ))}
-            gap={24}
-            speed={50}
-            hoverSpeed={100}
-            className="w-full z-[2] rounded-[10px] overflow-clip"
-          />
-
-        </div>
-
-      </section>
+      {/* â”€â”€ Ticker â”€â”€ */}
+      <TickerBar />
 
 
       <OffersSection />
