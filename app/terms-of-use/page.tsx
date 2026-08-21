@@ -53,12 +53,11 @@ export default function TermsOfUse() {
             <div className="relative tablet:sticky tablet:top-[96px] tablet:self-start w-full flex flex-row justify-center items-start gap-[16px] p-0 overflow-clip rounded-none z-[1]">
               <div className="relative w-full h-[400px] max-h-[400px] overflow-clip rounded-none">
                 <Image
-                  src="https://framerusercontent.com/images/Gc6O1F954hURQV76jJmtv0eKhc.png"
+                  src="/images/about-ticker2.jpg"
                   alt=""
                   fill
                   sizes="(max-width: 809px) 100vw, 50vw"
-                  quality={100}
-                  unoptimized
+                  quality={90}
                   className="object-cover object-center"
                 />
               </div>
