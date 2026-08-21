@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { H4, SubtitleMd, ItalicBodySm } from "./typography";
+import { H4, ItalicBodySm } from "./typography";
 import { OutlineButton } from "./button";
 import { ProductCard } from "./product-card";
 import { useLoadingGate } from "./loading-gate";
@@ -99,6 +99,10 @@ export function OffersSection() {
   // Land on the shop with the Offers collection already ticked in the filters.
   const shopAllHref = `${OFFERS_PATH}?collection=${OFFERS_SLUG}`;
 
+  // Nothing tagged into the Offers collection — the section drops out entirely
+  // rather than standing there empty.
+  if (loading || products.length === 0) return null;
+
   return (
     <section className="w-full flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip rounded-none bg-dusty">
 
@@ -119,44 +123,29 @@ export function OffersSection() {
             </ItalicBodySm>
           </div>
 
-          {!loading && products.length > 0 && (
-            <Link href={shopAllHref} className="shrink-0">
-              <OutlineButton>{OFFERS_CTA}</OutlineButton>
-            </Link>
-          )}
+          <Link href={shopAllHref} className="shrink-0">
+            <OutlineButton>{OFFERS_CTA}</OutlineButton>
+          </Link>
 
         </div>
 
-        {loading ? null : products.length === 0 ? (
-          /* No product is tagged into the Offers collection yet. */
-          <div className="w-full flex flex-col justify-center items-center gap-[16px] py-[32px] border border-dashed border-beige rounded-none">
-            <SubtitleMd className="!text-brown !text-center">No offers running right now</SubtitleMd>
-            <ItalicBodySm className="!text-brown !text-center max-w-[420px] [text-wrap:balance]">
-              New sets land regularly — in the meantime, everything is on the shop page.
-            </ItalicBodySm>
-            <Link href="/shop-all">
-              <OutlineButton>Shop all</OutlineButton>
-            </Link>
-          </div>
-        ) : (
-          <div className="w-full grid
-              grid-cols-1 gap-x-[16px] gap-y-[48px]
-              tablet:grid-cols-2 tablet:gap-x-[24px] tablet:gap-y-[40px]
-              desktop:grid-cols-4 desktop:gap-x-[32px] desktop:gap-y-[48px]">
-              {products.map((p) => (
-                <ProductCard
-                  key={p.id}
-                  slug={p.slug}
-                  title={p.title}
-                  price={p.price}
-                  discount={p.discount}
-                  imageSrc={p.imageSrc}
-                  href={`/products/${p.slug}`}
-                  className="!w-full"
-                />
-            ))}
-          </div>
-        )}
+        <div className="w-full grid
+            grid-cols-1 gap-x-[16px] gap-y-[48px]
+            tablet:grid-cols-2 tablet:gap-x-[24px] tablet:gap-y-[40px]
+            desktop:grid-cols-4 desktop:gap-x-[32px] desktop:gap-y-[48px]">
+          {products.map((p) => (
+            <ProductCard
+              key={p.id}
+              slug={p.slug}
+              title={p.title}
+              price={p.price}
+              discount={p.discount}
+              imageSrc={p.imageSrc}
+              href={`/products/${p.slug}`}
+              className="!w-full"
+            />
+          ))}
+        </div>
 
       </div>
     </section>

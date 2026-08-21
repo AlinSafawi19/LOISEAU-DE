@@ -193,24 +193,25 @@ export default function Home() {
       </section>
 
       {/* â”€â”€ Featured â”€â”€ */}
-      <section className="w-full flex flex-col justify-start items-center gap-[10px] p-0 overflow-visible rounded-none bg-caledon
-        py-[32px]
-        tablet:py-[40px]
-        desktop:py-[56px]">
+      {/* Hidden outright when there is nothing featured. */}
+      {!featuredLoading && featuredProducts.length > 0 && (
+        <section className="w-full flex flex-col justify-start items-center gap-[10px] p-0 overflow-visible rounded-none bg-caledon
+          py-[32px]
+          tablet:py-[40px]
+          desktop:py-[56px]">
 
-        {/* Container */}
-        <div className="w-full max-w-[1920px] flex flex-col justify-start items-start overflow-visible rounded-none z-[2]
-          gap-[40px] px-[16px]
-          tablet:gap-[32px] tablet:px-[24px]
-          desktop:gap-[32px] desktop:px-[32px]">
+          {/* Container */}
+          <div className="w-full max-w-[1920px] flex flex-col justify-start items-start overflow-visible rounded-none z-[2]
+            gap-[40px] px-[16px]
+            tablet:gap-[32px] tablet:px-[24px]
+            desktop:gap-[32px] desktop:px-[32px]">
 
-          {/* Title Wrapper */}
-          <div className="sticky top-0 w-full max-w-[400px] flex flex-col justify-start items-start gap-[8px] overflow-visible rounded-none p-0 z-[1]">
-            <H4 className="w-full !text-brown !text-left [text-wrap:balance]">Featured Products</H4>
-          </div>
+            {/* Title Wrapper */}
+            <div className="sticky top-0 w-full max-w-[400px] flex flex-col justify-start items-start gap-[8px] overflow-visible rounded-none p-0 z-[1]">
+              <H4 className="w-full !text-brown !text-left [text-wrap:balance]">Featured Products</H4>
+            </div>
 
-          {/* Products Wrapper — nothing to show until the loader lifts */}
-          {!featuredLoading && (
+            {/* Products Wrapper */}
             <div
               className="w-full grid grid-cols-1 tablet:grid-cols-3 overflow-visible rounded-none p-0"
               style={{ columnGap: "16px", rowGap: "48px" }}
@@ -228,11 +229,11 @@ export default function Home() {
                 />
               ))}
             </div>
-          )}
 
-        </div>
+          </div>
 
-      </section>
+        </section>
+      )}
 
 
     </main>
