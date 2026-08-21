@@ -143,7 +143,7 @@ export function Footer() {
           {/* Image base layer */}
           <div className="absolute inset-0 z-[1]">
             <Image
-              src="https://framerusercontent.com/images/ZbYyoU6EfYLcinn2akWs02lFfg.png?scale-down-to=2048&width=2400&height=1800"
+              src="/images/hero.jpeg"
               alt=""
               fill
               sizes="100vw"

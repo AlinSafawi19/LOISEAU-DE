@@ -42,14 +42,20 @@ function load(): Promise<Brand[]> {
   return cache;
 }
 
-export function useBrands(): Brand[] {
-  const [brands, setBrands] = useState<Brand[]>([]);
+export interface BrandsState {
+  brands:  Brand[];
+  /** False once the request settles — an empty list then means empty, not pending. */
+  loading: boolean;
+}
+
+export function useBrands(): BrandsState {
+  const [state, setState] = useState<BrandsState>({ brands: [], loading: true });
 
   useEffect(() => {
     let alive = true;
-    load().then((list) => { if (alive) setBrands(list); });
+    load().then((list) => { if (alive) setState({ brands: list, loading: false }); });
     return () => { alive = false; };
   }, []);
 
-  return brands;
+  return state;
 }

@@ -68,7 +68,7 @@ function NavLink({ title, href, active }: { title: string; href: string; active:
  * on every breakpoint. "All brands" inside the panel keeps the shop reachable.
  */
 function BrandsNavItem({ title, active }: { title: string; active: boolean }) {
-  const brands   = useBrands();
+  const { brands, loading } = useBrands();
   const pathname = usePathname();
   const [open,    setOpen]    = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -155,7 +155,9 @@ function BrandsNavItem({ title, active }: { title: string; active: boolean }) {
                   onNavigate={() => setOpen(false)}
                 />
               ))}
-              {brands.length === 0 && (
+              {/* Only while the request is in flight — a list that comes back empty
+                  leaves "All brands" standing on its own rather than a stuck spinner. */}
+              {loading && (
                 <BodySm className="!text-brown !text-left px-[10px] py-[8px]">Loading…</BodySm>
               )}
             </div>
@@ -374,7 +376,7 @@ function BrandsDrawerItem({
 
 export function Header() {
   const pathname = usePathname();
-  const brands   = useBrands();
+  const { brands } = useBrands();
   const [open,     setOpen]     = useState(false);
   const [scrolled, setScrolled] = useState(false);
 

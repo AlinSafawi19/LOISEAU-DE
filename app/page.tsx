@@ -91,7 +91,7 @@ export default function Home() {
         {/* LiquidLogo â€” absolute, fills hero, z-1 */}
         <div className="absolute inset-0 z-[1]">
           <LiquidLogo
-            image="https://framerusercontent.com/images/ZbYyoU6EfYLcinn2akWs02lFfg.png?scale-down-to=2048&width=2400&height=1800"
+            image="/images/hero.jpeg"
             distortionStrength={0.06}
             hoverRadius={0.07}
             decayTime={1400}
