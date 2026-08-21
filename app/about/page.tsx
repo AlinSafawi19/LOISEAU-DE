@@ -78,7 +78,7 @@ export default function About() {
                 h-[360px]
                 desktop:h-[581px]">
                 <Image
-                  src="/images/selection.jpg"
+                  src="/images/selection.png"
                   alt=""
                   fill
                   sizes="500px"
