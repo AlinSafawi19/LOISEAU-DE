@@ -15,8 +15,8 @@ import { useLoadingGate } from "@/components/ui/loading-gate";
 
 const EASE = [0.44, 0, 0.56, 1] as const;
 
-const PRODUCTS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/products`;
-const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
+const PRODUCTS_URL = `${process.env.NEXT_PUBLIC_DASHBOARD_BACKEND_URL}/glaze/products`;
+const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_DASHBOARD_API_KEY}` };
 
 interface FeaturedProduct {
   id:       string;

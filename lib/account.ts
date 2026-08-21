@@ -13,8 +13,8 @@ import { cookies } from "next/headers";
 
 export const ACCOUNT_COOKIE = "glaze_customer";
 
-const BASE = process.env.NEXT_PUBLIC_CMS_BACKEND_URL;
-const API_KEY = process.env.NEXT_PUBLIC_CMS_API_KEY;
+const BASE = process.env.NEXT_PUBLIC_DASHBOARD_BACKEND_URL;
+const API_KEY = process.env.NEXT_PUBLIC_DASHBOARD_API_KEY;
 
 export interface Customer {
   id: string;

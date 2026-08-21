@@ -8,12 +8,12 @@ import { ProductCard } from "./product-card";
 import { H4, SubtitleMd } from "./typography";
 import { useLoadingGate, whenImagesSettled } from "./loading-gate";
 
-const CATEGORIES_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/categories`;
-const BRANDS_URL     = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/brands`;
-const COLLECTIONS_URL= `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/collections`;
-const SKIN_TYPES_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/skin-types`;
-const PRODUCTS_URL   = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/products`;
-const API_HEADERS    = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
+const CATEGORIES_URL = `${process.env.NEXT_PUBLIC_DASHBOARD_BACKEND_URL}/glaze/categories`;
+const BRANDS_URL     = `${process.env.NEXT_PUBLIC_DASHBOARD_BACKEND_URL}/glaze/brands`;
+const COLLECTIONS_URL= `${process.env.NEXT_PUBLIC_DASHBOARD_BACKEND_URL}/glaze/collections`;
+const SKIN_TYPES_URL = `${process.env.NEXT_PUBLIC_DASHBOARD_BACKEND_URL}/glaze/skin-types`;
+const PRODUCTS_URL   = `${process.env.NEXT_PUBLIC_DASHBOARD_BACKEND_URL}/glaze/products`;
+const API_HEADERS    = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_DASHBOARD_API_KEY}` };
 
 /**
  * Relation fields come back either expanded into an object or as a bare slug
@@ -27,7 +27,7 @@ function relationSlug(value: Relation): string {
 }
 
 /** Skin type reads as a list so a product can suit Dry *and* Sensitive, whether
- *  the CMS field ends up single- or multi-valued. */
+ *  the dashboard field ends up single- or multi-valued. */
 function relationSlugs(value: Relation | Relation[]): string[] {
   if (Array.isArray(value)) return value.map(relationSlug).filter(Boolean);
   const slug = relationSlug(value);
@@ -63,7 +63,7 @@ interface Product {
 const DESKTOP_PAGE_SIZE = 12;
 const MOBILE_PAGE_SIZE  = 8;
 
-/** A list the CMS does not have yet just yields no filter — never a dead page. */
+/** A list the dashboard does not have yet just yields no filter — never a dead page. */
 async function fetchFilterItems(url: string): Promise<FilterItem[]> {
   try {
     const res  = await fetch(url, { headers: API_HEADERS });

@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-const PRODUCTS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/products?limit=100`;
-const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
+const PRODUCTS_URL = `${process.env.NEXT_PUBLIC_DASHBOARD_BACKEND_URL}/glaze/products?limit=100`;
+const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_DASHBOARD_API_KEY}` };
 
 interface RawEntry {
   id:            string;

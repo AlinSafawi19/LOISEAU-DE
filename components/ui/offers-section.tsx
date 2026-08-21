@@ -7,11 +7,11 @@ import { OutlineButton } from "./button";
 import { ProductCard } from "./product-card";
 import { useLoadingGate } from "./loading-gate";
 
-const PRODUCTS_URL    = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/products?limit=100`;
-const COLLECTIONS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/collections?limit=100`;
-const API_HEADERS     = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
+const PRODUCTS_URL    = `${process.env.NEXT_PUBLIC_DASHBOARD_BACKEND_URL}/glaze/products?limit=100`;
+const COLLECTIONS_URL = `${process.env.NEXT_PUBLIC_DASHBOARD_BACKEND_URL}/glaze/collections?limit=100`;
+const API_HEADERS     = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_DASHBOARD_API_KEY}` };
 
-// The entry in the CMS `collections` list that drives this section.
+// The entry in the dashboard `collections` list that drives this section.
 const OFFERS_SLUG = "offers";
 
 /**

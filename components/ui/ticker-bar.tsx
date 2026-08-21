@@ -5,8 +5,8 @@ import { H4 } from "./typography";
 import { Ticker } from "./ticker";
 import { useLoadingGate } from "./loading-gate";
 
-const TICKER_URL  = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/ticker?limit=100`;
-const API_HEADERS = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
+const TICKER_URL  = `${process.env.NEXT_PUBLIC_DASHBOARD_BACKEND_URL}/glaze/ticker?limit=100`;
+const API_HEADERS = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_DASHBOARD_API_KEY}` };
 
 interface RawTickerItem {
   id:    string;

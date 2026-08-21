@@ -10,8 +10,8 @@ import { accountPost, readToken } from "@/lib/account";
  * localStorage.
  */
 
-const BASE = process.env.NEXT_PUBLIC_CMS_BACKEND_URL;
-const KEY = process.env.NEXT_PUBLIC_CMS_API_KEY;
+const BASE = process.env.NEXT_PUBLIC_DASHBOARD_BACKEND_URL;
+const KEY = process.env.NEXT_PUBLIC_DASHBOARD_API_KEY;
 
 export async function GET() {
   const token = await readToken();

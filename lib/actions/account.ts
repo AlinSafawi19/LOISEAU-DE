@@ -113,11 +113,11 @@ export async function placeOrder(
 
   const token = await readToken();
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/orders`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_DASHBOARD_BACKEND_URL}/glaze/orders`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}`,
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_DASHBOARD_API_KEY}`,
       ...(token ? { "X-Customer-Token": token } : {}),
     },
     cache: "no-store",

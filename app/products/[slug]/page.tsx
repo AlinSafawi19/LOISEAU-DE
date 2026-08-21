@@ -13,8 +13,8 @@ import { WishlistDetailButton } from "@/components/ui/wishlist-button";
 import { useCart } from "@/components/ui/use-cart";
 import { useLoadingGate } from "@/components/ui/loading-gate";
 
-const PRODUCTS_URL = `${process.env.NEXT_PUBLIC_CMS_BACKEND_URL}/glaze/products`;
-const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CMS_API_KEY}` };
+const PRODUCTS_URL = `${process.env.NEXT_PUBLIC_DASHBOARD_BACKEND_URL}/glaze/products`;
+const API_HEADERS  = { Authorization: `Bearer ${process.env.NEXT_PUBLIC_DASHBOARD_API_KEY}` };
 
 /**
  * A relation field arrives either expanded into an object or as a bare slug

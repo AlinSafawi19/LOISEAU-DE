@@ -117,7 +117,7 @@ function FilterSections({
         ))}
       </div>
 
-      {/* Skin type — stays hidden until the CMS list has entries */}
+      {/* Skin type — stays hidden until the dashboard list has entries */}
       {skinTypes.length > 0 && (
         <div className="w-full flex flex-col justify-start items-start gap-[8px]">
           <SubtitleSm className="w-full !text-black">Skin type</SubtitleSm>
