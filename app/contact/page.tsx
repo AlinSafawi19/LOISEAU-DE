@@ -21,10 +21,6 @@ const FAQS = [
     answer: "No. All sales are final, so please check your order carefully before confirming it. If something arrives damaged or is not what you ordered, call us the same day and we will make it right.",
   },
   {
-    question: "How can I track my order?",
-    answer: "Once your order is shipped, you'll receive a confirmation email with a tracking link to monitor your delivery in real time.",
-  },
-  {
     question: "Where do your products come from?",
     answer: "Everything we sell is Korean skincare, made in Korea by the brand named on the packaging. GLAZE is a retailer — we source from the brands and their authorised distributors, and we do not formulate, blend, or repackage anything ourselves.",
   },
