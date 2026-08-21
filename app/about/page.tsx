@@ -1,50 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { LiquidLogo } from "@/components/ui/liquid-logo";
-import { H2, H3, H5, ItalicBodyLg, SubtitleMd } from "@/components/ui/typography";
-import { Logomark } from "@/components/ui/logomark";
+import { H2, H5, ItalicBodyLg, SubtitleMd } from "@/components/ui/typography";
 import { ImgBox } from "@/components/ui/img-box";
 
 export default function About() {
   return (
     <main>
-
-      {/* ── Hero ── */}
-      <section className="relative w-full h-[calc(100vh-60px)] tablet:h-[calc(100vh-68px)] desktop:h-[calc(100vh-72px)] flex flex-col justify-start items-center gap-[10px] p-0 overflow-clip">
-
-        {/* LiquidLogo — absolute, fills hero, z-1 */}
-        <div className="absolute inset-0 z-[1]">
-          <LiquidLogo
-            image="https://framerusercontent.com/images/TkVzmeVSBibyrsJOcu5U4ccoM.png?scale-down-to=2048&width=2400&height=1800"
-            distortionStrength={0.06}
-            hoverRadius={0.07}
-            decayTime={1400}
-          />
-        </div>
-
-        {/* Container — z-2, pointer-none, relative for absolute children */}
-        <div
-          className="relative z-[2] w-full flex-1 max-w-[1920px] flex flex-col justify-end items-center gap-[64px] overflow-clip pointer-events-none rounded-none"
-          style={{ padding: "80px 32px 32px 32px" }}
-        >
-          <H3 className="absolute top-[120px] right-[32px] !text-accent !text-right z-[1] w-auto">
-            Who we are
-          </H3>
-
-          {/* Subtitles */}
-          <div className="w-full flex flex-row justify-between items-center overflow-clip rounded-none border-b border-dashed border-white" style={{ padding: "16px 0" }}>
-            <SubtitleMd className="w-auto grow !text-white !text-left">K-Beauty</SubtitleMd>
-            <SubtitleMd className="w-auto grow !text-white !text-center">Rituals</SubtitleMd>
-            <SubtitleMd className="w-auto grow !text-white !text-right">Radiance</SubtitleMd>
-          </div>
-
-          {/* Hero logotype */}
-          <Logomark />
-
-        </div>
-
-      </section>
 
       {/* ── About Info ── */}
       <section className="w-full flex flex-col justify-start items-center gap-0 p-0 overflow-clip rounded-none">
@@ -88,12 +50,11 @@ export default function About() {
             tablet:h-[445px]
             desktop:h-[700px]">
             <Image
-              src="https://framerusercontent.com/images/1jmOTaaHGvnxZVgefdpHOgbt8.png?width=2400&height=1600"
+              src="/images/about-full.jpeg"
               alt=""
               fill
               sizes="100vw"
-              quality={100}
-              unoptimized
+              quality={90}
               className="object-cover object-center"
             />
           </div>
@@ -129,12 +90,11 @@ export default function About() {
                 h-[360px]
                 desktop:h-[581px]">
                 <Image
-                  src="https://framerusercontent.com/images/WXEexLcx5ozx1Cx5j1y50W2oY0A.png?width=1808&height=2400"
+                  src="/images/selection.jpg"
                   alt=""
                   fill
                   sizes="500px"
-                  quality={100}
-                  unoptimized
+                  quality={90}
                   className="object-cover object-center"
                 />
               </div>
@@ -149,24 +109,6 @@ export default function About() {
 
         </div>
 
-      </section>
-
-      {/* ── Img Section ── */}
-      <section className="w-full flex flex-col justify-start items-center content-center flex-nowrap overflow-clip rounded-none gap-[10px] p-0">
-        <div className="relative w-full overflow-clip rounded-none
-          h-[300px] min-h-[300px]
-          tablet:h-[472px]
-          desktop:h-[700px]">
-          <Image
-            src="https://framerusercontent.com/images/TzT9C4H14CF7XP6sZCbZ0YjNw.png?width=2400&height=1600"
-            alt=""
-            fill
-            sizes="100vw"
-            quality={100}
-            unoptimized
-            className="object-cover object-center"
-          />
-        </div>
       </section>
 
     </main>

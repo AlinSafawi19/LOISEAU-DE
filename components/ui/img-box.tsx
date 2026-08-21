@@ -5,9 +5,9 @@ import { motion, type Easing } from "framer-motion";
 import Image from "next/image";
 
 const IMAGES = [
-  "https://framerusercontent.com/images/MAUYaHGrGJiCBtHgnx0o5QQ7sww.png",
-  "https://framerusercontent.com/images/stui7nLH0W6suNpRBxaAAz6OFU.png",
-  "https://framerusercontent.com/images/Gc6O1F954hURQV76jJmtv0eKhc.png",
+  "/images/about-ticker1.jpg",
+  "/images/about-ticker2.jpg",
+  "/images/about-ticker3.jpg",
 ];
 
 // Duplicate first image so the loop jump is invisible
@@ -74,8 +74,7 @@ export function ImgBox({ className = "" }: ImgBoxProps) {
               alt=""
               fill
               sizes="(max-width: 809px) 360px, 600px"
-              quality={100}
-              unoptimized
+              quality={90}
               className="object-cover object-center"
             />
           </div>

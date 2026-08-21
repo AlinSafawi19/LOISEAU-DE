@@ -86,12 +86,11 @@ export default function Contact() {
                 tablet:w-[320px] tablet:h-[372px]
                 desktop:w-[320px] desktop:h-[372px]">
                 <Image
-                  src="https://framerusercontent.com/images/XilcCuWEC92ZjdYJQZwYxEFU.png?width=1200&height=900"
+                  src="/images/contact-image1.jpg"
                   alt=""
                   fill
                   sizes="(max-width: 809px) 100vw, 320px"
-                  quality={100}
-                  unoptimized
+                  quality={90}
                   className="object-cover object-center"
                 />
               </div>
@@ -101,12 +100,11 @@ export default function Contact() {
                 tablet:w-[320px] tablet:h-[372px]
                 desktop:w-[320px] desktop:h-[372px]">
                 <Image
-                  src="https://framerusercontent.com/images/qk804I3NvFQTrlK961CHb0Skqtc.png?width=1200&height=1200"
+                  src="/images/contact-image2.jpg"
                   alt=""
                   fill
                   sizes="(max-width: 809px) 100vw, 320px"
-                  quality={100}
-                  unoptimized
+                  quality={90}
                   className="object-cover object-center"
                 />
               </div>
@@ -156,12 +154,11 @@ export default function Contact() {
         {/* Background image */}
         <div className="absolute inset-0 z-[1]">
           <Image
-            src="https://framerusercontent.com/images/0HdXEs0k8N5xPfXR0yBSj8ogjrI.png?scale-down-to=2048&width=2400&height=1800"
+            src="/images/contact-form-bg.jpg"
             alt=""
             fill
             sizes="100vw"
-            quality={100}
-            unoptimized
+            quality={90}
             className="object-cover object-center"
           />
         </div>
