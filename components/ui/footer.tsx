@@ -7,7 +7,11 @@ import { FooterWordmark, WordmarkImage } from "./footer-wordmark";
 import { Logomark } from "./logomark";
 
 /** The address shoppers write to. Set NEXT_PUBLIC_STORE_EMAIL to change it. */
-const STORE_EMAIL = process.env.NEXT_PUBLIC_STORE_EMAIL || "hello@glaze.store";
+const STORE_EMAIL = process.env.NEXT_PUBLIC_STORE_EMAIL || "hello@glazekorea.com";
+
+/** The number shoppers call — dialled form for the link, spaced form for reading. */
+const STORE_PHONE = "+96179345700";
+const STORE_PHONE_DISPLAY = "+961 79 345 700";
 
 function TruchetOverlay() {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -85,9 +89,7 @@ export function Footer() {
 
             <div className="flex-1 flex flex-col justify-start items-start gap-[10px] overflow-clip rounded-none">
               <SubtitleMd className="w-full !text-white [text-wrap:balance]">Call us</SubtitleMd>
-              <LinkContact href="tel:+12345678900" target="_blank" rel="noopener noreferrer">
-                +1 234 56 7890
-              </LinkContact>
+              <LinkContact href={`tel:${STORE_PHONE}`}>{STORE_PHONE_DISPLAY}</LinkContact>
             </div>
 
           </div>
