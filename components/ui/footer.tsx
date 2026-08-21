@@ -79,7 +79,7 @@ export function Footer() {
 
             <div className="flex-1 flex flex-col justify-start items-start gap-[10px] overflow-clip rounded-none">
               <SubtitleMd className="w-full !text-white [text-wrap:balance]">Where to find us</SubtitleMd>
-              <BodyMd className="w-full !text-white [text-wrap:balance]">Wherever you are — we deliver to your door</BodyMd>
+              <BodyMd className="w-full !text-white [text-wrap:balance]">Anywhere in Lebanon — we deliver to your door</BodyMd>
             </div>
 
             <div className="flex-1 flex flex-col justify-start items-start gap-[10px] overflow-clip rounded-none">
