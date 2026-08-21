@@ -193,21 +193,25 @@ export function Filters({
           w-full tablet:w-[227px]
           border border-dusty tablet:border-0
           bg-white tablet:bg-transparent
-          pt-2 pr-3 pb-2 pl-4 tablet:p-0
+          p-0
           ${className}`}
         transition={SPRING}
       >
-        {/* Toggle — mobile only, the sections stand on their own from tablet up */}
-        <div className="w-full tablet:hidden flex flex-row justify-between items-center gap-[16px]">
+        {/* Toggle — mobile only, the sections stand on their own from tablet up.
+            The whole bar is the target, not just the icon: it reads as one
+            tappable strip, so anything less feels broken under a thumb. */}
+        <button
+          type="button"
+          className="w-full tablet:hidden flex flex-row justify-between items-center gap-[16px] pt-2 pr-3 pb-2 pl-4 bg-transparent border-none cursor-pointer text-left"
+          onClick={() => setFilterOpen((v) => !v)}
+          aria-expanded={filterOpen}
+          aria-label="Toggle filters"
+        >
           <SubtitleSm className="!text-black !text-left">Filters</SubtitleSm>
-          <button
-            className="flex items-center justify-center p-0 bg-transparent border-none cursor-pointer text-black"
-            onClick={() => setFilterOpen((v) => !v)}
-            aria-label="Toggle filters"
-          >
+          <span className="flex items-center justify-center text-black">
             {filterOpen ? <X size={24} strokeWidth={1} /> : <SlidersHorizontal size={24} strokeWidth={1} />}
-          </button>
-        </div>
+          </span>
+        </button>
 
         {/* Desktop: inline filter content */}
         <div className="hidden tablet:flex flex-col gap-[32px] w-full">

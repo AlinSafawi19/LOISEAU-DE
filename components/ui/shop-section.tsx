@@ -346,7 +346,7 @@ export function ShopSection({ collectionSlug }: { collectionSlug?: string } = {}
         </div>
 
         {/* Shop */}
-        <div className="w-full flex flex-col md:flex-row justify-start items-start overflow-visible rounded-none
+        <div className="w-full flex flex-col tablet:flex-row justify-start items-start overflow-visible rounded-none
           gap-[32px]
           tablet:gap-[24px]
           desktop:gap-[32px]">
