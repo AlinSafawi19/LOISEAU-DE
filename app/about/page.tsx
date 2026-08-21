@@ -35,28 +35,16 @@ export default function About() {
       {/* ── Banner ── */}
       <section className="w-full flex flex-col justify-start items-center gap-0 p-0 overflow-clip rounded-none">
 
-        <div className="w-full max-w-[1920px] flex flex-col justify-start items-center gap-[32px] p-0 overflow-clip rounded-none bg-dusty">
+        <div className="w-full max-w-[1920px] flex flex-col justify-start items-center gap-[32px] overflow-clip rounded-none bg-dusty
+          px-[16px] pb-[48px]
+          tablet:px-[24px] tablet:pb-[64px]
+          desktop:px-[32px] desktop:pb-[80px]">
 
           {/* Title wrapper */}
           <div className="w-full max-w-[800px] flex flex-col justify-start items-center gap-[8px] p-0 overflow-clip rounded-none z-[1]">
             <SubtitleMd className="w-auto h-auto z-[1] !text-brown !text-center [text-wrap:balance]">
               Every product we list is made in Korea by the brand named on it. We are a shop, not a laboratory — what we add is the selection, never the formula.
             </SubtitleMd>
-          </div>
-
-          {/* Banner image */}
-          <div className="relative w-full overflow-clip rounded-none
-            h-[300px] min-h-[300px]
-            tablet:h-[445px]
-            desktop:h-[700px]">
-            <Image
-              src="/images/about-full.jpeg"
-              alt=""
-              fill
-              sizes="100vw"
-              quality={90}
-              className="object-cover object-center"
-            />
           </div>
 
         </div>
