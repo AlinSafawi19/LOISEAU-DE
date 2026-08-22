@@ -47,11 +47,24 @@ function write(lines: CartLine[], remote = true) {
 /** Set once the first pull confirms there is an account behind this browser. */
 let signedIn = false;
 
-/** Quantities add up; the higher wins nothing, both baskets are kept. */
+/**
+ * Both baskets are kept, but a quantity is the larger of the two rather than
+ * the sum.
+ *
+ * Summing reads correctly for the case this was written for — a signed-out
+ * basket meeting the account's own at sign-in — and is wrong for the case that
+ * happens on every page load. `write` pushes to the account the moment the
+ * cart changes, so from the second load onwards `local` and `stored` are the
+ * same basket read twice, and adding them doubled every line on every
+ * navigation: one added to the cart reached checkout as two, and four after
+ * that.
+ *
+ * Distinct products still union, so nothing saved on either side is dropped.
+ */
 function merge(local: CartLine[], stored: CartLine[]): CartLine[] {
   const totals = new Map<string, number>();
   for (const line of [...stored, ...local]) {
-    totals.set(line.slug, (totals.get(line.slug) ?? 0) + line.qty);
+    totals.set(line.slug, Math.max(totals.get(line.slug) ?? 0, line.qty));
   }
   return [...totals].map(([slug, qty]) => ({ slug, qty: Math.min(qty, 999) }));
 }
