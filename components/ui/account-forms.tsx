@@ -302,7 +302,7 @@ export function VerifyForm({ email, next }: { email: string; next?: string }) {
             type="submit"
             className="max-w-full"
             buttonState={stateOf(pending, state)}
-            label="Confirm and sign in"
+            label="Confirm"
             successLabel="Welcome"
           />
           {state.error && <Reason>{state.error}</Reason>}

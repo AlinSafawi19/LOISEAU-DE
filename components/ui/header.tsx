@@ -200,7 +200,7 @@ function WishlistLink({ className = "" }: { className?: string }) {
       aria-label={ready && count > 0 ? `Wishlist, ${count} saved` : "Wishlist"}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={`relative flex items-center justify-center w-[42px] h-[42px] tablet:w-[43px] tablet:h-[43px] desktop:w-[44px] desktop:h-[44px] rounded-none ${className}`}
+      className={`relative flex items-center justify-center w-[30px] h-[42px] tablet:w-[43px] tablet:h-[43px] desktop:w-[44px] desktop:h-[44px] rounded-none ${className}`}
     >
       {/* Two stacked hearts crossfade — the SVG `fill` attribute cannot be
           CSS-transitioned, so opacity does the work instead. */}
@@ -239,7 +239,7 @@ function CartLink({ className = "" }: { className?: string }) {
       aria-label={ready && count > 0 ? `Cart, ${count} items` : "Cart"}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={`relative flex items-center justify-center w-[42px] h-[42px] tablet:w-[43px] tablet:h-[43px] desktop:w-[44px] desktop:h-[44px] rounded-none ${className}`}
+      className={`relative flex items-center justify-center w-[30px] h-[42px] tablet:w-[43px] tablet:h-[43px] desktop:w-[44px] desktop:h-[44px] rounded-none ${className}`}
     >
       <motion.span
         className="flex items-center justify-center"
@@ -276,7 +276,7 @@ function AccountLink({ className = "" }: { className?: string }) {
       aria-label="Your account"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={`relative flex items-center justify-center w-[42px] h-[42px] tablet:w-[43px] tablet:h-[43px] desktop:w-[44px] desktop:h-[44px] rounded-none ${className}`}
+      className={`relative flex items-center justify-center w-[30px] h-[42px] tablet:w-[43px] tablet:h-[43px] desktop:w-[44px] desktop:h-[44px] rounded-none ${className}`}
     >
       <motion.span
         className="flex items-center justify-center"

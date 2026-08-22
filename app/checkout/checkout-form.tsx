@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import { CircleCheck } from "lucide-react";
 import Link from "next/link";
 import { H2, H4, SubtitleMd, BodySm, ItalicBodyLg } from "@/components/ui/typography";
 import { OutlineButton, Button, type ButtonState } from "@/components/ui/button";
@@ -51,6 +52,14 @@ export function CheckoutForm({ identity }: { identity: CheckoutIdentity }) {
   // lines back out of storage.
   useLoadingGate(!settled);
 
+  // The confirmation replaces a long form in place, with no navigation to reset
+  // the scroll — so without this the shopper is left staring at whatever was
+  // under their thumb rather than at "order placed". After commit, so the short
+  // page is already the one being scrolled.
+  useEffect(() => {
+    if (placed) window.scrollTo(0, 0);
+  }, [placed]);
+
   async function submitOrder(e: React.FormEvent) {
     e.preventDefault();
     if (incomplete || items.length === 0) return;
@@ -80,21 +89,24 @@ export function CheckoutForm({ identity }: { identity: CheckoutIdentity }) {
       <main>
         <section className="w-full flex flex-col justify-start items-center gap-[10px] p-0 rounded-none bg-caledon">
           <div className="w-full max-w-[800px] flex flex-col justify-center items-center gap-[24px] py-[80px] px-[16px] tablet:py-[120px]">
+            <CircleCheck
+              strokeWidth={1.25}
+              fill="none"
+              aria-hidden
+              className="text-plum w-[56px] h-[56px] tablet:w-[64px] tablet:h-[64px]"
+            />
             <H2 className="w-full !text-black !text-center">ORDER PLACED</H2>
+            {/* Only a signed-in shopper has an address on file, so only they are
+                sent anything — promising a guest an email they will never get is
+                worse than saying nothing. */}
             <ItalicBodyLg className="w-full !text-brown !text-center [text-wrap:balance]">
-              We will call you to confirm the details. Payment is cash on delivery — please have the
-              exact amount ready for the courier.
+              {identity.signedIn
+                ? "A confirmation email is on its way, with everything you ordered."
+                : "Your order is with us and we are getting it ready."}
             </ItalicBodyLg>
-            <div className="flex flex-row flex-wrap justify-center items-center gap-[12px]">
-              {identity.signedIn && (
-                <Link href="/account/orders">
-                  <OutlineButton icon={null}>Track this order</OutlineButton>
-                </Link>
-              )}
-              <Link href="/shop-all">
-                <OutlineButton>Keep shopping</OutlineButton>
-              </Link>
-            </div>
+            <Link href="/shop-all">
+              <OutlineButton>Keep shopping</OutlineButton>
+            </Link>
           </div>
         </section>
       </main>
