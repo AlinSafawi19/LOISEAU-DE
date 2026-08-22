@@ -5,7 +5,14 @@ import Link from "next/link";
 
 import { H2, ItalicBodyLg, SubtitleMd, BodyMd, BodySm } from "./typography";
 import { Button, OutlineButton, type ButtonState } from "./button";
-import { saveProfile, signIn, signUp, type AccountState } from "@/lib/actions/account";
+import {
+  resendCode,
+  saveProfile,
+  signIn,
+  signUp,
+  verifyEmail,
+  type AccountState,
+} from "@/lib/actions/account";
 
 /**
  * These forms deliberately reuse the contact page's language — the same
@@ -40,6 +47,8 @@ function Field({
   placeholder,
   autoComplete,
   defaultValue,
+  inputMode,
+  maxLength,
 }: {
   label: string;
   name: string;
@@ -47,6 +56,8 @@ function Field({
   placeholder?: string;
   autoComplete?: string;
   defaultValue?: string;
+  inputMode?: React.ComponentProps<"input">["inputMode"];
+  maxLength?: number;
 }) {
   return (
     <div className="w-full flex flex-col justify-start items-center gap-[32px] p-0 overflow-visible rounded-none">
@@ -57,6 +68,8 @@ function Field({
         placeholder={placeholder}
         autoComplete={autoComplete}
         defaultValue={defaultValue}
+        inputMode={inputMode}
+        maxLength={maxLength}
         className={INPUT_CLS}
         {...focusProps}
       />
@@ -243,6 +256,85 @@ export function SignUpForm({ next }: { next?: string }) {
         <BodyMd className="w-full !text-brown !text-center">Already have one?</BodyMd>
         <Link href="/account/sign-in">
           <OutlineButton icon={null}>Sign in</OutlineButton>
+        </Link>
+      </div>
+    </Card>
+  );
+}
+
+/**
+ * The code screen.
+ *
+ * Registering creates the account but not a session — `verify` is the call that
+ * returns a token, so confirming the address here is what signs the shopper in.
+ * They go straight on to `next` (or their account) already authenticated,
+ * rather than being handed back to the sign-in form.
+ */
+export function VerifyForm({ email, next }: { email: string; next?: string }) {
+  const [state, action, pending] = useActionState<AccountState, FormData>(verifyEmail, {});
+  const [resent, resendAction, resending] = useActionState<AccountState, FormData>(
+    resendCode,
+    {}
+  );
+
+  return (
+    <Card title="Confirm your email" tagline={`we sent a six-digit code to ${email}`}>
+      <form
+        action={action}
+        className="w-full flex flex-col justify-start items-start gap-[48px] p-0 overflow-hidden rounded-none"
+      >
+        <NextField next={next} />
+        <input type="hidden" name="email" value={email} />
+
+        <div className="w-full flex flex-col justify-start items-start gap-[32px] p-0 overflow-clip rounded-none">
+          <Field
+            label="Verification code"
+            name="code"
+            placeholder="000000"
+            autoComplete="one-time-code"
+            inputMode="numeric"
+            maxLength={6}
+          />
+        </div>
+
+        <div className="w-full flex flex-col justify-center items-center gap-[16px]">
+          <Button
+            type="submit"
+            className="max-w-full"
+            buttonState={stateOf(pending, state)}
+            label="Confirm and sign in"
+            successLabel="Welcome"
+          />
+          {state.error && <Reason>{state.error}</Reason>}
+          <BodySm className="w-full !text-brown !text-center [text-wrap:balance]">
+            The code lasts fifteen minutes. Check your spam folder if it has not arrived.
+          </BodySm>
+        </div>
+      </form>
+
+      {/* Its own form: a nested one is invalid HTML, and resending must not
+          carry the half-typed code with it. */}
+      <form
+        action={resendAction}
+        className="w-full flex flex-col justify-center items-center gap-[12px]"
+      >
+        <input type="hidden" name="email" value={email} />
+        <BodyMd className="w-full !text-brown !text-center">No code yet?</BodyMd>
+        <OutlineButton type="submit" icon={null} disabled={resending}>
+          {resending ? "Sending…" : "Send another"}
+        </OutlineButton>
+        {resent.ok && (
+          <BodySm className="w-full !text-brown !text-center">
+            A new code is on its way.
+          </BodySm>
+        )}
+        {resent.error && <Reason>{resent.error}</Reason>}
+      </form>
+
+      <div className="w-full flex flex-col justify-center items-center gap-[12px]">
+        <BodyMd className="w-full !text-brown !text-center">Wrong address?</BodyMd>
+        <Link href="/account/sign-up">
+          <OutlineButton icon={null}>Start again</OutlineButton>
         </Link>
       </div>
     </Card>

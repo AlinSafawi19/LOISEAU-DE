@@ -19,6 +19,18 @@ function safeNext(value: string): string {
   return value.startsWith("/") && !value.startsWith("//") ? value : "/account";
 }
 
+/** The code screen, carrying the address it is for and where to go after. */
+function verifyPath(email: string, next: string): string {
+  const params = new URLSearchParams({ email });
+  if (next) params.set("next", safeNext(next));
+  return `/account/verify?${params}`;
+}
+
+/**
+ * Signing up no longer signs anyone in: the backend creates the account
+ * unverified and emails a six-digit code. The session is issued by `verify`,
+ * so this hands the shopper to the code screen rather than setting a cookie.
+ */
 export async function signUp(
   _state: AccountState,
   formData: FormData
@@ -27,9 +39,11 @@ export async function signUp(
   const confirm = String(formData.get("confirmPassword") ?? "");
   if (password !== confirm) return { error: "The two passwords do not match." };
 
+  const email = field(formData, "email");
+
   const { status, data } = await accountPost("register", {
     name: field(formData, "name"),
-    email: field(formData, "email"),
+    email,
     password,
     phone: field(formData, "phone"),
     address: field(formData, "address"),
@@ -40,20 +54,63 @@ export async function signUp(
     return { error: String(data.error ?? "We could not create your account.") };
   }
 
+  redirect(verifyPath(email, field(formData, "next")));
+}
+
+/**
+ * The code came back. This is the call that returns a token, so confirming the
+ * address is also what signs the shopper in — they land on `next` already
+ * authenticated, with no second trip through the sign-in form.
+ */
+export async function verifyEmail(
+  _state: AccountState,
+  formData: FormData
+): Promise<AccountState> {
+  const { status, data } = await accountPost("verify", {
+    email: field(formData, "email"),
+    code: field(formData, "code"),
+  });
+
+  if (status !== 200) {
+    return { error: String(data.error ?? "We could not confirm your email address.") };
+  }
+
   await setToken(String(data.token), String(data.expiresAt));
   redirect(safeNext(field(formData, "next")));
+}
+
+/** Another code, for whoever lost the first one. */
+export async function resendCode(
+  _state: AccountState,
+  formData: FormData
+): Promise<AccountState> {
+  const { status, data } = await accountPost("resend-code", {
+    email: field(formData, "email"),
+  });
+
+  if (status !== 202) {
+    return { error: String(data.error ?? "We could not send another code.") };
+  }
+  return { ok: true };
 }
 
 export async function signIn(
   _state: AccountState,
   formData: FormData
 ): Promise<AccountState> {
+  const email = field(formData, "email");
+
   const { status, data } = await accountPost("login", {
-    email: field(formData, "email"),
+    email,
     password: String(formData.get("password") ?? ""),
   });
 
   if (status !== 200) {
+    // Right password, unproven address. The backend has already sent a fresh
+    // code, so this belongs on the code screen — not shown as a failed sign-in.
+    if (data.verificationRequired) {
+      redirect(verifyPath(email, field(formData, "next")));
+    }
     return { error: String(data.error ?? "We could not sign you in.") };
   }
 
